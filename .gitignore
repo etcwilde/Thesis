@@ -1,0 +1,9 @@
+# Files
+*.aux
+*.lof
+*.log
+*.lot
+*.toc
+
+# Directories
+output/
