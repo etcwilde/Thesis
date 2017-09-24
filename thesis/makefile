@@ -9,6 +9,7 @@ DIR_FIGURES  = Figures/
 DIR_TABLES   = Tables/
 DIR_MACROS   = macros/
 DIR_FRONT    = frontmatter/
+DIR_SCRIPTS	 = scripts/
 
 # Files
 template = $(wildcard $(DIR_FRONT)*.tex $(DIR_MACROS)*.tex)
@@ -16,6 +17,10 @@ mainfile = thesis.tex
 chapters = $(wildcard $(DIR_CHAPTERS)*.tex)
 figures  = $(wildcard $(DIR_FIGURES)*.tex $(DIR_FIGURES)*.pdf $(DIR_FIGURES)*.png)
 tables   = $(wildcard $(DIR_TABLES)*.tex)
+
+figures += $(DIR_FIGURES)linux_commits_per_year.pdf \
+		   $(DIR_FIGURES)linux_commits_per_release.pdf \
+		   $(DIR_FIGURES)linux_authors_per_release.pdf
 
 $(info Compiling Main File: $(mainfile))
 $(info Compiling Chapters:  $(chapters))
@@ -44,3 +49,15 @@ $(DIR_OUTPUT):
 $(DIR_OUTPUT)Thesis.pdf: $(DIR_OUTPUT) $(mainfile) $(chapters) $(figures) $(tables)
 	rubber --pdf $(mainfile)
 	mv thesis.pdf $(DIR_OUTPUT)Thesis.pdf
+
+$(DIR_FIGURES)linux_commits_per_year.pdf: $(DIR_SCRIPTS)linux/commit_counts.R
+	./$(DIR_SCRIPTS)linux/commit_counts.R
+	mv per_year.pdf $(DIR_FIGURES)linux_commits_per_year.pdf
+
+$(DIR_FIGURES)linux_commits_per_release.pdf: $(DIR_SCRIPTS)linux/commit_counts.R
+	./$(DIR_SCRIPTS)linux/commit_counts.R
+	mv per_release.pdf $(DIR_FIGURES)linux_commits_per_release.pdf
+
+$(DIR_FIGURES)linux_authors_per_release.pdf: $(DIR_SCRIPTS)linux/author_counts.R
+	./$(DIR_SCRIPTS)linux/author_counts.R
+	mv authors_per_release.pdf $(DIR_FIGURES)linux_authors_per_release.pdf
