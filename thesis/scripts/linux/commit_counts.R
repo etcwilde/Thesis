@@ -3,6 +3,7 @@
 # Evan Wilde
 
 library(RPostgreSQL)
+library(ggplot2)
 
 colorScheme <- c("#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC")
 colorSchemeTrans <- c("#3366CC99", "#DC391299", "#FF990099", "#10961899", "#99009999", "#3B3EAC99")
@@ -100,5 +101,30 @@ barplot(data$commit_count / data$merge_count,
         main="Commits per merge over each Linux release",
         col=colorSchemeTrans[3],
         border=colorScheme[3])
+
+# === [ Commits Per Merge Per Release] ===
+
+query <- "
+SELECT rm.cid,
+       vr.ver,
+       vr.start_date,
+       vr.end_date,
+       rm.count,
+       rm.autdate
+FROM root_merges rm,
+     version_ranges vr
+WHERE rm.autdate >= vr.start_date AND rm.autdate < vr.end_date;
+"
+
+data <- dbGetQuery(con, query)
+pdf("merge_distribution.pdf", width=12, height=8)
+
+print(colorScheme[1])
+
+p0 = ggplot(data, aes(reorder(ver, start_date), count)) + geom_boxplot(outlier.shape=NA, fill=colorSchemeTrans[1], color=colorScheme[1])
+
+
+ylim1 = boxplot.stats(data$count)$stats[c(1,5)]
+plot(p0 + coord_cartesian(ylim=ylim1*1.5) + xlab("Version") + ylab("Commits") + ggtitle("Distribution of Commits in each Merge in each Version of Linux from 3.1 to 3.16"))
 
 dbDisconnect(con)
