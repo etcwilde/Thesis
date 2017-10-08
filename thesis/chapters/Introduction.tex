@@ -4,17 +4,18 @@
 Understanding the process in which a piece of software is developed is
 crucial in the process of determining why certain changes were made, how
 the changes were made, and how the surrounding code was modified to
-accept those changes. Git is a distributed version control software,
-designed to facilitate collaborative software development between
-thousands of people working independently around the world. Git uses the
-Directed Acyclic Graph (DAG) model to store modifications to code in
-individual commits. The model enables git to have impressive flexibility
-compared to many other version control systems, but suffers from poor
-visualizations stemming from the DAG. In large projects, the
-visualization of the DAG, as shown in git, does not provide an adequate
-summarization of how a commit is integrated into the master branch of a
-repository.
-
+accept those changes. This information can be used by maintainers to
+understand how the changes being made to the current version are being
+applied, so they can be applied to older versions as well. Git is a
+distributed version control software, designed to facilitate
+collaborative software development between thousands of people working
+independently around the world. Git uses the Directed Acyclic Graph
+(DAG) model to store modifications to code in individual commits. The
+model enables git to have impressive flexibility compared to many other
+version control systems, but suffers from poor visualizations stemming
+from the DAG\@. In large projects, the visualization of the DAG, as
+shown in git, does not provide an adequate summarization of how a commit
+is integrated into the master branch of a repository.
 
 While there has been extensive research on visualizing git repositories,
 previous work does not focus on showing how a commit is integrated. The
