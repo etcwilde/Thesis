@@ -32,3 +32,77 @@ to kernel versions 3.1 up to and including 3.16, or the commits that
 were integrated into the kernel between October of 2011 and August of
 2014.
 %% TODO: More is described in the background section of the paper
+
+\section{Related Work}\label{sec:related_work}
+
+The \define{Version Control System}{VCS} tracks the development of a
+software project, recording each change as it happens. In many cases,
+the VCS contains the entire story of the software, with rich information
+about the authors, files, and changes being made. This makes the VCS
+vital in providing information about how a software project is being
+developed, how the software is structured, and extending Conway's law,
+can reflects the communication structure within an organization. In
+order to use the information stored in the VCS, users must be able to
+gain a clean understanding and summarization of the changes being made
+and how they interact with the rest of the source code. Various
+visualizations of have been written to tackle various aspects of this
+challenge, but we are aware of no git repository visualization tool that
+was designed with the explicit goal of showing how commits are
+integrated into the master branch of the repository. There has, however,
+been a lot of work in providing visualizations of various aspects of a
+repository.
+
+Many tools focus on addressing the issue in communication between
+developers in inter-team collaborative work. Hipikat\cite{Cubranic2005}
+investigates communication between developers, focusing on assisting
+with the integration of new developers into a project though
+communication, providing the new developer with searchable artifacts of
+the changes being made, and where to find them. Codebook\cite{Begel2010}
+also focuses on communication, but where Hipikat focuses on assisting
+new developers find artifacts, Codebook assists developers with finding
+who was responsible for creating the artifact. Codebook uses a
+data-mining technique to determine the developer of a piece of code, the
+program manager who wrote the specification for the code, and the
+program managers and developers on the team who were working together.
+Neither tool is designed with the goal of providing information on the
+topological structure of a source code repository, nor are these tools
+designed for visualization purposes.
+
+Most visualization systems provide information about a certain aspect of
+the contents in the repository. Fractal Figures\cite{Ambros2005} uses a
+square to represent a component of a project. Then subdividing the
+square based on the proportion of an author's contributions to that
+component. EPOSee\cite{Burch2005} and Evolution Radar\cite{Ambros2009}
+perform further analysis to determine which files are created together,
+and see what changes are made over a sequence of commits. The goals of
+these two projects differ slightly, but both use evolution over time to
+extract information about how different parts of a software system are
+related.
+
+Codebook, Hipikat, Fractal Figures, EPOSee, and Evolution Radar all
+extract data from CVS repositories. Our goal is to provide information
+about git repositories. Fewer tools are available for generating
+visualizations and summaries of git repositories, potentially due to the
+DAG model used as the internal structure of git repositories.
+
+Gource\cite{Caudwell2010} is a tool for providing an interactive
+timelapse of the changes being made to various files stored in the
+repository. Gource uses a graph metaphor for representing the file
+structure in the repository. Files are the nodes in the graph, and the
+clustering of the file represents directories. The edges are the links
+between directories. User avatars move around the graph emitting
+different color light depending on the change being made to the file.
+Green indicates the creation of a new file, yellow indicates a
+modification, and red indicates the deletion of the file (shown in
+Figure~\ref{fig:gource_view}). Codeswarm\cite{ogawa09} is similar to
+Gource, using an organic timelapse approach to visualizing the events in
+the repository. Unlike Gource, which focuses on files, Codeswarm focuses
+on developers and the number of commits each developer is making.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{./Figures/introduction/gource-linux.jpg}
+  \caption{View of Gource file graph with users operating on a
+    repository}
+  \label{fig:gource_view}
+\end{figure}
