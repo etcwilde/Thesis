@@ -18,10 +18,10 @@ chapters = $(wildcard $(DIR_CHAPTERS)*.tex)
 figures  = $(wildcard $(DIR_FIGURES)*.tex $(DIR_FIGURES)*.pdf $(DIR_FIGURES)*.png)
 tables   = $(wildcard $(DIR_TABLES)*.tex)
 
-figures += $(DIR_FIGURES)linux_commits_per_year.pdf \
-		   $(DIR_FIGURES)linux_commits_per_release.pdf \
-		   $(DIR_FIGURES)linux_authors_per_release.pdf \
-		   $(DIR_FIGURES)linux_merge_distribution_per_release.pdf
+figures += $(DIR_FIGURES)background/linux_commits_per_year.pdf \
+		   $(DIR_FIGURES)background/linux_commits_per_release.pdf \
+		   $(DIR_FIGURES)background/linux_authors_per_release.pdf \
+		   $(DIR_FIGURES)background/linux_merge_distribution_per_release.pdf
 
 $(info Compiling Main File: $(mainfile))
 $(info Compiling Chapters:  $(chapters))
@@ -56,25 +56,25 @@ $(DIR_OUTPUT)Thesis.pdf: $(DIR_OUTPUT) $(mainfile) $(chapters) $(figures) $(tabl
 	rubber --pdf $(mainfile)
 	mv thesis.pdf $(DIR_OUTPUT)Thesis.pdf
 
-$(DIR_FIGURES)linux_commits_per_year.pdf: $(DIR_SCRIPTS)linux/commit_counts.R
+$(DIR_FIGURES)background/linux_commits_per_year.pdf: $(DIR_SCRIPTS)linux/commit_counts.R
 	./$(DIR_SCRIPTS)linux/commit_counts.R
-	mv per_year.pdf $(DIR_FIGURES)linux_commits_per_year.pdf
-	mv per_release.pdf $(DIR_FIGURES)linux_commits_per_release.pdf
-	mv merge_distribution.pdf $(DIR_FIGURES)linux_merge_distribution_per_release.pdf
+	mv per_year.pdf $(DIR_FIGURES)background/linux_commits_per_year.pdf
+	mv per_release.pdf $(DIR_FIGURES)background/linux_commits_per_release.pdf
+	mv merge_distribution.pdf $(DIR_FIGURES)background/linux_merge_distribution_per_release.pdf
 
-$(DIR_FIGURES)linux_commits_per_release.pdf: $(DIR_SCRIPTS)linux/commit_counts.R
+$(DIR_FIGURES)background/linux_commits_per_release.pdf: $(DIR_SCRIPTS)linux/commit_counts.R
 	./$(DIR_SCRIPTS)linux/commit_counts.R
-	mv per_year.pdf $(DIR_FIGURES)linux_commits_per_year.pdf
-	mv per_release.pdf $(DIR_FIGURES)linux_commits_per_release.pdf
-	mv merge_distribution.pdf $(DIR_FIGURES)linux_merge_distribution_per_release.pdf
+	mv per_year.pdf $(DIR_FIGURES)background/linux_commits_per_year.pdf
+	mv per_release.pdf $(DIR_FIGURES)background/linux_commits_per_release.pdf
+	mv merge_distribution.pdf $(DIR_FIGURES)background/linux_merge_distribution_per_release.pdf
 
-$(DIR_FIGURES)linux_merge_distribution_per_release.pdf: $(DIR_SCRIPTS)linux/commit_counts.R
+$(DIR_FIGURES)background/linux_merge_distribution_per_release.pdf: $(DIR_SCRIPTS)linux/commit_counts.R
 	./$(DIR_SCRIPTS)linux/commit_counts.R
-	mv per_year.pdf $(DIR_FIGURES)linux_commits_per_year.pdf
-	mv per_release.pdf $(DIR_FIGURES)linux_commits_per_release.pdf
-	mv merge_distribution.pdf $(DIR_FIGURES)linux_merge_distribution_per_release.pdf
+	mv per_year.pdf $(DIR_FIGURES)background/linux_commits_per_year.pdf
+	mv per_release.pdf $(DIR_FIGURES)background/linux_commits_per_release.pdf
+	mv merge_distribution.pdf $(DIR_FIGURES)background/linux_merge_distribution_per_release.pdf
 
 
-$(DIR_FIGURES)linux_authors_per_release.pdf: $(DIR_SCRIPTS)linux/author_counts.R
+$(DIR_FIGURES)background/linux_authors_per_release.pdf: $(DIR_SCRIPTS)linux/author_counts.R
 	./$(DIR_SCRIPTS)linux/author_counts.R
-	mv authors_per_release.pdf $(DIR_FIGURES)linux_authors_per_release.pdf
+	mv authors_per_release.pdf $(DIR_FIGURES)background/linux_authors_per_release.pdf
