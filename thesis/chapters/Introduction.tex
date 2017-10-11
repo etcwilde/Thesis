@@ -16,21 +16,61 @@ summarization of how a commit is integrated into the master branch of a
 repository.
 
 
-In this \paper{} \evan{dissertation, thesis or paper?}, we describe the
-design of a model to alleviate this issue, called the \mt. \mt{s} are a
-tree structure, rooted at the integrating merge into the master branch,
-and shows the paths that commits took to be integrated. To test the
-model, we construct a tool, \tool, around the repository of the Linux
-kernel, which is one of the most complex open-source git repositories
-available. Furthermore, git was designed by Linus Torvalds as a
-replacement to Bitkeeper, the version control system that was used to
-manage the development of the kernel until 2005, meaning that the git
-was designed specifically for the Linux repository. Our dataset includes
-commits from as far back as 2001 and as recent as 2014, though for this
-\paper{} we will mostly concern ourselves with the commits contributing
-to kernel versions 3.1 up to and including 3.16, or the commits that
-were integrated into the kernel between October of 2011 and August of
-2014.
+While there has been extensive research on visualizing git repositories,
+previous work does not focus on showing how a commit is integrated. The
+literature on repository visualization and summarization can be broken
+down into three main subcategories;
+communication\cite{Cubranic2005,Begel2010}, aspect-oriented
+visualization\cite{Ambros2005,Burch2005,Ambros2009}, and organic
+visualizations\cite{ogawa09,Caudwell2010}. A fourth category can be
+added to include non-academic tools, like GitKraken and SourceTree,
+built as clients to work with git repositories and visualize the DAG
+model directly.
+
+In this \paper{} \evan{dissertation, thesis, or paper?}, we describe the
+design of a model, the \mt{}, and the construction and evaluation of a
+tool, \tool{}, designed to clearly visualize the path that commits take
+to be integrated, and what other commits are related to it. \tool{} is
+built around the \mt{} model using the Linux repository. Linux was
+requested by an external entity with interest in maintenance of older
+versions of the kernel for use in Android distributions. Linux makes
+sense as a good platform for understanding the various uses of git, as
+it was designed to replace Bitkeeper as the version control system for
+the Linux repository in 2005, so the repository makes use of nearly
+every feature of git. Our dataset includes commits from as far back as
+2001 and as recent as 2014, though for this \paper{}, we will mostly
+concern ourselves with the commits contributing to kernel versions 3.1
+through 3.16, or the commits that were integrated into the kernel
+between October, 2011 and August 2014.
+
+When constructing and evaluating the model and tool, three questions
+arose; first, we want to ensure that the visualizations of the directed
+acyclic graph (DAG) do not already provide meaningful summarization of
+how a commit is integrated (RQ\ref{rq:RQ1}). Next, we want to compare
+the visualization of the DAG against the visualization of the \mt{} to
+determine which is capable of providing a better understanding of how a
+commit is integrated (RQ\ref{rq:RQ2}). Finally, the new model should
+make it possible to more easily extract additional aggregate information
+about what is being integrated, and who is making the contributions
+(RQ\ref{rq:RQ3}).
+
+%% TODO: Move to methodology section
+\begin{textbox}
+  \textbf{RQ\rqs{rq:RQ1}:} Do visualizations of the DAG provide
+  users with a meaningful visualization of how commits are integrated?
+\end{textbox}
+
+\begin{textbox}
+  \textbf{RQ\rqs{rq:RQ2}:} How does the visualization of the \mt{}
+  compare with the visualization of the DAG to determine how commits are
+  integrated?
+\end{textbox}
+
+\begin{textbox}
+  \textbf{RQ\rqs{rq:RQ3}:} What other information can be drawn from the
+  \mt{} model that cannot easily be drawn from the DAG.
+\end{textbox}
+
 %% TODO: More is described in the background section of the paper
 
 \section{Related Work}\label{sec:related_work}
