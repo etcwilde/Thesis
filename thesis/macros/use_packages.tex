@@ -1,20 +1,39 @@
-% Long Table and decimal aligned columns
+%% Long Table and decimal aligned columns
 \usepackage{dcolumn}
 \usepackage{longtable}
+\usepackage{tabulary}
+\usepackage{booktabs}
+\usepackage{multirow}
 
-% Mathematics support
+%% Mathematics support
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
 
-% Text Control
+%% Algorithm Control
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%% Text Control
 \usepackage{xspace}
 \usepackage{textcase}
+\usepackage{url}
 
-% Graphics
+%% Graphics
 \usepackage{xcolor}
 \usepackage{color}
 \usepackage{wasysym}
+\usepackage{tikz}
 \usepackage{graphics}
-\usepackage{graphicx}   % A package to allow insertion of
-                        % external image files
+\usepackage{graphicx}
+
+%% Referencing
+\usepackage[unicode=true,
+          pdftitle={\thesistitle},
+          pdfauthor={Evan Wilde},
+          colorlinks=false]{hyperref}
+
+%% Configure Packages
+\usetikzlibrary{positioning, arrows}
+
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
