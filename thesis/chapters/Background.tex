@@ -1,2 +1,58 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Background}\label{chap:background}
+
+To understand how a change is integrated into the master branch of a
+repository, it is vital to understand the merges that led to the
+integration of the commit, and the commits that are merged into the
+master branch with the commit of interest. Maintainers of software must
+sift through the commits to determine which changes being made to the
+current version of the software pertain to the area of the software that
+they are maintaining. Specifically, maintainers must be able to answer
+two questions;
+
+\begin{textbox}
+\begin{itemize}
+  \item How is a commit integrated?
+  \item What other commits are related to a given commit?
+\end{itemize}
+\end{textbox}
+
+Commits being integrated into a repository may pass through multiple
+merges on the path to the master branch. The merges form logical
+groupings of related code; furthermore, in some repository structures,
+merges are used to resolve conflicts between commits. In order to apply
+the changes in one commit, modifications to other parts of the codebase
+may be necessary. While they are necessary to the integration of the
+commit of interest, these modifications will likely be in separate
+commits, and possibly merged into the branch that the commit of interest
+is on. Maintainers must be able to easily find these commits, as they
+will be necessary for back-porting the commit of interest into older
+versions of the software.
+
+We specifically study the Linux kernel repository. Older versions of the
+Linux kernel are used in a wide variety of situations including various
+Linux desktop distributions, internet of things device firmware, web
+servers, spacecrafts\footnote{Linux is used heavily at SpaceX
+  \url{https://lwn.net/Articles/540368/}}, and in mobile devices as the
+base of the Android platform. These kernels are sometimes modified forks
+of the official Linux kernel, made to be more suitable for the specific
+needs of the application. Due to these application-specific
+modifications, it is not feasible to update to the latest version of the
+kernel for every official update. While it may not be feasible to
+update, the changes being made to the official version are necessary as
+they fix bugs, patch security issues, and improve performance. Due to
+the sometimes critical nature of the patches being merged into the
+current version of the kernel, it is necessary for maintainers working
+on application-specific forks of the kernel to sift through the commits
+coming into the official version, looking for the changes that may
+impact the kernel they are maintaining. In Section~\ref{sec:linux}, we
+will break down the repository, investigating the nature of the
+repository integration and merge behaviour.
+
+Linux uses git as the version control system, managing the distributed
+nature of the kernel development and storing the changes to the kernel.
+In Section~\ref{sec:git}, we will discuss the structure of git and the
+challenges it poses against our two primary goals.
+
+\section{Linux}\label{sec:linux}
+\section{Git}\label{sec:git}
