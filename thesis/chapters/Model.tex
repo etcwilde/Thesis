@@ -192,3 +192,133 @@ was merged twice. In the case of node 9, it is merged into 11, though it
 could also be merged into 12 through 10. We design the merge tree to use
 the shortest distance in hops, and use distance in time as a tie
 breaker.
+
+\section{Algorithm}
+\label{sec:algorithm}
+
+Computing the \mt from a DAG for any repository may not be possible;
+however, certain features of the development process of Linux make it
+feasible to compute the \mt for the Linux repository. First, the master
+branch of Linux is maintained by Linus Torvalds, and only Linus has
+write access to it. We have verified this assertion in previous
+research~\cite{German2015}. We have developed a heuristic that is
+presented in Algorithm~\ref{fig:alg}. In short, the algorithm first
+identifies the commits made directly to the master branch, whereafter it
+recursively determines the shortest path, using the DAG, from each
+commit to the master branch using the inverted DAG.\@
+
+\begin{algorithm}
+        \caption{Computing the \mt of Linux from the DAG}\label{fig:alg}
+        \begin{algorithmic}[1]
+                \Function{ComputeMergeTree}{DAG}: tree
+                % \State {\# Compute the tree from the DAG of Linux repository.}
+                % \State {\# Returns $Tree$, a graph containing every commit }
+                % \State {\# in DAG with the path it followed to master.}
+                \State $head \gets \textit{Head of master of git repository}$
+                \State $master \gets \textit{traverse DAG from head using }$
+                \State \quad\quad\quad\quad $\textit{first parent until reaching root}$
+                \State $nodes(Tree) \gets nodes(DAG)$
+                \State \Function{MergeAtMaster}{cid}
+                \State {\# Returns $(depth, merge, next)$}
+                \State {\# Helper function}
+                \State {\# Compute the closest merge into master, }
+                \State {\# setting the children on the way to master.}
+                \If {\textit{cid in master}}
+                \State \Return $(0, cid, \varnothing)$
+                \EndIf
+                \State {$d \gets \infty$}
+                \State {\# Traverse the inverted DAG}
+                \For{$c \in children(cid, DAG)$}
+                \State $(d_c, merge_c, next_c) \gets MergeAtMaster(c)$
+                \If {$IsMerge(c)$}
+                \State $fp \gets FindFirstParent(c)$
+                \If {$fp \neq cid$}
+                \State $d_c \gets d_c + 1$
+                \State $next_c \gets c$
+                \EndIf
+                \EndIf
+                \State {\# Find the shortest path}
+                \If {$d_c < d$}
+                \State $(d, m, next) \gets (d_c, merge_c, next_c)$
+                \ElsIf{ $d_c = d$ }
+
+                \State {\# Use the time as a tie-breaker}
+                \If {$ cTime(merge_c) < cTime(m) $}
+                \State $(m, next) \gets (merge_c, next_c)$
+                \EndIf
+                \EndIf
+                \EndFor
+                \State {\# $c$ is the commit that follows $cid$}
+                \State {\# in its way to master}
+                \State add edge $(cid, next)$ to $Tree$
+                \State \Return $(d, m, next)$
+                \EndFunction
+
+                \State {\# Compute the distance for each commit}
+                \State {\# discarding result}
+                \For{$c \in nodes(DAG)$}
+                \State $MergeAtMaster(c)$
+                \EndFor
+                \State \Return $Tree$
+                \EndFunction
+        \end{algorithmic}
+\end{algorithm}
+
+The algorithm is broken into two phases. The first is determining which
+repository events are on the master branch. This is done by traversing
+the first parent from the master branch reference to the commit that has
+no parents. The second phase is encompassed by the function
+$MergeAtMaster$ which determines, for each commit, which merge the
+commit is merged at, the depth (as variable $d$ in the algorithm), and
+the next merge on the path to the master branch. The function
+$MergeAtMaster$ has two parts, the first for determining the depth, from
+the master branch, that the repository event is at. The second phase
+determines the merge into the master branch, and the next merge on the
+way to the master branch. The distance is by shortest path, staying as
+close to the master branch as possible. If there is a tie between two
+paths, the path that merges into the master branch sooner is taken.
+
+To demonstrate the behaviour of the algorithm, we use a short example,
+computing the merge at commit 5 in Figure~\ref{fig:repoEvents}.
+$MergeAtMaster$, recurses along the children of the nodes it visits.
+Eventually every child of every node along the path will be visited at
+least once. Without loss of generality, suppose that the path recursed
+along is from node 5 to 6, 9, 10, and finally 12.
+
+The depth for each, except 12 (a merge into the master branch), is
+initialized to infinity, the merge into master is blank, and the next
+merge is blank. Merges into master trivially have a distance of 0 from
+the master branch, and it merges itself into the master branch. The
+recursion at 12 returns the triple $(0, \varnothing, 12)$ to the call
+from 10. 12 is a merge commit and 10 is not the first parent, so the
+temporary depth, $d_c$, is incremented to 1 and the temporary next
+merge, $next_c$, is changed to 12. 1 is less than infinity, so the depth
+is set to 1, the merge to 12, and the next to 12. This returns the
+triple $(1, 12, 12)$ to the call from 9. 9 is the first parent of 10, so
+no changes are made to the temporary variables.
+
+The call to 9 recurses to the second child, 11. 11 is a merge into the
+master so it returns $(0, \varnothing, 11)$ to the call from 9. 9 is not
+the first parent of 11, so the $d_c$ is incremented to 1 and $next_c$ is
+changed to 11. The distances $d_c$ and $d$ are the same, so to break the
+tie, we use the time. 12 was merged after 11, so 11 replaces 12 as the
+merge into the master branch for 9, as well as being the next merge. The
+call for 9 returns the triple $(1, 11, 11)$ to the call for 6. 6 is not
+the first parent of 9, so $d_c$ is incremented and $next_c$ is changed
+to 9, as 9 merges 6. 2 is less than infinity, so the $d$ is changed to
+2, the merge to 11, and the next merge to 9. The call to 6 returns the
+triple $(2, 11, 9)$ to the call for 5.
+
+The call for 5 recurses on the second child of 5, calling on 7, which
+calls 8, and then 9. 9 can continue, but if the implementation of the
+algorithm uses memoization, the call to 9 can immediately return the
+triple $(1, 11, 11)$ to the call for 8, and avoid an exponential
+runtime. 8 is not the first parent of 8, so $d_c$ is incremented to 2
+and $next_c$ is changed to 9. 2 is less than infinity, so $d$ is changed
+to 2, $merge$ to 11, and $next$ to 9. The call to 8 returns the triple
+$(2, 11, 9)$ to the call for 7, which recurses on the second child of 7,
+9. 9 returns the triple $(1, 11, 11)$. 7 is the first parent of 9, so
+the depth is not incremented. $d_c$ is less than $d$, so $d$ is changed
+to 1, $m$ to 11, and $next$ to 11, returning $(1, 11, 11)$ to the call
+for 5. $d_c$ is less than $d$, so $d$ is changed to 1, $m$ to 11, and
+$next$ to 11. There are no other children, so the function halts.
