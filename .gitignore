@@ -4,6 +4,9 @@
 *.log
 *.lot
 *.toc
+*.bbl
+*.blg
+*.out
 
 # Directories
 output/
