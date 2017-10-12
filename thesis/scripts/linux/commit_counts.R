@@ -19,7 +19,7 @@ SELECT extract(year FROM comdate) AS year, count(*) FROM commits GROUP BY year O
 "
 
 data <- dbGetQuery(con, query)
-pdf("per_year.pdf", width=12, height=8)
+pdf("per_year.pdf", width=16, height=8)
 data <- data[2:(nrow(data)- 1),]
 data.freq = as.vector(rep(data$year, data$count))
 barplot(table(data.freq),
@@ -78,29 +78,35 @@ GROUP BY chunks.ver,
 ORDER BY start_date;
 "
 
-pdf("per_release.pdf", width=12, height=8)
+pdf("per_release.pdf", width=16, height=8)
 data <- dbGetQuery(con, query)
 barplot(data$commit_count,
         names.arg=data$ver,
         xlab="Version",
         ylab="Commits",
-        main="Number of commits per Linux release",
+        main="Commits per Linux Release",
         col=colorSchemeTrans[1],
-        border=colorScheme[1])
+        border=colorScheme[1],
+        cex.main=1.8,
+        cex.lab=1.5)
 barplot(data$merge_count,
         names.arg=data$ver,
         xlab="Version",
         ylab="Merges",
-        main="Merges into the master branch of Linux",
+        main="Merges into the Master Branch of Linux",
         col=colorSchemeTrans[2],
-        border=colorScheme[2])
+        border=colorScheme[2],
+        cex.main=1.8,
+        cex.lab=1.5)
 barplot(data$commit_count / data$merge_count,
         names.arg=data$ver,
         xlab="Version",
         ylab="Commits per Merge",
-        main="Commits per merge over each Linux release",
+        main="Commits per Merge over each Linux Release",
         col=colorSchemeTrans[3],
-        border=colorScheme[3])
+        border=colorScheme[3],
+        cex.main=1.8,
+        cex.lab=1.5)
 
 # === [ Commits Per Merge Per Release] ===
 
@@ -123,8 +129,16 @@ print(colorScheme[1])
 
 p0 = ggplot(data, aes(reorder(ver, start_date), count)) + geom_boxplot(outlier.shape=NA, fill=colorSchemeTrans[1], color=colorScheme[1])
 
-
 ylim1 = boxplot.stats(data$count)$stats[c(1,5)]
-plot(p0 + coord_cartesian(ylim=ylim1*1.5) + xlab("Version") + ylab("Commits") + ggtitle("Distribution of Commits in each Merge in each Version of Linux from 3.1 to 3.16"))
+plot(p0 + coord_cartesian(ylim=ylim1*1.5) +
+     xlab("Version") +
+     ylab("Commits") +
+     ggtitle("Distribution of Commits in each Merge") +
+     theme(plot.title=element_text(size=22, hjust=0.5),
+           axis.title=element_text(size=18),
+           axis.text.x=element_text(angle=30,hjust=1),
+           axis.text=element_text(size=15),
+           panel.background=element_blank(),
+           axis.line.y=element_line(colour="#000000")))
 
 dbDisconnect(con)

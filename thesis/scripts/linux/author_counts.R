@@ -44,16 +44,16 @@ GROUP BY ver, start_date
 ORDER BY start_date;
 "
 
-pdf("authors_per_release.pdf", width=12, height=8)
+pdf("authors_per_release.pdf", width=16, height=8)
 data <- dbGetQuery(con, query)
-print("## Authors")
-print(data)
 barplot(data$count,
         names.arg=data$ver,
         xlab="Version",
         ylab="Authors",
-        main="Number of authors per Linux release",
+        main="Authors per Linux Release",
         col=colorSchemeTrans[4],
-        border=colorScheme[4])
+        border=colorScheme[4],
+        cex.main=1.8,
+        cex.lab=1.5)
 
 dbDisconnect(con)
