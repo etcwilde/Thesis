@@ -46,13 +46,118 @@ current version of the kernel, it is necessary for maintainers working
 on application-specific forks of the kernel to sift through the commits
 coming into the official version, looking for the changes that may
 impact the kernel they are maintaining. In Section~\ref{sec:linux}, we
-will break down the repository, investigating the nature of the
-repository integration and merge behaviour.
+describe the structure of the Linux repository, the dataset collected
+from the repository, and investigate the nature of the repository
+integration and merge behaviour.
 
 Linux uses git as the version control system, managing the distributed
 nature of the kernel development and storing the changes to the kernel.
-In Section~\ref{sec:git}, we will discuss the structure of git and the
-challenges it poses against our two primary goals.
+In Section~\ref{sec:git}, we discuss the structure of git, repository
+visualizations available, and challenges it poses against answering the
+two main questions.
 
 \section{Linux}\label{sec:linux}
+
+Linux is open source, using git to track and manage the source code in
+the kernel. A mirror of the repository is available on
+GitHub\footnote{\url{https://github.com/torvalds/linux}}, which makes
+data collection relatively straightforward. In this section, we describe
+the dataset that we collected, looking at the number of authors,
+commits, and merges.
+
+The data extracted from the repository involves all merges into the
+master branch between April 18, 2005 and August 14, 2014. This
+corresponds to the merges added to the kernel between versions 2.6.11
+and Linux 3.16. The commits collected from the repository include
+commits authored between September 17, 2001 and December 6, 2014. There
+are 4 commits in the dataset that are beyond this range due to the date
+being incorrectly set on that developer's machine. There is one
+incorrect date that is dated January 1, 1970, authored by Ursula Braun,
+and three commits dated after 2014. These commits are dated April 5,
+2019, October 14 2030, and April 25 2037, authored by Len Brown, Yanmin
+Zhang, and Daniel Vetter, respectively. Commits are not necessarily
+merged immediately, all commits were added between April 15, 2005 and
+October 14, 2014. The average difference between when a commit was
+created and when it was committed is 16 days and 10 hours; 25\% of the
+commits were committed within 2 hours of being authored, 50\% committed
+within 2 days and 8 hours, 75\% within 15 days, and all commits were
+merged within 9.5 years of being authored. In this breakdown of the
+kernel data, we will focus on the commits integrated into kernel
+versions Linux 3.1 to Linux 3.16, translating to the merges between July
+21, 2011 and August 3, 2014.
+
+\evan{How much of this should I be describing here versus in in a later
+section?}
+
+As expected, we find that the Linux kernel is highly collaborative, and
+is very active. Between 1000 and 1500 authors have contributions
+accepted into the official kernel per release (shown in
+Figure~\ref{fig:linux_authors_per_release}). These authors contribute
+between 8000 and 14000 commits per release
+(Figure~\ref{fig:linux_commits_per_release}). Between 275 and 400 merges
+integrate the commits into the master branch of the kernel per release
+(Figure~\ref{fig:linux_commits_per_release}). The Linux kernel
+repository is a prime example of a successful open source project,
+exemplifying the collaborative nature of modern software development.
+The sheer number of commits being contributed make the task of filtering
+the important or relevant commits impractical.
+
+\evan{Having some troubles getting enough text mixed in with the plots.
+  Should I just move some of them to the appendix later?}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/background/linux_authors_per_release.pdf}
+  \caption{Unique authors with contributions to each kernel version}
+  \label{fig:linux_authors_per_release}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth, page=1]{Figures/background/linux_commits_per_release.pdf}
+  \caption{Commits per release from Linux 3.1 to Linux 3.16}
+  \label{fig:linux_commits_per_release}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth, page=2]{Figures/background/linux_commits_per_release.pdf}
+  \caption{Merges per release from Linux 3.1 to Linux 3.16}
+  \label{fig:linux_merges_per_release}
+\end{figure}
+
+While the number of integrating merges into the master branch appears to
+be decreasing slightly per release, the number of commits per release is
+increasing. The average (mean) number of commits per merge per release
+has increased from slightly over 20 commits per merge in Linux 3.1 up to
+50 commits per merge in Linux 3.16
+(Figure~\ref{fig:linux_commits_per_merge_per_release}).
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth, page=3]{Figures/background/linux_commits_per_release.pdf}
+  \caption{Commits per merge into each release of Linux from 3.1 to 3.16
+    \evan{Should probably go in the appendix}}
+  \label{fig:linux_commits_per_merge_per_release}
+\end{figure}
+
+Grouping commits by the merge that integrates it into the master branch,
+we get a different view of the kernel. The individual merges contain
+relatively few commits, 25\% of the merges merge only a single commit,
+and 50\% of the merges merge at most 7 events
+(Figure~\ref{fig:linux_merge_distribution_per_release}).
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/background/linux_merge_distribution_per_release.pdf}
+  \caption{Distribution of Merge Sizes per Release Between Linux 3.1 and
+  3.16}
+  \label{fig:linux_merge_distribution_per_release}
+\end{figure}
+
+Initially, the repository looks very large and unmanageable. Breaking
+the commits down by the integrating merge looks like a promising means
+of simplifying the content. Most of the groups of commits will only
+contain 7 elements, which is nearly trivial to visualize.
+
 \section{Git}\label{sec:git}
