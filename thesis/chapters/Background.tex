@@ -194,3 +194,62 @@ patch granularity as BitKeeper\footnote{initial announcement of git on
 initial version of git was around 1300 lines of code and was written and
 self-hosting in less than 2 weeks\footnote{From the git mailing list
   \url{https://marc.info/?l=git&m=117254154130732}}.
+
+The core model used to store the repository is a \define{directed
+  acyclic graph}{DAG}. Git refers to the nodes of the DAG as commits,
+not distinguishing between the code-carrying commits and the structural
+commits that merge two branches together. In this \paper{}, we will
+refer to the code-carrying commits as commits, the structural merge
+commits as merges, and refer to both types without discrimination as
+repository events. Each repository event contains an ordered list of one
+or more parents, except the initial commit which has no parents. The
+parent relationship points from the current event toward the initial
+commit. Commits have a single parent, while merges will have at least
+two parents, the parent on the current branch followed by the repository
+events being merged. This model allows merging of multiple branches
+simultaneously in octopus merges, where the order of the parents
+represents the order that the branches were specified for being
+merged\footnote{One octopus merge in Linux
+  (2cde51fbd0f310c8a2c5f977e665c0ac3945b46d) has 66 parents}.
+A \foxtrot\footnote{See
+  \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html}
+  for a full description of the issue.} merge occurs when the parent on
+the current branch is replaced by a parent from a branch being merged
+into the current branch, thus confounding the branch relationships
+(depicted in Figure~\ref{fig:foxtrot_steps}).
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{ccc}
+    \includegraphics[width=114px]{Figures/background/foxtrot_initial.png} &
+    \includegraphics[width=145px]{Figures/background/foxtrot_good.png} &
+    \includegraphics[width=145px]{Figures/background/foxtrot_bad.png} \\
+    Initial Repository & No Foxtrot & Foxtrot
+  \end{tabular}
+  \caption{Depiction of a foxtrot merge, where the master branch is
+    confounded by \emph{branch2}}
+  \label{fig:foxtrot_steps}
+\end{figure}
+
+The repository events in the DAG are immutable; once a repository event
+is created, it can't be changed. Git allows operations to alter
+repository events and re-order them, but this will create a new event
+with a new commit hash. This property makes a repository event unable to
+record the traversal of merges into the master branch of the repository.
+Introducing an additional field to track the path to the master branch
+would create a circular dependency between the parent and child. Any
+updates to the DAG would modify the commit hashes for all repository
+events in the repository. To alleviate this, git provides the command
+\verb|git log --children| which traverses the DAG and prints the
+inverted edges relationship between events.
+
+Under perfect conditions, visualizations of the DAG should show how a
+commit is integrated as the DAG stores all information about the
+repository, and the events within. It includes information about where
+branches are being made, where merges are occurring, who is making
+changes, when the changes are being made, what files are being modified,
+and how much is being changed. Most repositories are simple, with only a
+few small branches and a clear well-defined master branch; however, in
+large, active, repositories, the master branch can be confounded by
+\foxtrot{} merges, making it difficult to identify. This consequently
+would make it difficult to determine how a commit is merged.
