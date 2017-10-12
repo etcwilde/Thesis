@@ -161,3 +161,36 @@ of simplifying the content. Most of the groups of commits will only
 contain 7 elements, which is nearly trivial to visualize.
 
 \section{Git}\label{sec:git}
+
+\define{Version control software}{VCS} supports software development,
+assisting with efficient storage of code, archival of the modifications,
+and navigation of code. The goals of version control software is to
+provide means of efficient source code storage, logging changes made to
+the code, and retrieving historical versions. Source Code Control System
+(SCCS) and its successor, Revision Control System (RCS), were designed
+for local development, providing no means of collaboration. As software
+projects grew, this model quickly became outdated, being replaced by a
+client-server model. \define{Concurrent Versions System}{CVS} and Apache
+\define{Subversion}{SVN} are examples of two client-server VCSs, which
+adds support for collaborative development. As projects grew, the
+client-server was no longer sufficient to meet the requirements of
+development teams, which gave rise to the \define{distributed version
+  control system}{DVCS}. Distributed version control systems are more
+flexible than either the local systems or client-server systems as they
+give the user more control of their local clone and have further support
+for distributed workflows. The distributed version control is necessary
+for large open source projects, like Linux, it does pose additional
+challenges related to the complexities that arise as a result of being
+distributed.
+
+Git is a DVCS, implemented for handling development on the Linux kernel,
+written to replace BitKeeper due to issues with highly restrictive
+licensing in April of 2005. The primary goals for git were to be able to
+support development of the kernel, be implemented quickly so as not to
+hinder the development of the kernel, and to maintain similar levels of
+patch granularity as BitKeeper\footnote{initial announcement of git on
+  the mailing list
+  \url{https://marc.info/?l=linux-kernel&m=111280216717070}}. The
+initial version of git was around 1300 lines of code and was written and
+self-hosting in less than 2 weeks\footnote{From the git mailing list
+  \url{https://marc.info/?l=git&m=117254154130732}}.
