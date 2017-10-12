@@ -322,3 +322,63 @@ the depth is not incremented. $d_c$ is less than $d$, so $d$ is changed
 to 1, $m$ to 11, and $next$ to 11, returning $(1, 11, 11)$ to the call
 for 5. $d_c$ is less than $d$, so $d$ is changed to 1, $m$ to 11, and
 $next$ to 11. There are no other children, so the function halts.
+
+\section{Algorithm Evaluation}
+\label{sec:algorithm_evaluation}
+
+We must assure that the trees we are creating with the algorithm are an
+accurate representation of the events occurring in the repository.
+Evaluation poses some issues, as there is no easy way to gather a ground
+truth directly from the DAG\@. Further inspection of the integrating
+merges show that the merge log made by Linus Torvalds contains useful
+information about the contents of that merge, including the number of
+commits, and a listing of a subset of the commit log titles (example of
+a merge message from the kernel shown in Figure~\ref{fig:sampleMerge}).
+
+\begin{figure}[htpb]
+  \centering
+\begin{textbox}
+  \begin{verbatim}
+Merge: 8cbd84f fd8aa2c
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Aug 10 15:38:19 2010 -0700
+
+Merge branch 'for-linus' of git://neil.brown.name/md
+
+* 'for-linus' of git://neil.brown.name/md: (24 commits)
+md: clean up do_md_stop
+[... edited for the sake of space]
+md: split out md_rdev_init
+md: be more careful setting MD_CHANGE_CLEAN
+md/raid5: ensure we create a unique name for kmem_cache...
+...
+  \end{verbatim}
+\end{textbox}
+  \caption{Example of how merges record a subset of commits being merged. The
+                commit only shows the first 20 one-line summaries messages for the 24
+                non-merge commits it merged. The ending ``\ldots'' is part of the log
+                and represents that other commits were merged.}
+  \label{fig:sampleMerge}
+\end{figure}
+
+Using this information, we are able to determine how many commits were
+integrated at that merge, and a list of the first 20 non-merge commits
+that appear in the merge. As this log information is computer-generated,
+we can extract this information with relative ease, and compare the log
+information with the contents of the corresponding merge-tree. If the
+merge-tree contains the correct number of commits, and the commits
+listed in log message are present in the tree, then the commit and tree
+were correctly identified.
+
+Since Linus Torvalds primarily merges commits into the master branch, we
+make the initial assumption that every merge by Linus is the root of a
+merge-tree. In a later pass, we detect merges made by Linus that are to
+other branches, and remove them from the set of root merges. We extract
+the merges made by Linus Torvalds using the command
+\verb|git log --merges --author='Torvalds'| and compared the number of
+commits stated in the log message with the number of commits in the
+merge-tree. Using the example in Figure~\ref{fig:sampleMerge}, we would
+expect to find that the merge-tree rooted at \emph{8cbd84f} contains 24
+commits, and the one-line commit titles are found on commits within the
+merge-tree. Those that were reported to be incorrect by this method were
+further inspected manually to ensure that they were true errors.
