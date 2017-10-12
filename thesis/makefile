@@ -38,6 +38,11 @@ clean:
 	rm -f thesis.synctex thesis.synctex.gz
 	rm -f thesis.brf
 	rm -f thesis.lot thesis.lof thesis.toc
+	rm -f $(DIR_FIGURES)background/linux_commits_per_year.pdf
+	rm -f $(DIR_FIGURES)background/linux_commits_per_release.pdf
+	rm -f $(DIR_FIGURES)background/linux_authors_per_release.pdf
+	rm -f $(DIR_FIGURES)background/linux_merge_distribution_per_release.pdf
+
 
 clean-full: clean
 	rm -r $(DIR_OUTPUT)
