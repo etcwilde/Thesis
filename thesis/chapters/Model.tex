@@ -326,14 +326,16 @@ $next$ to 11. There are no other children, so the function halts.
 \section{Algorithm Evaluation}
 \label{sec:algorithm_evaluation}
 
-We must assure that the trees we are creating with the algorithm are an
+We must assure that the trees we created using the algorithm are an
 accurate representation of the events occurring in the repository.
-Evaluation poses some issues, as there is no easy way to gather a ground
-truth directly from the DAG\@. Further inspection of the integrating
-merges show that the merge log made by Linus Torvalds contains useful
-information about the contents of that merge, including the number of
-commits, and a listing of a subset of the commit log titles (example of
-a merge message from the kernel shown in Figure~\ref{fig:sampleMerge}).
+Evaluation poses some issues, as there is no easy way to accurately
+gather this information directly from the DAG\@. Further inspection of
+the merges provides some insight; Linus Torvalds adds useful information
+about the content of the merges. For each branch being merged, Linus
+includes either the first 20 commit titles and the total number of
+commits being merged (see Figure~\ref{fig:sampleMerge} for an example),
+or the list of titles if 20 or fewer commits are being merged from the
+branch.
 
 \begin{figure}[htpb]
   \centering
@@ -361,24 +363,119 @@ md/raid5: ensure we create a unique name for kmem_cache...
   \label{fig:sampleMerge}
 \end{figure}
 
-Using this information, we are able to determine how many commits were
-integrated at that merge, and a list of the first 20 non-merge commits
-that appear in the merge. As this log information is computer-generated,
-we can extract this information with relative ease, and compare the log
-information with the contents of the corresponding merge-tree. If the
-merge-tree contains the correct number of commits, and the commits
-listed in log message are present in the tree, then the commit and tree
-were correctly identified.
+Using this information, we are able to verify that the results from our
+database match the information in the merge logs, and further
+investigate the merges that don't. If the merge-tree in
+our database has the correct number of commits being merged, and the
+titles listed in the log appear in the merge-tree, then we have
+correctly identified and recorded the commits and merge-tree.
+We use a scripted approach to extract information from both the git logs
+and our database. From the logs, we extract the commit hash, the date
+the merge was created, and the number of commits merged.
 
-Since Linus Torvalds primarily merges commits into the master branch, we
-make the initial assumption that every merge by Linus is the root of a
-merge-tree. In a later pass, we detect merges made by Linus that are to
-other branches, and remove them from the set of root merges. We extract
-the merges made by Linus Torvalds using the command
-\verb|git log --merges --author='Torvalds'| and compared the number of
-commits stated in the log message with the number of commits in the
-merge-tree. Using the example in Figure~\ref{fig:sampleMerge}, we would
-expect to find that the merge-tree rooted at \emph{8cbd84f} contains 24
-commits, and the one-line commit titles are found on commits within the
-merge-tree. Those that were reported to be incorrect by this method were
-further inspected manually to ensure that they were true errors.
+We gather the information from the logs using two commands;\\
+\verb|git log --merges --author='Torvalds' v3.16| to collect the merges
+made by Linus, and \verb|git log --format="%H" --first-parent --merges  v3.16| to
+collect merges along the master branch.
+
+Using this technique, we collected 15096 merges by Linus from our
+database, and 15306 merges from the logs. There was an overlap of 14836
+merges between the two, with 470 merges from the logs that were not in
+the database, and 260 merges that were in the database that were not in
+the logs, or a total of 15566 merges.
+
+The main issue behind the disparity between the number commits collected
+from the logs and the commits from the database are the technique that
+they were collected. From the logs, we collect all information for
+merges made by Linus since the merge tag \emph{v3.16}, regardless of
+whether they are in the master branch or not. We annotate the commits
+using the list of commits that are along the first-parent starting at
+the merge tag, which we know is on the master branch. Merges that are
+not on the master branch are not removed from the dataset. The merges
+collected for the database were ones we were able to identify along the
+master branch. Focusing only on the merges in the master branch, the
+difference between the two sets decreases dramatically. There were 14670
+merges along the master branch that were shared by both the logs and by
+our database, 2 merges, \emph{186051d70444742bf1c2bc0257dd4696a3df66e3}
+and \emph{5170a3b24a9141e2349a3420448743b7c68f2223}, from the logs that
+were not in the database, and 426 merges in the database that were not
+in the logs. Examining the two merges from the logs, we find that the
+master branch disappears into a group of commits, which are later
+merged. This is confusing, as Linus is the only one with direct merge
+access into the master branch of the repository. The likely reason for
+this is that these commits were merged in a fast-forward merge, which
+does not insert a merge, and instead splices the commits directly into
+the branch.
+
+Conversely, many of the merges and commits that were in our database but
+not found in the logs were due to the fast-forward merges. The commits
+were detected as being part of the master branch when inserting the
+commits into the database, but were not collected by our git log query
+since they were not authored by Linus Torvalds.
+
+Beyond investigating why merges show up in either the database or logs,
+we need the merges to show up in both datasets, and that they have
+associated commit logs in both our database and in the merge log. There
+are 14198 merges with these properties.
+
+The results of the evaluation are summarized as follows:
+
+\begin{itemize}
+  \item
+
+    Five merges did not have matching commit counts between the database
+    and the logs. Upon further investigation, we found that four merges
+    had incorrectly formatted logs. The fifth merge,
+    \emph{42a579a0f960081cd16fc945036e4780c3ad3202}, is a \foxtrot{}
+    merge. One commit is on the first-parent of the merge, and is
+    therefore not detected when building the merge-tree, but is included
+    in the merge log.
+
+  \item
+
+    The heuristic worked correctly until September 4, 2007, the earliest
+    date that could be verified. Before this date, merge logs did not
+    include a summary of the commits being merged, making it impossible
+    to verify. Manual inspection indicates that the heuristic worked
+    correctly for these commits, until December 12, 2006 where a
+    \foxtrot{} merge occurs.
+
+  \item
+
+    There is 1 merge after September 4, 2007 that does not have recorded
+    commit logs. This is due to incorrect formatting. If it were
+    correctly formatted, it would report having 15 commits integrated,
+    which is consistent with the results in the database.
+
+  \item
+
+    There were 1537 merges made by Linus prior to December 12, 2006. 507
+    of these merges are not on the master branch, indicating that a
+    foxtrot occurred. Upon further investigation, we find that Dave
+    Jones merges 29 commits from ranging from October 15, 2006 to
+    December 12, 2006 into the master branch. Due to the \foxtrot{},
+    this merges 4708 repository events, including 199 merges by Linus
+    Torvalds.
+
+  \item
+
+    Another foxtrot merge by Jeff Garzik on June 26, 2005 merges a
+    total of 2349 repository events, 105 of which are merges by Linus
+    Torvalds. The intent was to merge 10 commits into the master branch.
+
+  \item
+
+    77 Merges were made by Linus into non-master branches after
+    September 4, 2007. These merges were made into
+    \emph{3f17ea6dea8ba5668873afa54628a91aaa3fb1c0}, which is
+    extraordinarily large containing 7217 repository events, 6809 of
+    which are commits.
+
+\end{itemize}
+
+There were 12837 merges after September 4, 2007. With the exception of
+the five merges, four with errors, and one as part of a \foxtrot{}, all
+merges were correctly identified. The 835 merges between December 12,
+2006, and September 4, 2007, appear to be correct, but cannot easily be
+verified. Of the 1542 commits prior to December 12, 2006, roughly 512
+merges appear to be confounded by \foxtrot{s}.
