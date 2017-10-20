@@ -63,9 +63,74 @@ merge-tree groups are ordered by the mean of the relevancy scores.
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=0.8\linewidth]{Figures/Linvis/search_results.png}
+  \includegraphics[width=0.9\linewidth]{Figures/Linvis/search_results.png}
   \caption{A single merge-tree in the search results of \tool{}, showing
     the link to the root at the top, and the relevant commits in the
     table below.}
   \label{fig:linvis_search_results}
+\end{figure}
+
+\section{Summarization}\label{sec:summarization}
+
+\tool{} uses seven tabs to present the information and visualizations
+for a selected repository event. The informative tabs are; messages,
+files, modules, and authors. The visualization tabs are; list tree, pack
+tree, and \rt{} tree.
+
+The message tab shows the full commit log message. This does not include
+the patch, but given a commit hash, the patch can be found directly from
+the repository.
+
+The files tab shows an aggregated table of all files that were modified
+in a merge. It includes metrics like the number of lines added, lines
+removed, total lines modified, and the delta, summed across all commits
+in the \mt{} that modify the selected file. A details drop-down button
+allows a user to see exactly which commits make the changes, as shown in
+Figure~\ref{fig:linvis_files_results}.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/Linvis/linvis_files.png}
+  \caption{Table showing the modified files in a merge, with the second
+    entry expanded to show the commit that makes the changes.}
+  \label{fig:linvis_files_results}
+\end{figure}
+
+The modules tab shows the modules modified in the \mt{}. Like the files
+tab, the modules tab uses a table to show the name of the module, the
+number of commits that are in the \mt{} that work with the module, and a
+details button to provide the links to those commits, shown in
+Figure~\ref{fig:linvis_modules_results}. Modules are not an inherent
+part of git, but are a property of most commit log previews in the Linux
+repository. We noticed that the text up to the first colon in the commit
+log preview tended to indicate the subsystem of the kernel that was
+being modified. In Figure~\ref{fig:sampleMerge}, the first commit is
+from the ``md'' subsystem, which virtualizes multiple physical devices
+into a single virtual device.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/Linvis/linvis_modules.png}
+  \caption{Table showing the modules involved in a merge, listing the
+    commits that modify this module.}
+  \label{fig:linvis_modules_results}
+\end{figure}
+
+The authorship tab is similar to the files tab, but shows the authorship
+information. It shows the sum of the lines added, removed, modified, and
+the delta within the \mt{}. It also shows the number of files that were
+modified by the author. The details are organized slightly differently
+than in the files tab. Instead of showing the commits that make the
+modifications, we show the individual files that are modified, as well
+as the commit hash. As multiple files can be modified in the same
+commit, commit hashes are not unique in this table. The authors tab is
+shown in Figure~\ref{fig:linvis_authors_results}.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/Linvis/linvis_authors.png}
+  \caption{Table showing the authors who made changes in a merge. The
+    entry for Randy Dunlap is expanded, showing the files that Randy
+    modified in this merge.}
+  \label{fig:linvis_authors_results}
 \end{figure}
