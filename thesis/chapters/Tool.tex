@@ -141,3 +141,24 @@ While the summarizations are potentially useful, the visualizations are
 what make \tool{} different from the other tools that are visualizing
 the DAG\@. \tool{} provides access to three visualizations, each with a
 specific intention.
+
+\subsection{List Tree}\label{sub:list_tree}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/Linvis/linvis_list_tree.png}
+  \caption{The List Tree Visualization}
+  \label{fig:linvis_list_tree}
+\end{figure}
+
+The list tree, depicted in Figure~\ref{fig:linvis_list_tree}, is
+constructed from nested lists. The indentation level indicates the
+hierarchy of the tree. This visualization is text-based, making
+searching simple through the browser text search functionality. The top
+item in the list is the root of the tree; item node will be indented
+further than this item. Due to the complexity of some of the trees, this
+tree visualization is rooted at the node that is currently selected.
+\tool{} also provides breadcrumbs showing the path that the current
+repository event took to being merged into the root of the merge-tree to
+ensure that a user can navigate both toward the root and toward the
+leaves using this visualization.
