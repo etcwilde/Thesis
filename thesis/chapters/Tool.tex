@@ -40,3 +40,32 @@ pertinent to our primary research questions. The tool uses full-text
 search to gather the repository events that the user is interested in,
 two summarization views, and three visualizations of the merge-tree for
 the repository events.
+
+\section{Search}\label{sec:search}
+
+\evan{Should I put this section in the implementation details?}
+
+\tool{} provides a search engine for navigating within the kernel
+repository, filtering the repository events that are not relevant. The
+search engine takes a plain-text query from the user and returns the
+results ordered by the relevancy to the query. Relevancy is computed by
+weighted similarity, taking into account the contents of the commit log,
+the author name, the filenames, the commit hash, the date the commit was
+authored, and the date the commit was committed.
+
+Before presenting the results, the repository events are grouped by
+merge-tree root. Each group of events has the link to the root at the
+top, followed by a table of the relevant commits and merges from that
+tree, shown in Figure~\ref{fig:linvis_search_results}. The table of
+results includes the relevancy rank assigned by the search engine,
+commit preview, author, commit date, and the authored date. The
+merge-tree groups are ordered by the mean of the relevancy scores.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/Linvis/search_results.png}
+  \caption{A single merge-tree in the search results of \tool{}, showing
+    the link to the root at the top, and the relevant commits in the
+    table below.}
+  \label{fig:linvis_search_results}
+\end{figure}
