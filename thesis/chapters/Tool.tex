@@ -162,3 +162,62 @@ tree visualization is rooted at the node that is currently selected.
 repository event took to being merged into the root of the merge-tree to
 ensure that a user can navigate both toward the root and toward the
 leaves using this visualization.
+
+\subsection{\rt{} Tree}
+\label{sub:rt_tree}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/Linvis/linvis_reingold_tree.png}
+  \caption{The \rt{} tree visualization with the root currently
+    selected. The root is at the top, the leaves are depicted as the
+    white circles with no children.}
+  \label{fig:linvis_reingold_tree}
+\end{figure}
+
+The \rt{} tree~\cite{Reingold1981} visualization, depicted in
+Figure~\ref{fig:linvis_reingold_tree}, is the classic tree
+visualization. The root is at the top, leaves are at the bottom, and the
+edges between the nodes showing the parent-child relationship.
+
+The \rt{} tree was designed with the goal of producing trees that looked
+tidy. Proposed by Wetherell and Shannon\cite{Wetherell1979}, there were
+three aesthetic requirements behind the design of tidy trees;
+
+\begin{itemize}
+  \item
+
+    Nodes at the same depth in the tree must be aligned, and each level
+    should be parallel.
+
+  \item
+
+    The left and right children must be positioned to the left and right
+    of their parent.
+
+  \item
+
+    The parent should be centered above the two children.
+
+\end{itemize}
+
+These requirements are necessary, but not sufficient for producing
+visually appealing trees. Reingold and Tilford propose an additional
+aesthetic requirement; subtrees should be drawn identically regardless
+of position in the tree, and that the reflection of the tree should
+produce a mirror-image of the original tree. The entire goal is to
+produce trees that are aesthetically pleasing and easily understandable.
+
+In our visual metaphor, the white nodes indicate a commit, while the
+colored nodes indicate merges. The merges are colored in shades of blue
+to indicate the number of children of that node. Darker shades of blue
+indicate more nodes, while lighter shades indicate fewer nodes. The
+repository event that is currently being inspected will be filled with
+pumpkin orange, but the outline will remain the original color.
+Initially, the node representing the current repository event will be
+centered in the window, and the title and author of the node are
+presented above the visualization. Clicking on a node will center that
+node and update title and author. The title is hyper-linked to the page
+for that commit, clicking on the title will navigate to the node that
+was selected. Clicking and dragging will move the tree in the view,
+scrolling will zoom the tree.
