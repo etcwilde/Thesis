@@ -134,3 +134,140 @@ shown in Figure~\ref{fig:linvis_authors_results}.
     modified in this merge.}
   \label{fig:linvis_authors_results}
 \end{figure}
+
+\section{Visualization}\label{sec:visualization}
+
+While the summarizations are potentially useful, the visualizations are
+what make \tool{} different from the other tools that are visualizing
+the DAG\@. \tool{} provides access to three visualizations, each with a
+specific intention.
+
+\subsection{List Tree}\label{sub:list_tree}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/Linvis/linvis_list_tree.png}
+  \caption{The List Tree Visualization}
+  \label{fig:linvis_list_tree}
+\end{figure}
+
+The list tree, depicted in Figure~\ref{fig:linvis_list_tree}, is
+constructed from nested lists. The indentation level indicates the
+hierarchy of the tree. This visualization is text-based, making
+searching simple through the browser text search functionality. The top
+item in the list is the root of the tree; item node will be indented
+further than this item. Due to the complexity of some of the trees, this
+tree visualization is rooted at the node that is currently selected.
+\tool{} also provides breadcrumbs showing the path that the current
+repository event took to being merged into the root of the merge-tree to
+ensure that a user can navigate both toward the root and toward the
+leaves using this visualization.
+
+\subsection{\rt{} Tree}
+\label{sub:rt_tree}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/Linvis/linvis_reingold_tree.png}
+  \caption{The \rt{} tree visualization with the root currently
+    selected. The root is at the top, the leaves are depicted as the
+    white circles with no children.}
+  \label{fig:linvis_reingold_tree}
+\end{figure}
+
+The \rt{} tree~\cite{Reingold1981} visualization, depicted in
+Figure~\ref{fig:linvis_reingold_tree}, is the classic tree
+visualization. The root is at the top, leaves are at the bottom, and the
+edges between the nodes showing the parent-child relationship.
+
+The \rt{} tree was designed with the goal of producing trees that looked
+tidy. Proposed by Wetherell and Shannon\cite{Wetherell1979}, there were
+three aesthetic requirements behind the design of tidy trees;
+
+\begin{itemize}
+  \item
+
+    Nodes at the same depth in the tree must be aligned, and each level
+    should be parallel.
+
+  \item
+
+    The left and right children must be positioned to the left and right
+    of their parent.
+
+  \item
+
+    The parent should be centered above the two children.
+
+\end{itemize}
+
+These requirements are necessary, but not sufficient for producing
+visually appealing trees. Reingold and Tilford propose an additional
+aesthetic requirement; subtrees should be drawn identically regardless
+of position in the tree, and that the reflection of the tree should
+produce a mirror-image of the original tree. The entire goal is to
+produce trees that are aesthetically pleasing and easily understandable.
+
+In our visual metaphor, the white nodes indicate a commit, while the
+colored nodes indicate merges. The merges are colored in shades of blue
+to indicate the number of children of that node. Darker shades of blue
+indicate more nodes, while lighter shades indicate fewer nodes. The
+repository event that is currently being inspected will be filled with
+pumpkin orange, but the outline will remain the original color.
+Initially, the node representing the current repository event will be
+centered in the window, and the title and author of the node are
+presented above the visualization. Clicking on a node will center that
+node and update title and author. The title is hyper-linked to the page
+for that commit, clicking on the title will navigate to the node that
+was selected. Clicking and dragging will move the tree in the view,
+scrolling will zoom the tree.
+
+\subsection{Pack Tree}
+\label{sub:pack_tree}
+
+The Pack Tree\cite{Wang2006} is used for quickly displaying an overview
+of large hierarchical data. The original use-case was the file system,
+where there are usually many files, but few levels of directories,
+creating a very wide but shallow tree. This metaphor is directly
+comparable with the structure of a git repository. The commits are
+files, they contain the information, rather than being structural. The
+merges map to the directories, structurally grouping the commits in a
+logical fashion.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.4\linewidth]{Figures/Linvis/linvis_bubble.pdf}
+  \caption{The pack tree visualization; the root depicted as the
+    outer-most circle, containing all other nodes, the leaves depicted
+    as white circles containing no other nodes. The currently selected
+    node shown in pumpkin orange.}
+  \label{fig:linvis_bubble_tree}
+\end{figure}
+
+Our goal in providing this visualization is to quickly show the topology
+of the merge. With the \rt{} tree, it can be difficult to understand
+just how big the large \mt{} are, as they don't fit on the screen. The
+Pack Tree uses a set theory-like model for describing the hierarchical
+structure. Mapping the pack tree metaphor with the tree, leaves are the
+smallest nodes, containing no other nodes; inner nodes contain other
+nodes within them; the root is the outermost circle, containing all
+other nodes within it.
+
+We investigated the bubble tree\cite{Boardman2000}, as it uses a similar
+metaphor, but due to limitations with the bubble tree, the pack tree
+seemed more suitable with our goals. The initial bubble tree
+visualization starts with a single circle, the root. Hovering over that
+circle shows the contents of the node. This works recursively, hovering
+the cursor over an inner node will reveal the contents of that node.
+While this is designed to prevent overwhelming users, the user cannot
+quickly determine what the tree looks like without hovering their cursor
+over each inner node. Due to this limitation, we decided to use the pack
+tree.
+
+An example of the pack tree visualization used in \tool{} is depicted in
+Figure~\ref{fig:linvis_bubble_tree}. The outer-most circle that contains
+the other circles is the root node. Nodes that are not leaves are
+colored in a shade of blue. Darker blue indicates that the node is
+deeper in the tree; the root is shaded with the lightest blue. The
+commits are colored white. The node that represents the repository event
+that is currently being inspected will be shown in pumpkin orange.
