@@ -1,2 +1,22 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Implementation Details}
+
+The implementation is broken into two parts, the tool and the database.
+The database uses postgresql, an advanced opensource database management
+system. The tool backend uses Python and the Flask framework.
+Both the database and the \tool{} backend are containerized using
+Docker. This facilitates easy migration between the development
+environment and the server where the system is running. Both components
+are running Alpine 3.5, a simple, light, and secure distribution of
+Linux designed to run as the base of Docker containers. Containers are
+similar to virtual machines, but easier to work with. Instead of using
+virtualization of the hardware, Docker containers run on top of the host
+kernel, making use of \textit{cgroups} to allocate resources to the
+container. Since the container is not a full virtual machine, it only
+needs to contain the information required to run the service. There are
+no device drivers, or even a kernel. A container image can be exported
+and imported from the development environment directly into the
+production environment.
+
+This chapter contains details on the design of the database, the
+extraction of the data, and the implementation of the tool.
