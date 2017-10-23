@@ -124,3 +124,33 @@ vectors; stop words are terms that are common in a given language and
 won't help when discriminating items. These terms include words like
 ``and'', ``the'', and ``a''. We use the default English stop-words built
 into Postgres version 9.6.2.
+
+\section{Web Interface}\label{sec:web_interface}
+
+The tool itself is implemented as a web-interface to enable people to
+use it without needing to install dependencies or download external
+files. As the compressed database image sits at 976MB, it would not be
+useful for many to download it.
+
+The application is written with asynchronous processing in mind. Most of
+the actual do not contain information that is specific to a given commit
+or query. Instead, the pages are a format, which is filled in later by
+Javascript. Using the asynchronous architecture has advantages and
+disadvantages. Since the main part of the page is the same for every
+commit, it can be cached. When a user clicks on a page, it takes nearly
+no time to get most of the page showing, since it should be cached at
+all hops on the way back to the server. The only waiting period is for
+the commit-specific information to load. The issue is that many requests
+must be passed between the client and the server. When the client
+requests the page, instead of getting a single response, the client will
+wait for the response, then send a request for the commit-specific
+information. There are different requests involved for collecting the
+tree, files, authorship, modules, and message information.
+
+The backend itself is written in Python 3.5, and uses the Flask
+framework to handle routing requests and manage cookies. While flask
+contains a simple built-in HTTP server, I opted to use the uWSGI server,
+which is more secure and runs faster, supporting multiple worker
+threads. The frontend is written in Javascript, HTML, and CSS. Bootstrap
+is used to produce the clean interface, and D3 generates the tree
+visualizations.
