@@ -20,3 +20,107 @@ production environment.
 
 This chapter contains details on the design of the database, the
 extraction of the data, and the implementation of the tool.
+
+\section{Database}\label{sec:database}
+
+The database is made of seven tables;
+
+\begin{itemize}
+  \item
+
+    Baseline contains the commits that have been integrated into the
+    master branch of the repository.
+
+  \item
+
+    Commits contains the metadata for each commit, including the author,
+    committer, the date the commit was authored, and the date the commit
+    was committed, as well as the associated patch.
+
+  \item
+
+    Filesmod contains the information regarding which files were changed,
+    and how many lines were added and removed from each.
+
+  \item
+
+    Logs contains the subject and full log message for every commit.
+
+  \item
+
+    Releases contains information regarding which commits represent the
+    split between versions of the kernel. It contains the version name,
+    the commit, the previous version, the commit for the previous
+    version, the previous candidate and commit, and whether the version
+    is a candidate.
+
+  \item
+
+    Search contains information necessary for the search engine. While
+    this table is not necessary for the operation of the tool, it is
+    used as a cache and index, which improves the performance of the
+    search engine greatly. It contains the search term vector and the
+    associated commit hash.
+
+  \item
+
+    PathToMerge contains the actual merge-tree structures, with
+    references pointing from a given commit to the next merge on the way
+    to integration.
+
+\end{itemize}
+
+\evantodo{In the appendix, actually spell out the schema of each table
+  in the database}
+
+\subsection{Full Text Search}\label{sub:full_text_search}
+
+
+We use the full text search built into PostgreSQL to enable easy
+searching for commits in the database. While it is possible to compute
+the text search vectors for every query, it is faster to pre-compute the
+vectors for each commit. The search vectors are pre-computed and stored
+in the search table, creating a map between search terms and commit
+hash. The search vectors include terms from the commit hash, log
+subject, full log message, commit author name, commit and authorship
+date, and list of files that were modified in the commit.
+
+The search attributes are given different weight when calculating the
+search rank. The attribute weights are listed in
+Table~\ref{tab:search_attribute_rank}. We do not normalize against
+document length when computing the rank. The ranking system is designed
+to associate a higher weight with attributes of more importance. One
+drawback of using full text search is that terms must be in verbatim of
+the term used in the attribute. This has two negative effects, the first
+is that typos will drop commits that are otherwise relevant, and second,
+the entire term must be entered. Trigraphs are a possibility for working
+around this. Trigraphs break the words in the attribute into groups of
+three. Using this on the commit hash, for example, would allow a user to
+perform a substring search, typing only a portion of the commit hash.
+Unfortunately, the Trigraphs are slower to compute, to search, and
+consume more memory, and therefore were infeasible for this project.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Search Attribute Ranking}
+  \label{tab:search_attribute_rank}
+  \begin{tabular}{cc}
+    \toprule
+    Attribute       & Weight\\
+    \midrule
+    Commit Hash     & A \\
+    Log Subject     & A \\
+    Log Full Text   & C \\
+    Author Name     & A \\
+    Commit Date     & B \\
+    Authorship Date & B \\
+    File names      & B \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Postgres applies stop-word elimination when constructing the search
+vectors; stop words are terms that are common in a given language and
+won't help when discriminating items. These terms include words like
+``and'', ``the'', and ``a''. We use the default English stop-words built
+into Postgres version 9.6.2.
