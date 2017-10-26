@@ -32,3 +32,61 @@ the study. More details are discussing in
 Section~\ref{sec:summarization_study}. A third part asks for the
 opinions of the participants regarding their preferences, and why they
 felt that way.
+
+\section{Commit Selection}\label{sec:commit_selection}
+
+Two commits are used in both the conceptual study and summarization
+study, with the goal of determining how well the DAG and \mt{}
+visualizations scale between merges integrating varying numbers of
+commits. The order that the two commits are presented to each
+participant is randomized. I analyzed 15096 merge-trees from the
+database that were candidates for the study, from April 16th 2005 to
+October 14th 2014, corresponding to Linux releases 2.6.12-rc3 to
+3.17-rc1. A merge-tree could only be selected if it was not a foxtrot,
+and had correctly been identified. 25\% of the trees contain at most a
+single repository event, not including the root, while 50\% of the trees
+contain at most seven nodes. 75\% of the trees contain at least 51
+nodes, and the largest tree contains 7217 nodes. 8031 trees contained at
+least seven nodes, of these only 593 contained at least a single
+internal merge node. Trivially, trees with a single node cannot have any
+internal merge nodes. Of the 624 trees with seven non-root node, only
+135 contained at least one inner node. Using this information, I chose a
+random tree from the 2008 trees in the first quartile, which merges a
+single commit into the master branch. These trees are trivial, but
+appear frequently in the repository. The second tree was chosen randomly
+from trees in the second quartile. These trees contain seven nodes, and
+to increase the complexity of the tree, I required that the tree contain
+at least one internal merge node.
+
+Once the trees were selected, I had to select a commit from the tree.
+Selecting a commit from the small tree was trivial, there was only a
+single node to choose. From the medium-sized tree, I used a script to
+select a commit randomly. The commits selected from the small tree and
+medium tree were \emph{a3c1239eb59c0a907f8be5587d42e950f44543f8} and
+\emph{cdbdd1676a5379f1d5cbd4d476f5e349f445befe} respectively. Commit 1,
+the commit from the small tree is visualized in
+Figure~\ref{fig:commit_1_visualization}, showing the DAG visualization
+by Gitk and \rt{} tree visualization in Linvis. The same is
+shown for commit 2 in Figure~\ref{fig:commit_2_visualization}.
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{cc}
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit1_gitk.png} &
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit1_linvis.pdf}
+  \end{tabular}
+  \caption{The visualizations of commit 1 by Gitk and Linvis
+    respectively.}
+  \label{fig:commit_1_visualization}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{cc}
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit2_gitk.png} &
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit2_linvis.pdf}
+  \end{tabular}
+  \caption{The visualizations of commit 2 by Gitk and Linvis
+    respectively.}
+  \label{fig:commit_2_visualization}
+\end{figure}
