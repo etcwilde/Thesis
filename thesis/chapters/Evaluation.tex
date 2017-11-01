@@ -186,3 +186,50 @@ shown for commit 2 in Figure~\ref{fig:commit_2_visualization}.
     respectively.}
   \label{fig:commit_2_visualization}
 \end{figure}
+
+\subsection{Part 1: Conceptual Study}\label{ssec:conceptual_study}
+
+The conceptual portion of the study verifies our initial assumption,
+that the DAG visualization is unable to provide people with a conceptual
+understanding of the events in a repository. Participants in the study
+are asked to perform tasks that are related to understanding how a
+commit is integrated. The tasks for this part of the study are outlined
+in Table~\ref{tab:conceptual_tasks}.
+
+\begin{table*}[htpb]
+  \centering
+  \caption{Conceptual Tasks}
+  \label{tab:conceptual_tasks}
+  \begin{tabulary}{0.9\textwidth}{LL}
+    \toprule
+    Task & Description\\
+    \midrule
+    T1 & Draw a diagram showing how this commit was merged into the master branch, along with any other related commits\\
+    T2 & How many individual commits are related to this commit?\\
+    T3 & How many merges are involved with merging this commit into the master branch?\\
+    \bottomrule
+  \end{tabulary}
+\end{table*}
+
+Task 1 asks participants to draw a diagram showing the shortest path for
+a commit to be merged, including any commits that are related to it, or
+are necessary for the integration. Participants were given 10 minutes to
+draw the diagram. The correct answer should look something like the
+merge-tree for that commit. The drawing from Task 1 is then referred to
+in Task 2 and 3. Building on the conceptual understanding built in task
+1, task 2 and 3 ask the participant to determine how many commits are
+related, and how many merges. The order that task 2 and 3 are presented
+to participants is randomized between participants, to remove order
+bias, although it shouldn't matter as both questions are designed to
+build off of task 1 and the conceptual understanding constructed  from
+analyzing the DAG visualization of that commit for 10 minutes. These
+questions enable us to find issues when users are comprehending the DAG
+visualizations.
+
+The diagrams drawn by the participants in the first task help provide
+insight about how the participants are interpreting the DAG. I looked
+for patterns in the drawings to see if common issues arose, providing
+qualitative information about issues in comprehension. The results from
+task 2 and 3 are numerical results, the number of commits that are
+related, and the number of merges. These numbers are directly comparable
+with the correct numbers.
