@@ -23,6 +23,111 @@ a commit into the repository. These were done in two parts of the same
 study. They were performed together as a single study for pragmatic
 reasons, but could have been done as separate studies.
 
+\section{Methodology}\label{sec:methodology}
+
+This section describes the evaluation, how it was performed, the methods
+used to ensure that things were kept consistent between participants,
+and setting of the study. The evaluation was performed as a single
+study, broken into two parts, using the same 12 participants and same 2
+commits. The first part of the evaluation only used Gitk, while the
+second part used Gitk and \tool{}. The order that the participants
+studied each commit was randomized for each participant, but was kept
+consistent through each part of the study. Participants would complete
+part 1 of the study on both commits, the continue with part two, before
+answering a few questions about their opinions and experience in an exit
+survey. A screencapture with audio was taken for the duration of the
+study with each participant. The videos were later analyzed and had the
+information extracted into a more usable form.
+
+Order bias was mitigated throughout the study through the use of
+randomization between participants. In both parts, the order that the
+participants worked with the commits, tasks, and tools was randomized.
+More details about how this is done for each part are discussed in
+Section~\ref{ssec:conceptual_study} and~\ref{ssec:summarization_study}.
+
+Prior to starting the study, participants were given a quick
+introduction to Gitk and Linvis, and could ask questions about either
+interface. These introductions usually lasted no more than 10 minutes.
+The goal was to test the visualizations and summarizations provided by
+the tools, not the interface itself. Following the introduction to the
+tools, I introduce the concept of the merge-tree, giving two examples,
+shown in Figure~\ref{fig:DAG_to_MergeTree}, of how to convert between
+the DAG and merge-tree, answering any questions that may arise.
+
+\begin{figure}[htpb]
+  \begin{center}
+    \begin{tabular}{cc}
+      \begin{tikzpicture}[auto, on grid, semithick,
+        commit/.style={draw,shape=circle,fill=black}]
+        \node[commit] (A) {};
+        \node[commit, below right = of A] (1) {};
+        \node[commit, below = of 1] (2) {};
+        \node[commit, below = of 2] (3) {};
+        \node[commit, below left = of 3] (I) {};
+
+        \node[left = 0.5cm of A] {A};
+        \node[right = 0.5cm of 1] {1};
+        \node[right = 0.5cm of 2] {2};
+        \node[right = 0.5cm of 3] {3};
+        \node[left = 1.0cm of I] {Initial};
+
+        \draw (A) edge[-stealth] (I) edge[-stealth] (1)
+              (1) edge[-stealth] (2)
+              (2) edge[-stealth] (3)
+              (3) edge[-stealth] (I);
+    \end{tikzpicture}
+    &
+    \begin{tikzpicture}[auto, on grid, semithick,
+      root/.style={draw, circle, minimum size=0.8cm},
+      leaf/.style={draw, circle, minimum size=0.8cm}]
+      \node[root] {A}
+      child {node[leaf] {1}}
+      child {node[leaf] {2}}
+      child {node[leaf] {3}};
+    \end{tikzpicture}
+    \\\midrule
+    \begin{tikzpicture}[auto, on grid, semithick,
+        commit/.style={draw,shape=circle,fill=black}]
+
+        \node[commit] (A){};
+        \node[commit, below right = of A] (1) {};
+        \node[commit, below = of 1] (B) {};
+        \node[commit, below = of B] (2) {};
+        \node[commit, below = of 2] (3) {};
+        \node[commit, below right = of B] (4) {};
+        \node[commit, below left = of 3] (I) {};
+
+        \node[left = 0.5cm of A] {A};
+        \node[right = 0.5cm of 1] {1};
+        \node[left = 0.45cm of B] {B};
+        \node[left = 0.45cm of 2] {2};
+        \node[left=0.45cm of 3]{3};
+        \node[right=0.5cm of 4] {4};
+        \node[left=1.0cm of I] {Initial};
+
+        \draw (A) edge[-stealth] (I) edge[-stealth] (1)
+              (1) edge[-stealth] (B)
+              (B) edge[-stealth] (2) edge[-stealth] (4)
+              (2) edge[-stealth] (3)
+              (4) edge[-stealth] (3)
+              (3) edge[-stealth] (I);
+    \end{tikzpicture}
+    &
+    \begin{tikzpicture}[auto, on grid, semithick,
+      every node/.style={draw, circle, minimum size=0.8cm}]
+      \node {A}
+      child {node {1}}
+      child {node {B} child {node {4}}}
+      child {node {2}}
+      child {node {3}};
+    \end{tikzpicture}
+    \end{tabular}
+  \end{center}
+  \caption{Two examples of DAG to \mt{} conversions used in explanation
+  during evaluation}
+\label{fig:DAG_to_MergeTree}
+\end{figure}
+
 Two commits are used in both the conceptual study and summarization
 study, with the goal of determining how well the DAG and \mt{}
 visualizations scale between merges integrating varying numbers of
