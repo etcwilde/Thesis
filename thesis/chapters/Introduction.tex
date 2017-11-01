@@ -150,3 +150,48 @@ on developers and the number of commits each developer is making.
     repository}
   \label{fig:gource_view}
 \end{figure}
+
+There are many non-academic programs that are designed as an interface
+to git. While not all of these programs provide visualizations, those
+that do use a visual metaphor of the DAG to show topological information
+about the repository. Some of the interfaces are shown in
+Figure~\ref{fig:non_academic_work}. While they ultimately show the same
+information, the topology of the repository, the organization of that
+information is different. GitKraken is a popular commercially written
+git interface that aims to be efficient, elegant, and reliable,
+according to the GitKraken website. On visual inspection, it appears to
+be all of these things. GitLab and GitHub are both online repository
+hosts, with visualization and summarization provided as well. While the
+GitLab visualization does not appear to provide any additional
+information, the GitHub visualization does take advantage of it's
+internal knowledge of forks. Through this visualization, GitHub displays
+the branch history of the repository network, including the branches of
+the main repository and forks from that. Giteye and most of the other
+visualizations are relatively conventional, simply cleaning up the
+interface of Gitk, the visualizer that is shipped with git. With the
+exception of Gitk, no GUI visualizers are able to produce a
+visualization for the Linux repository, due to its size. The GitHub
+visualizer displays an error message, stating that there are too may
+forks to display. The GitKraken interface will freeze and eventually
+crash while trying to load the repository, while Giteye and the other
+visualizers will consume all of the system memory before they are able
+to produce a visualization. The Gitk interface is the least polished,
+but is able to produce a visualization of the repository.
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{cc}
+    \includegraphics[height=3.5cm]{Figures/introduction/giteye_graph.jpg}
+    &
+    \includegraphics[height=3.5cm]{Figures/introduction/github_dag.png}
+    \\
+
+    \includegraphics[height=3.5cm]{Figures/introduction/gitkraken_graph.jpg}
+    &
+    \includegraphics[height=3.5cm]{Figures/introduction/gitlab_graph.jpg}
+  \end{tabular}
+
+  \caption{Various non-academic git interfaces. In clockwise order from the
+    top-left; Giteye, Github, Gitlab, and GitKraken.}
+  \label{fig:non_academic_work}
+\end{figure}
