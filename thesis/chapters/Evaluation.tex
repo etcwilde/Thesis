@@ -45,6 +45,19 @@ participants worked with the commits, tasks, and tools was randomized.
 More details about how this is done for each part are discussed in
 Section~\ref{sub:conceptual_study} and~\ref{sub:summarization_study}.
 
+Statistical significance testing is performed to verify that the results
+are meaningful. We use $\alpha = 0.05$ or a $95\%$ confidence level. The
+Wilcoxon test\cite{Wilcoxon45} is applied between commits to determine
+if the size of the \mt effects timing and accuracy. If there is no
+statistically significant difference between the distributions of
+responses to a task in both commits, then the results of both commits
+are aggregated. The McNemar $\chi^2$ test\cite{McNemar1947} with
+continuity correction is used to test if there is a difference in the
+correctness of responses made by users when using \tool{} versus Gitk.
+The Wilcoxon test\cite{Wilcoxon45} and Cliff's effect size\cite{Cliff93}
+are applied to the accuracy and timing metrics to determine the
+significance of the difference between the results in \tool{} and Gitk.
+
 Prior to starting the study, participants were introduced to the \mt{}
 model and the conversion from the DAG to the \mt{}. Two examples of how
 the conversion works were given, the examples shown in
@@ -335,19 +348,6 @@ but a property we noticed in the repository of the Linux kernel. Commit
 summaries are prefaced with the module, followed by a colon. For example
 the log summary \textit{``ALSA: kernel docs: fix sound/core/
   kernel-doc''} is in the \textit{``ALSA''} module.
-
-Statistical significance testing is performed to verify that the results
-are meaningful. We use $\alpha = 0.05$ or a $95\%$ confidence level. The
-Wilcoxon test\cite{Wilcoxon45} is applied between commits to determine
-if the size of the \mt effects timing and accuracy. If there is no
-statistically significant difference between the distributions of
-responses to a task in both commits, then the results of both commits
-are aggregated. The McNemar $\chi^2$ test\cite{McNemar1947} with
-continuity correction is used to test if there is a difference in the
-correctness of responses made by users when using \tool{} versus Gitk.
-The Wilcoxon test\cite{Wilcoxon45} and Cliff's effect size\cite{Cliff93}
-are applied to the accuracy and timing metrics to determine the
-significance of the difference between the results in \tool{} and Gitk.
 
 \subsection{User Opinions and Exit Interview}
 \label{sub:user_opinions_and_exit_interview}
