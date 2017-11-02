@@ -233,3 +233,97 @@ qualitative information about issues in comprehension. The results from
 task 2 and 3 are numerical results, the number of commits that are
 related, and the number of merges. These numbers are directly comparable
 with the correct numbers.
+
+\subsection{Part 2: Summarization Study}\label{sub:summarization_study}
+
+The summarization portion of the study compares the visualization and
+summarization capabilities of \tool{} and Gitk to determine if the
+visualization of the \mt{} is capable of providing a better
+understanding of the events in repository, specifically answering
+RQ\ref{RQ2} and RQ\ref{RQ3}. This portion of the study requires the
+participants to switch between both Use-Case 1 and Use-Case 2
+strategies. The participants are provided an commit, since their goal is
+to summarize information about the entire merge-tree, they must navigate
+to the root node, making use of features for Use-Case 1. Once they are
+at the root, the participant must be able to summarize information about
+the authors, files, and modules. The tasks are outline in
+Table~\ref{tab:summarization_tasks}.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Summarization Tasks}
+  \label{tab:summarization_tasks}
+  \begin{tabular}{lll}
+    \toprule
+    Task Set   & Task & Description\\\midrule
+    Merge      & T4   & What is the series of merges involved with merging this
+    commit?\\
+               & T5   & What other commits are merged?\\
+    Authorship & T6   & How many authors are involved?\\
+               & T7   & Who contributed the most changes?\\
+    Files      & T8   & How many files were modified?\\
+               & T9   & Which file had the most changes?\\
+    Modules    & T10  & Which modules does this \mt involve?\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+With some exceptions, three metrics are recorded from each task;
+correctness, accuracy, and time taken. Correctness is simply whether the
+response was correct. Accuracy is how far from the response was from the
+correct answer. An Accuracy of zero indicates that the answer was
+correct. Time indicates how long the participant took to respond. Time
+is measured from the end of the question to the beginning of the final
+response. Since the time measures until the final modification to the
+answer, it is possible for times to overlap between tasks if the
+participant were to change their response after answering another
+question.
+
+The tasks are split into four task sets, based on the type of
+information that the task is investigating. The \emph{Merge} tasks set
+focuses on detailed information about the topology of the merge itself,
+looking at the specific merges and commits involved in the integration.
+Task T4 asks for the specific merges that merge the commit into the
+master branch. These must be the correct merges, and must be in the
+correct order. I use the edit distance between the response and the
+correct answer as a measure of how correct the response is. Adding new
+merges, removing extraneous merges, replacing merges, and swapping the
+order of merges are of unit cost. An edit distance of 0 indicates a
+correct answer. Task T5 asks for the other commits that are integrated
+with this commit. Again, I use an edit distance-like metric to evaluate
+the response. Order doesn't matter, but the correct commits must be
+indicated in the response. Adding commits, replacing commits, and
+removing commits are of unit cost.
+
+The \emph{authorship} task set involves finding information about the
+authors involved in the merge. Task T6 asks for the number of authors
+involved in the merge. These are authors of commits, not merges, as
+merges in the kernel repository do not include code, and are used for
+creating logical separation in commits. The accuracy is measured as the
+absolute difference between the response and the correct answer. Task T7
+asks participants to identify the person who was responsible for
+contributing the most in the merge. While it is possible that two
+authors could have contributed the same number of changes, in the merges
+for both commits, there is an identifiable author who contributed the
+most. The answer to this task can either be correct or incorrect, so
+accuracy is not recorded for this task.
+
+The \emph{files} task set involves finding information about specific
+files being merged. Task T8 asks the participant to identify how many
+files are modified in a merge. Like task T6, the response to task T8 is
+a single number, so the accuracy is measured as the absolute difference
+between the response and the correct answer. Task T9 asks the
+participants to identify which files had the most lines modified in
+the merge. While this is similar to task T7, the files in the tree
+associated with commit 1 had the same number of changes. For this
+reason, I use the edit distance between the response and the correct
+answer, with addition, removal, and replacement of unit cost.
+
+The \emph{modules} task set only contains a single task, and involves
+determining the modules involved in a merge. Modules, or subsystems,
+refer to the component of the kernel that is being modified by a commit.
+This is not a property that is inherent to git repositories in general,
+but a property we noticed in the repository of the Linux kernel. Commit
+summaries are prefaced with the module, followed by a colon. For example
+the log summary \textit{``ALSA: kernel docs: fix sound/core/
+  kernel-doc''} is in the \textit{``ALSA''} module.
