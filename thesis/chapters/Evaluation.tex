@@ -363,6 +363,11 @@ summaries are prefaced with the module, followed by a colon. For example
 the log summary \textit{``ALSA: kernel docs: fix sound/core/
   kernel-doc''} is in the \textit{``ALSA''} module.
 
+The order that the task sets are performed is randomized between
+participants, and the order that the tasks within a task set are
+performed is randomized as well. This keeps related tasks together,
+while still mitigating some of the order bias.
+
 \subsection{User Opinions and Exit Interview}
 \label{sub:user_opinions_and_exit_interview}
 
