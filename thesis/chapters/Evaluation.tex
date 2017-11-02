@@ -3,7 +3,7 @@
 
 In June 2017, I conducted a study to quantitatively and qualitatively
 evaluate the effectiveness of the visualizations and summaries presented
-in \tool{} to the DAG-bed visualizations found in Gitk and the git
+in \tool{} to the DAG-based visualizations found in Gitk and the git
 command-line. The study was performed in a controlled environment
 running Ubuntu 14.04. Participants were allowed to use Gitk and the git
 command-line tools for these tasks, I will refer to both tools as Gitk,
@@ -19,16 +19,431 @@ The study has two primary goals; first determining if the DAG-based
 visualization is sufficient for conceptual understanding, second
 comparing \tool and Gitk to determine which is more capable of providing
 users with a summarization of various metrics involved with integrating
-a commit into the repository.
+a commit into the repository. These were done in two parts of the same
+study. They were performed together as a single study for pragmatic
+reasons, but could have been done as separate studies.
 
-The first part of the study are conceptual questions. These questions
-are designed to test the conceptual understanding drawn from the DAG
-visualization. The participants will be working with Gitk to answer
-RQ\ref{RQ1}. More details about this part of the study are discussed in
-Section~\ref{sec:conceptual_study}. The second part of the study involve
-summarizing information about the commits that are related to a given
-commit. The participants work with both Gitk and \tool{} in this part of
-the study. More details are discussing in
-Section~\ref{sec:summarization_study}. A third part asks for the
-opinions of the participants regarding their preferences, and why they
-felt that way.
+\section{Methodology}\label{sec:methodology}
+
+This section describes the evaluation, how it was performed, the methods
+used to ensure that things were kept consistent between participants,
+and setting of the study. The evaluation was performed as a single
+study, broken into two parts, using the same 12 participants and same 2
+commits. The first part of the evaluation only used Gitk, while the
+second part used Gitk and \tool{}. The order that the participants
+studied each commit was randomized for each participant, but was kept
+consistent through each part of the study. Participants would complete
+part one of the study on both commits, the continue with part two, before
+answering a few questions about their opinions and experience in an exit
+interview. A screencapture with audio was taken for the duration of the
+study with each participant. The videos were later analyzed and had the
+information extracted into a more usable form.
+
+With some exceptions, three metrics are recorded from each task;
+correctness, accuracy, and time taken. Correctness is simply whether the
+response was correct. Accuracy is how far from the response was from the
+correct answer. An Accuracy of zero indicates that the answer was
+correct. Time indicates how long the participant took to respond. Time
+is measured from the end of the question to the beginning of the final
+response. Since the time measures until the final modification to the
+answer, it is possible for times to overlap between tasks if the
+participant were to change their response after answering another
+question.
+
+Order bias was mitigated throughout the study through the use of
+randomization between participants. In both parts, the order that the
+participants worked with the commits, tasks, and tools was randomized.
+Participant performance, with regard to the recorded performance
+metrics, between different size merges, or merges that are merging
+different number of commits, is measured in both parts of the study. The
+hypothesis being that it is easier to locate commits for and summarize
+smaller merges. In the remainder of the \paper{}, merge size refers to
+the number of repository events being integrated at a given merge. Two
+merge trees are selected from the set of merge trees, and from each of
+those, a single commit is selected. The reasoning and method for
+selecting the trees and commits is detailed in
+Section~\ref{sub:commit_selection}. The order that the commits were
+inspected was randomized between participants, and were kept consistent
+between parts for each participant. Where applicable, the order that the
+tools were used by the participants was randomized between participants.
+Details on the randomization of the tasks are outlined with the
+methodologies for the specific parts of the study.
+
+Statistical significance testing is performed to verify that the results
+are meaningful. We use $\alpha = 0.05$ or a $95\%$ confidence level. The
+Wilcoxon test\cite{Wilcoxon45} is applied between commits to determine
+if the size of the \mt effects timing and accuracy. If there is no
+statistically significant difference between the distributions of
+responses to a task in both commits, then the results of both commits
+are aggregated. The McNemar $\chi^2$ test\cite{McNemar1947} with
+continuity correction is used to test if there is a difference in the
+correctness of responses made by users when using \tool{} versus Gitk.
+The Wilcoxon test\cite{Wilcoxon45} and Cliff's effect size\cite{Cliff93}
+are applied to the accuracy and timing metrics to determine the
+significance of the difference between the results in \tool{} and Gitk.
+
+Prior to starting the study, participants were introduced to the \mt{}
+model and the conversion from the DAG to the \mt{}. Two examples of how
+the conversion works were given, the examples shown in
+Figure~\ref{fig:DAG_to_MergeTree}. Any questions about the model or
+conversion were answered at this time. Then participants were introduced
+to the tools, Gitk and \tool{}, and could ask questions about either
+interface. These introductions usually lasted no more than 10 minutes.
+
+\begin{figure}[htpb]
+  \begin{center}
+    \begin{tabular}{cc}
+      \begin{tikzpicture}[auto, on grid, semithick,
+        commit/.style={draw,shape=circle,fill=black}]
+        \node[commit] (A) {};
+        \node[commit, below right = of A] (1) {};
+        \node[commit, below = of 1] (2) {};
+        \node[commit, below = of 2] (3) {};
+        \node[commit, below left = of 3] (I) {};
+
+        \node[left = 0.5cm of A] {A};
+        \node[right = 0.5cm of 1] {1};
+        \node[right = 0.5cm of 2] {2};
+        \node[right = 0.5cm of 3] {3};
+        \node[left = 1.0cm of I] {Initial};
+
+        \draw (A) edge[-stealth] (I) edge[-stealth] (1)
+              (1) edge[-stealth] (2)
+              (2) edge[-stealth] (3)
+              (3) edge[-stealth] (I);
+    \end{tikzpicture}
+    &
+    \begin{tikzpicture}[auto, on grid, semithick,
+      root/.style={draw, circle, minimum size=0.8cm},
+      leaf/.style={draw, circle, minimum size=0.8cm}]
+      \node[root] {A}
+      child {node[leaf] {1}}
+      child {node[leaf] {2}}
+      child {node[leaf] {3}};
+    \end{tikzpicture}
+    \\\midrule
+    \begin{tikzpicture}[auto, on grid, semithick,
+        commit/.style={draw,shape=circle,fill=black}]
+
+        \node[commit] (A){};
+        \node[commit, below right = of A] (1) {};
+        \node[commit, below = of 1] (B) {};
+        \node[commit, below = of B] (2) {};
+        \node[commit, below = of 2] (3) {};
+        \node[commit, below right = of B] (4) {};
+        \node[commit, below left = of 3] (I) {};
+
+        \node[left = 0.5cm of A] {A};
+        \node[right = 0.5cm of 1] {1};
+        \node[left = 0.45cm of B] {B};
+        \node[left = 0.45cm of 2] {2};
+        \node[left=0.45cm of 3]{3};
+        \node[right=0.5cm of 4] {4};
+        \node[left=1.0cm of I] {Initial};
+
+        \draw (A) edge[-stealth] (I) edge[-stealth] (1)
+              (1) edge[-stealth] (B)
+              (B) edge[-stealth] (2) edge[-stealth] (4)
+              (2) edge[-stealth] (3)
+              (4) edge[-stealth] (3)
+              (3) edge[-stealth] (I);
+    \end{tikzpicture}
+    &
+    \begin{tikzpicture}[auto, on grid, semithick,
+      every node/.style={draw, circle, minimum size=0.8cm}]
+      \node {A}
+      child {node {1}}
+      child {node {B} child {node {4}}}
+      child {node {2}}
+      child {node {3}};
+    \end{tikzpicture}
+    \end{tabular}
+  \end{center}
+  \caption{Two examples of DAG to \mt{} conversions used in explanation
+  during evaluation}
+\label{fig:DAG_to_MergeTree}
+\end{figure}
+
+Following the introduction, participants worked through the tasks in the
+conceptual portion of the study and comparative summarization portion of
+the study. Details for the conceptual study and summarization study are
+in Section~\ref{sub:conceptual_study}, and
+Section~\ref{sub:summarization_study} , respectively. The study
+concluded with participant opinions and a short exit interview to
+collect information about the experience of the participants with
+version control software. Details of which are provided in
+Section~\ref{sub:user_opinions_and_exit_interview}.
+
+\subsection{Commit Selection}\label{sub:commit_selection}
+
+Two commits are used in both the conceptual study and summarization
+study, with the goal of determining how well the DAG and \mt{}
+visualizations scale between merges integrating varying numbers of
+commits. The order that the two commits are presented to each
+participant is randomized. I analyzed 15096 merge-trees from the
+database that were candidates for the study, from April 16th 2005 to
+October 14th 2014, corresponding to Linux releases 2.6.12-rc3 to
+3.17-rc1. A merge-tree could only be selected if it was not a foxtrot,
+and had correctly been identified. 25\% of the trees contain at most a
+single repository event, not including the root, while 50\% of the trees
+contain at most seven nodes. 75\% of the trees contain at least 51
+nodes, and the largest tree contains 7217 nodes. 8031 trees contained at
+least seven nodes, of these only 593 contained at least a single
+internal merge node. Trivially, trees with a single node cannot have any
+internal merge nodes. Of the 624 trees with seven non-root node, only
+135 contained at least one inner node. Using this information, I chose a
+random tree from the 2008 trees in the first quartile, which merges a
+single commit into the master branch. These trees are trivial, but
+appear frequently in the repository. The second tree was chosen randomly
+from trees in the second quartile. These trees contain seven nodes, and
+to increase the complexity of the tree, I required that the tree contain
+at least one internal merge node.
+
+Once the trees were selected, I had to select a commit from the tree.
+Selecting a commit from the small tree was trivial, there was only a
+single node to choose. From the medium-sized tree, I used a script to
+select a commit randomly. The commits selected from the small tree and
+medium tree were \emph{a3c1239eb59c0a907f8be5587d42e950f44543f8} and
+\emph{cdbdd1676a5379f1d5cbd4d476f5e349f445befe} respectively. Commit 1,
+the commit from the small tree is visualized in
+Figure~\ref{fig:commit_1_visualization}, showing the DAG visualization
+by Gitk and \rt{} tree visualization in Linvis. The same is
+shown for commit 2 in Figure~\ref{fig:commit_2_visualization}.
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{cc}
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit1_gitk.png} &
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit1_linvis.pdf}
+  \end{tabular}
+  \caption{The visualizations of commit 1 by Gitk and Linvis
+    respectively.}
+  \label{fig:commit_1_visualization}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{cc}
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit2_gitk.png} &
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit2_linvis.pdf}
+  \end{tabular}
+  \caption{The visualizations of commit 2 by Gitk and Linvis
+    respectively.}
+  \label{fig:commit_2_visualization}
+\end{figure}
+
+\subsection{Part 1: Conceptual Study}\label{sub:conceptual_study}
+
+The conceptual portion of the study verifies our initial assumption,
+that the DAG visualization is unable to provide people with a conceptual
+understanding of the events in a repository. Participants in the study
+are asked to perform tasks that are related to understanding how a
+commit is integrated. The tasks for this part of the study are outlined
+in Table~\ref{tab:conceptual_tasks}.
+
+\begin{table*}[htpb]
+  \centering
+  \caption{Conceptual Tasks}
+  \label{tab:conceptual_tasks}
+  \begin{tabulary}{0.9\textwidth}{LL}
+    \toprule
+    Task & Description\\
+    \midrule
+    T1 & Draw a diagram showing how this commit was merged into the master branch, along with any other related commits\\
+    T2 & How many individual commits are related to this commit?\\
+    T3 & How many merges are involved with merging this commit into the master branch?\\
+    \bottomrule
+  \end{tabulary}
+\end{table*}
+
+Task 1 asks participants to draw a diagram showing the shortest path for
+a commit to be merged, including any commits that are related to it, or
+are necessary for the integration. Participants were given 10 minutes to
+draw the diagram. The correct answer should look something like the
+merge-tree for that commit. The drawing from Task 1 is then referred to
+in Task 2 and 3. Building on the conceptual understanding built in task
+1, task 2 and 3 ask the participant to determine how many commits are
+related, and how many merges. The order that task 2 and 3 are presented
+to participants is randomized between participants, to remove order
+bias, although it shouldn't matter as both questions are designed to
+build off of task 1 and the conceptual understanding constructed  from
+analyzing the DAG visualization of that commit for 10 minutes. These
+questions enable us to find issues when users are comprehending the DAG
+visualizations.
+
+The diagrams drawn by the participants in the first task help provide
+insight about how the participants are interpreting the DAG. I looked
+for patterns in the drawings to see if common issues arose, providing
+qualitative information about issues in comprehension. The results from
+task 2 and 3 are numerical results, the number of commits that are
+related, and the number of merges. These numbers are directly comparable
+with the correct numbers.
+
+\subsection{Part 2: Summarization Study}\label{sub:summarization_study}
+
+The summarization portion of the study compares the visualization and
+summarization capabilities of \tool{} and Gitk to determine if the
+visualization of the \mt{} is capable of providing a better
+understanding of the events in repository, specifically answering
+RQ\ref{RQ2} and RQ\ref{RQ3}. This portion of the study requires the
+participants to switch between both Use-Case 1 and Use-Case 2
+strategies. The participants are provided an commit, since their goal is
+to summarize information about the entire merge-tree, they must navigate
+to the root node, making use of features for Use-Case 1. Once they are
+at the root, the participant must be able to summarize information about
+the authors, files, and modules. The tasks are outline in
+Table~\ref{tab:summarization_tasks}.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Summarization Tasks}
+  \label{tab:summarization_tasks}
+  \begin{tabular}{lll}
+    \toprule
+    Task Set   & Task & Description\\\midrule
+    Merge      & T4   & What is the series of merges involved with merging this
+    commit?\\
+               & T5   & What other commits are merged?\\
+    Authorship & T6   & How many authors are involved?\\
+               & T7   & Who contributed the most changes?\\
+    Files      & T8   & How many files were modified?\\
+               & T9   & Which file had the most changes?\\
+    Modules    & T10  & Which modules does this \mt involve?\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+For each task, where specified, four statistical tests are applied. The
+first test determines if the results from the two commits are from the
+same distribution. If they are, it indicates that the results can be
+aggregated, otherwise, the results must be analyzed for each commit
+separately. The three other tests measure the difference in correctness,
+accuracy, and time between the results for \tool{} and Gitk. The null
+hypothesis for the difference between the commits is that there is no
+difference in the performance metrics between the commits. For the
+correctness metric, the null hypothesis is that \tool{} does not effect
+the correctness of the participants. For the accuracy metric, the null
+hypothesis is that there is no difference in accuracy between the
+results drawn from \tool{} and from Gitk. For the timing metric, the null
+hypothesis is that there is no difference in timing between the time
+taken to draw a result from \tool{} and Gitk.
+
+The tasks are split into four task sets, based on the type of
+information that the task is investigating. The \emph{Merge} tasks set
+focuses on detailed information about the topology of the merge itself,
+looking at the specific merges and commits involved in the integration.
+Task T4 asks for the specific merges that merge the commit into the
+master branch. These must be the correct merges, and must be in the
+correct order. I use the edit distance between the response and the
+correct answer as a measure of how correct the response is. Adding new
+merges, removing extraneous merges, replacing merges, and swapping the
+order of merges are of unit cost. An edit distance of 0 indicates a
+correct answer. Task T5 asks for the other commits that are integrated
+with this commit. Again, I use an edit distance-like metric to evaluate
+the response. Order doesn't matter, but the correct commits must be
+indicated in the response. Adding commits, replacing commits, and
+removing commits are of unit cost.
+
+The \emph{authorship} task set involves finding information about the
+authors involved in the merge. Task T6 asks for the number of authors
+involved in the merge. These are authors of commits, not merges, as
+merges in the kernel repository do not include code, and are used for
+creating logical separation in commits. The accuracy is measured as the
+absolute difference between the response and the correct answer. Task T7
+asks participants to identify the person who was responsible for
+contributing the most in the merge. While it is possible that two
+authors could have contributed the same number of changes, in the merges
+for both commits, there is an identifiable author who contributed the
+most. The answer to this task can either be correct or incorrect, so
+accuracy is not recorded for this task.
+
+The \emph{files} task set involves finding information about specific
+files being merged. Task T8 asks the participant to identify how many
+files are modified in a merge. Like task T6, the response to task T8 is
+a single number, so the accuracy is measured as the absolute difference
+between the response and the correct answer. Task T9 asks the
+participants to identify which files had the most lines modified in
+the merge. While this is similar to task T7, the files in the tree
+associated with commit 1 had the same number of changes. For this
+reason, I use the edit distance between the response and the correct
+answer, with addition, removal, and replacement of unit cost.
+
+The \emph{modules} task set only contains a single task, and involves
+determining the modules involved in a merge. Modules, or subsystems,
+refer to the component of the kernel that is being modified by a commit.
+This is not a property that is inherent to git repositories in general,
+but a property we noticed in the repository of the Linux kernel. Commit
+summaries are prefaced with the module, followed by a colon. For example
+the log summary \textit{``ALSA: kernel docs: fix sound/core/
+  kernel-doc''} is in the \textit{``ALSA''} module.
+
+The order that the task sets are performed is randomized between
+participants, and the order that the tasks within a task set are
+performed is randomized as well. This keeps related tasks together,
+while still mitigating some of the order bias.
+
+\subsection{User Opinions and Exit Interview}
+\label{sub:user_opinions_and_exit_interview}
+
+The goal in this part of the study is to expose issues in the underlying
+assumptions made while writing \tool{}. Two questions were asked in this
+part of the study, outlined in Table~\ref{tab:opinion_questions}. This
+portion of the study gives the participants to voice their opinions and
+observations that may not have been recorded or captured by the rest of
+the study.
+
+\begin{table}[htpb]
+  \centering
+  \caption{User Opinion Questions}
+  \label{tab:opinion_questions}
+  \begin{tabulary}{0.9\textwidth}{LL}
+    \toprule
+    Question & Description\\
+    \midrule
+    Q1 & Given these tasks again, which tool would you prefer?\\
+    Q2 & Which aspects of each tool did you like and why?\\
+    \bottomrule
+  \end{tabulary}
+\end{table}
+
+Question Q1 allows users to express their opinions on tool preference
+for merge-summarization tasks. We recognize that neither \tool{} nor
+Gitk are perfect, participants may have complaints or aspects of each
+tool that they preferred, or aspects that assisted them in understanding
+the events in the repository. Question Q2 is meant to address this.
+
+The exit interview is designed with the goal of collecting some
+information about our participants, and their experience with version
+control software and git. Three questions were asked in the exit
+interview portion of the study;
+
+\begin{itemize}
+  \item For how long have you used git?
+  \item For what kind of projects have you used git?
+  \item How many commits, files, and collaborators were involved with
+    the largest repository you have worked with?
+\end{itemize}
+
+\section{Participant Profile}\label{sec:participant_profile}
+
+The study was conducted with 12 participants, all of whom were masters,
+PhD, or post-doc researchers in the field of software engineering. The
+participants had between 6 months and 10 years experience with git, with
+the median being 3.5 years. Most participants had additional experience
+with SVN and CVS.\@ One of the participants in the study worked as a
+release engineer, studying merge practices to determine the best way to
+merge branches while minimizing the number of merge conflicts in SVN
+repositories. The participants worked with repositories ranging from
+around 10 commits up to 38000 commits, with the median being 350
+commits. Two of the participants had never collaborated with anyone in a
+repository, while the rest had some experience with repositories being
+modified by multiple people, with the most being 219. The median number
+of collaborators was four. Participants had most experience with
+personal and academic repositories. Three of the twelve participants had
+experience with professional repositories.
+
+All participants have had at least some experience with version control,
+branching in repositories, and git. The participants are from the same
+lab, and each participant worked with both tools in the study, thus,
+keeping the sample populations identical for both tools, with some
+variation between participants in experience with repositories.
