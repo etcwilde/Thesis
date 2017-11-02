@@ -313,6 +313,20 @@ Table~\ref{tab:summarization_tasks}.
   \end{tabular}
 \end{table}
 
+For each task, where specified, four statistical tests are applied. The
+first test determines if the results from the two commits are from the
+same distribution. If they are, it indicates that the results can be
+aggregated, otherwise, the results must be analyzed for each commit
+separately. The three other tests measure the difference in correctness,
+accuracy, and time between the results for \tool{} and Gitk. The null
+hypothesis for the difference between the commits is that there is no
+difference in the performance metrics between the commits. For the
+correctness metric, the null hypothesis is that \tool{} does not effect
+the correctness of the participants. For the accuracy metric, the null
+hypothesis is that there is no difference in accuracy between the
+results drawn from \tool{} and from Gitk. For the timing metric, the null
+hypothesis is that there is no difference in timing between the time
+taken to draw a result from \tool{} and Gitk.
 
 The tasks are split into four task sets, based on the type of
 information that the task is investigating. The \emph{Merge} tasks set
