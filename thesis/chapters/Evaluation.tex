@@ -457,6 +457,118 @@ Section~\ref{sub:conceptual_results}, for the summarization tasks in
 Section~\ref{sub:summarization_results}, and the user opinions in
 Section~\ref{sub:user_opinions_results}.
 
+\subsection{Conceptual Tasks}
+\label{sub:conceptual_results}
+
+Investigating the drawings made in response to task T1, none of the
+results from this task are correct. The diagrams for commit 1 tend to
+resemble a linked list, showing all of the merges along the master
+branch. The participants would generally continue traversing the master
+branch using either the first parent or the child links in the Gitk
+interface, or simply following the branch in the visualization, until
+they either hit the branch tag \verb|2.6.29-rc6|, or indicated that it
+was every merge along the master branch, or stopped at a seemingly
+arbitrary merge. An example of a diagram drawn by one participant is
+shown in Figure~\ref{fig:commit_1_fig}. This drawing follows the DAG
+backward, working from the commit, through the branch point, and
+traversing the DAG toward the initial commit. In another case, the
+participant was able to produce the correct drawing using the git
+command line tools, but then looked at the DAG visualization in Gitk and
+continued to draw a linked list, following the merges along the master
+branch toward the HEAD node.
+
+\begin{figure}[htpb]
+  \centering
+
+  \begin{tikzpicture}[commit/.style={ellipse, text=black, draw=black}]
+    \node[commit] (a) {11df};
+    \node[commit, right = of a] (b) {a3c};
+    \node[commit, right = of b] (c) {d2f8};
+    \node[commit, right = of c] (d) {b51e};
+    \node[commit, right = of d] (e) {fb5};
+    \node[commit, right = of e] (f) {37b};
+
+    \draw (a) edge[-stealth] (b)
+          (b) edge[-stealth] (c)
+          (c) edge[-stealth] (d)
+          (d) edge[-stealth] (e)
+          (e) edge[-stealth] (f);
+  \end{tikzpicture}
+
+  \caption{Example of a diagram drawn for the integration of commit 1}
+  \label{fig:commit_1_fig}
+\end{figure}
+
+This indicates difficulties identifying the master branch in the
+visualization. Furthermore, the commit date should provide some
+indication on which direction the commits are being merged in, some
+participants did not understand this from the Gitk interface. This could
+be confusion looking at the interface, or in the terminology surrounding
+the parent-child relationship.
+
+The resulting diagrams for commit 2 do not show any consistent patterns
+among participants. Many diagrams do not show the shortest paths from a
+commit to the master branch. Some participants were able to identify the
+master branch in this case. These participants had experience with SVN
+repositories, and were accustomed to the master branch being the first
+branch in the graph. In the visualization of the DAG for commit 2, the
+master branch returns to the first position in the graph, which some
+participants mentioned meant that it should be the master branch. In
+this case, they are correct in that the first line in the visualizations
+is the master branch in this case, but the reasoning is not correct. The
+first branch is not necessarily the master branch, as is the case with
+the results from Commit 1, where the master branch is the third line.
+Furthermore, the line indicating the master branch creates a visual cage
+around the repository events in question, which may have assisted with
+finding the correct commits.
+
+\evan{Since the part about the visual cage is speculation, should that
+  be moved to discussion?}
+
+With some participants, there was confusion about the direction of the
+parent-child relationship. In most data structures, the parents point
+toward the node of interest. In this case, the parents point toward the
+branch point, which is in the opposite direction of the merge, so the
+participant would actually need to follow the child to get to the merge
+point.
+
+One participant was able to identify the path to the master branch, but
+no participants were able to identify the commits that were necessary
+for integrating the given commit into the master branch. The diagram
+drawn is shown in Figure~\ref{fig:commit_2_fig}, which shows a possible
+path for the commit to pass through on the way to the master branch.
+While it isn't the shortest path, it is a possible path. In the diagram,
+$M_3$ is the merge into the master branch, and $start$ the commit that
+is being queried. The diagram includes one other commit that is being
+merged, but there are three additional commits that were not included.
+In the \mt{} representation, the starting commit and the $ALSA\ Fix$
+commit are both merged into $M_2$, while three others are merged into
+$M_1$. $M_1$ and $M_2$ are merged directly into the master branch at
+$M_3$. In the other cases, the diagrams had little resemblance of the
+events occurring in the repository. Some diagrams appeared to be
+constructed from random commits, others did not conform to the tree
+structure as what would be constructed from using shortest paths.
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tikzpicture}[commit/.style={ellipse, draw=black, text=black}]
+    \node[commit] (a) {$M_3$};
+    \node[commit, below = of a] (b) {$M_2$};
+    \node[commit, below right = of b] (c) {$ALSA\ Fix$};
+    \node[commit, below left = of b] (d) {$M_1$};
+    \node[commit, below = of d] (e) {$start$};
+
+    \draw (e) edge (d)
+          (d) edge (b)
+          (c) edge (b)
+          (b) edge (a);
+  \end{tikzpicture}
+  \caption{Example of a diagram drawn for the integration of commit 2.
+    This diagram is the closest to being a possible representation of
+    the events in the repository, but miss the other commits involved.}
+  \label{fig:commit_2_fig}
+\end{figure}
+
 \subsection{User Opinions}
 \label{sub:user_opinions_results}
 
