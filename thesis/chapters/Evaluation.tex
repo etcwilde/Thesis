@@ -663,6 +663,38 @@ the correctness and accuracy of the response, or time taken to respond.
   \end{tabular}
 \end{table}
 
+Looking at the effect of merge size on correctness, most of the
+$p$-values are reasonably far from the threshold of 0.05; however, in
+tasks T5, and T9, the, the $p$-value is within 0.01 from the threshold.
+This stems in the \tool{} results. Figure~\ref{fig:T5_correctness} shows
+the differences in correctness between commit 1 and commit 2 in Task T5.
+In commit 1, 4 participants produced the correct response with Gitk, and
+all participants produced the correct response with \tool{}. With commit
+2, 1 participant produced the correct response with Gitk, and 7
+participants produced correct responses with \tool{}. In both commits,
+there were more correct responses using \tool{} than with Gitk.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.4\linewidth]{Figures/evaluation/correctness/5.pdf}
+  \caption{Difference between commits in the correctness of responses to task T5.}
+  \label{fig:T5_correctness}
+\end{figure}
+
+Comparing this with the correctness results of the other tasks, in
+Figure~\ref{fig:agg_correctness}, there was at least one person with an
+incorrect response using both tools on both commits. Since there were no
+incorrect responses using \tool{} in commit 1, but there were incorrect
+responses when responding for commit 2. This difference was detected
+here, but would likely go away in a larger study.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/evaluation/correctness.pdf}
+  \caption{Aggregated Correctness of the summarization results}
+  \label{fig:agg_correctness}
+\end{figure}
+
 \begin{table}[htpb]
   \centering
   \caption{Effect of merge size on accuracy}
