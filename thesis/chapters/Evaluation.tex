@@ -569,6 +569,65 @@ structure as what would be constructed from using shortest paths.
   \label{fig:commit_2_fig}
 \end{figure}
 
+The participants were better able to determine the number of merges a
+commit passed through, and the number of commits being merged in the
+larger merge tree, as seen in Table~\ref{tab:conceptual_results}. The
+results reported in this table are in number of commits for Task T2, and
+the number of merges for task T3. Commit 1, which was merged directly
+without any other related commits, was said to have a median of 6
+related commits. The median number of merges was said to be between 6
+and 7 merges. The correct answer should have been 1, the integrating
+merge. There was more disagreement when determining the number of
+commits, in both commits. Interestingly, there was more variance in the
+answers on the smaller merge tree. The variance in the answers for
+determining the number of merges was consistent between both trees.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Accuracy Results from conceptual tasks T2 and T3}
+  \label{tab:conceptual_results}
+  \begin{tabular}{ccccc}
+    \toprule
+    Task & Commit   & Median Difference & Average Difference & Answer Variance\\\midrule
+    T2   & Commit 1 & 5                 & 20                 & 803.43\\
+    T3   & Commit 1 & 5.5               & 7.8                & 56.18\\
+    T2   & Commit 2 & 2                 & 6.22               & 120.19\\
+    T3   & Commit 2 & 1                 & 3.67               & 48.5\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Participants generally took longer to respond to questions about the
+larger merge tree, and the time taken was far more variable. The timing
+results are listed in Table~\ref{tab:conceptual_time_results}. When
+interpreting these results, it must be noted that participants had spent
+10 minutes working with the merge tree that they were summarizing prior
+to answering the questions. These times do not indicate the time to read
+the DAG, but the time taken to understand the conceptual image of the
+events in the DAG. It took the participants longest to determine the
+number of commits in both cases, but it took far longer in the case of
+commit 2, taking over half a minute.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Timing Results from the conceptual tasks T2 and T3}
+  \label{tab:conceptual_time_results}
+  \begin{tabular}{ccccr}
+    \toprule
+    Task & Commit   & Median Time (s) & Average Time (s) & Time Variance (s)\\\midrule
+    T2   & Commit 1 & 9               & 53.45            & 6382\\
+    T3   & Commit 1 & 8               & 26.64            & 921\\
+    T2   & Commit 2 & 35              & 114.45           & 58769\\
+    T3   & Commit 2 & 15              & 71.36            & 32324\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Users were able to more closely estimate the number of commits and
+merges in the larger tree, but generally took longer than the smaller
+tree. The tree with a single node resulted in more variability in the
+estimate of number of commits.
+
 \subsection{User Opinions}
 \label{sub:user_opinions_results}
 
