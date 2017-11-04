@@ -632,6 +632,72 @@ estimate of number of commits.
 \subsection{Summarization Study Results}
 \label{sub:summarization_results}
 
+Analyzing the summarization results, most of the tasks are not
+influenced by the merge size. Correctness is not affected by merge size
+in any of the tasks, however, task T5, finding the other commits being
+integrated, and task T9, determining which file had the most changes,
+are closest to the boundary. The results of the Wilcoxon test on
+correctness are shown Table~\ref{tab:cross_commit_correctness}. The size
+of the merge does not have a significant effect on the accuracy of the
+responses, shown in Table~\ref{tab:cross_commit_accuracy}. Timing is
+effected by merge size in task T7, determining who contributed the most
+changes, shown in Table~\ref{tab:cross_commit_timing}. Otherwise, the
+size of the merge doesn't have a statistically significant influence on
+the correctness and accuracy of the response, or time taken to respond.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Effect of merge size on correctness}
+  \label{tab:cross_commit_correctness}
+  \begin{tabular}{clr}
+    \toprule
+    Task & $p$-value & Conclusion\\\midrule
+    T4   & 0.16      & Do not reject $H_0$\\
+    T5   & 0.05      & Do not reject $H_0$\\
+    T6   & 0.11      & Do not reject $H_0$\\
+    T7   & 0.08      & Do not reject $H_0$\\
+    T8   & 0.13      & Do not reject $H_0$\\
+    T9   & 0.06      & Do not reject $H_0$\\
+    T10  & 0.45      & Do not reject $H_0$\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[htpb]
+  \centering
+  \caption{Effect of merge size on accuracy}
+  \label{tab:cross_commit_accuracy}
+  \begin{tabular}{clr}
+    \toprule
+    Task & $p$-value & Conclusion\\\midrule
+    T4   & 0.97      & Do not reject $H_0$\\
+    T5   & 0.08      & Do not reject $H_0$\\
+    T6   & 0.21      & Do not reject $H_0$\\
+    T8   & 0.13      & Do not reject $H_0$\\
+    T9   & 0.06      & Do not reject $H_0$\\
+    T10  & 0.22      & Do not reject $H_0$\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[htpb]
+  \centering
+  \caption{Effect of merge size on response time}
+  \label{tab:cross_commit_timing}
+  \begin{tabular}{crl}
+    \toprule
+    Task & $p$-value & Conclusion\\\midrule
+    T4   & 0.99      & Do not reject $H_0$\\
+    T5   & 0.90      & Do not reject $H_0$\\
+    T6   & 0.92      & Do not reject $H_0$\\
+    T7   & 0.01      & Reject $H_0$\\
+    T8   & 0.99      & Do not reject $H_0$\\
+    T9   & 0.70      & Do not reject $H_0$\\
+    T10  & 0.77      & Do not reject $H_0$\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \subsection{User Opinions}
 \label{sub:user_opinions_results}
 
