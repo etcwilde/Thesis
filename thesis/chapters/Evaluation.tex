@@ -713,6 +713,21 @@ determine the module involved using both tools.
   \end{tabular}
 \end{table}
 
+Merge size does not affect \textbf{accuracy} in any of the tasks, as
+seen in Table~\ref{tab:cross_commit_accuracy}. The results in task T9
+are very close to the threshold. Inspecting the distributions in
+Figure~\ref{fig:cross_commit_T9_accuracy}, the distribution for \tool{}
+appears to be different in the two commits. In commit 1, there is no
+variance, the entire distribution is at 0 files from the correct answer.
+In commit 2, the 3rd quartile spans from 0 files up to 1 file from the
+correct answer, and the fourth quartile, from 1 file to 2 files. This is
+consistent with the results found for correctness, although, unlike with
+correctness where task T5 showed more difference between merge sizes,
+task T9 shows more difference between merge sizes with accuracy. This
+indicates that those who were incorrect, were also further from the
+correct answer in the larger merge than the small merge in T9 than in
+task T5.
+
 \begin{table}[htpb]
   \centering
   \caption{Effect of merge size on accuracy}
@@ -729,6 +744,58 @@ determine the module involved using both tools.
     \bottomrule
   \end{tabular}
 \end{table}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[height=4.5cm]{Figures/evaluation/accuracy/9.pdf}
+  \caption{Difference in accuracies in responses to task T9 between Commit 1 and Commit 2.}
+  \label{fig:cross_commit_T9_accuracy}
+\end{figure}
+
+The results do not indicate a difference in the accuracy distributions
+between commits. Again, this could change in tasks T5 and T9 with a
+larger sample size. The results for both merges are combined. The
+Wilcoxon test and Cliff's Delta effect size are applied to each to
+determine if there is a difference in the accuracies of responses to the
+tasks between tools. The results of the tests are presented in
+Table~\ref{tab:accuracy_results}. In all cases, there is a difference
+in accuracies between when the participants use \tool{} versus Gitk. In
+all cases except for task T9, which files had the most changes, and T10,
+which modules were involved, there was a large effect in favour of
+\tool{}. In task T9, there was a medium effect, and T10, a small effect.
+Looking at the results depicted in Figure~\ref{fig:agg_accuracy}, this
+makes sense. The variance in the accuracies of responses of Gitk is much
+smaller in tasks T9 and T10 than in the other tasks, furthermore, the
+median is much closer to zero than in the other tasks. In task T10, only
+the third and fourth quartiles are beyond 0, which indicates that
+participants were generally correct when using Gitk to determine the
+module. This is also consistent with the results measuring the
+correctness.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Aggregated Accuracy results, including the Wilcoxon
+    $p$-values and Cliff's Delta Effect size}
+  \label{tab:accuracy_results}
+  \begin{tabular}{clrcc}
+    \toprule
+    Task & $p$-value & Delta Est. & Conclusion   & Effect\\\midrule
+    T4   & 0.00017   & 0.596      & Reject $H_0$ & Large\\
+    T5   & 0.00019   & 0.616      & Reject $H_0$ & Large\\
+    T6   & 0.00000   & 0.675      & Reject $H_0$ & Large\\
+    T8   & 0.00079   & 0.534      & Reject $H_0$ & Large\\
+    T9   & 0.01195   & 0.412      & Reject $H_0$ & Medium\\
+    T10  & 0.00479   & 0.318      & Reject $H_0$ & Small\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/evaluation/accuracy.pdf}
+  \caption{Aggregated Accuracy of the summarization results}
+  \label{fig:agg_accuracy}
+\end{figure}
 
 \begin{table}[htpb]
   \centering
