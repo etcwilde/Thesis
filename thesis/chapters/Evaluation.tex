@@ -632,18 +632,21 @@ estimate of number of commits.
 \subsection{Summarization Study Results}
 \label{sub:summarization_results}
 
-Analyzing the summarization results, most of the tasks are not
-influenced by the merge size. Correctness is not affected by merge size
-in any of the tasks, however, task T5, finding the other commits being
-integrated, and task T9, determining which file had the most changes,
-are closest to the boundary. The results of the Wilcoxon test on
-correctness are shown Table~\ref{tab:cross_commit_correctness}. The size
-of the merge does not have a significant effect on the accuracy of the
-responses, shown in Table~\ref{tab:cross_commit_accuracy}. Timing is
-effected by merge size in task T7, determining who contributed the most
-changes, shown in Table~\ref{tab:cross_commit_timing}. Otherwise, the
-size of the merge doesn't have a statistically significant influence on
-the correctness and accuracy of the response, or time taken to respond.
+Merge size does not affect \textbf{correctness}; however, task T5,
+finding the other commits being integrated, and task T9, determining
+which file had the most changes, are very close to the $p$-value
+threshold. The results of the Wilcoxon test on correctness are shown
+Table~\ref{tab:cross_commit_correctness}. Most of the $p$-values are
+reasonable far from the threshold of 0.05; however, in tasks T5 and T9,
+the $p$-value is within 0.01 of the threshold. Further investigation
+reveals that the differences in the distributions stem from the number
+of participants who were incorrect when using \tool{}. Inspecting the
+results from task T5, in Figure~\ref{fig:T5_correctness}, no
+participants provided an incorrect response using \tool{} in the small
+merge, but four participants provided an incorrect response when using
+\tool{} for the larger merge. Similarly, the number of incorrect
+responses increased going from the small merge to the large merge with
+Gitk. The split results are similar in task T9.
 
 \begin{table}[htpb]
   \centering
@@ -663,16 +666,6 @@ the correctness and accuracy of the response, or time taken to respond.
   \end{tabular}
 \end{table}
 
-Looking at the effect of merge size on correctness, most of the
-$p$-values are reasonably far from the threshold of 0.05; however, in
-tasks T5, and T9, the, the $p$-value is within 0.01 from the threshold.
-This stems in the \tool{} results. Figure~\ref{fig:T5_correctness} shows
-the differences in correctness between commit 1 and commit 2 in Task T5.
-In commit 1, 4 participants produced the correct response with Gitk, and
-all participants produced the correct response with \tool{}. With commit
-2, 1 participant produced the correct response with Gitk, and 7
-participants produced correct responses with \tool{}. In both commits,
-there were more correct responses using \tool{} than with Gitk.
 
 \begin{figure}[htpb]
   \centering
@@ -681,19 +674,44 @@ there were more correct responses using \tool{} than with Gitk.
   \label{fig:T5_correctness}
 \end{figure}
 
-Comparing this with the correctness results of the other tasks, in
-Figure~\ref{fig:agg_correctness}, there was at least one person with an
-incorrect response using both tools on both commits. Since there were no
-incorrect responses using \tool{} in commit 1, but there were incorrect
-responses when responding for commit 2. This difference was detected
-here, but would likely go away in a larger study.
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=0.9\linewidth]{Figures/evaluation/correctness.pdf}
+  \includegraphics[width=1.0\linewidth]{Figures/evaluation/correctness.pdf}
   \caption{Aggregated Correctness of the summarization results}
   \label{fig:agg_correctness}
 \end{figure}
+
+The results do not indicate that there is a difference in the
+distributions between the merge sizes, although one might arise with
+tasks T5 and T9 with more samples, the results for both merges are
+combined. The McNemar test is applied to determine if \tool{} has an
+effect on the correctness. The results of the McNemar test are presented
+in Table~\ref{tab:mcnemar_test_results}. For each task, except for task
+T10, determining which modules are involved in a merge, \tool{} has an
+effect on the results. Inspecting the results in
+Figure~\ref{fig:agg_correctness} shows that \tool{} effects results in a
+positive way, helping users to correctly identify properties about the
+merge. In task T10, it is also evident that participants were able to
+determine the module involved using both tools.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Aggregated Correctness Results comparing \tool{} and Gitk}
+  \label{tab:mcnemar_test_results}
+  \begin{tabular}{crrc}
+    \toprule
+    Task & $\chi^2$ & $p$-value & Conclusion\\\midrule
+    T4   & 12.07    & 0.0005    & Reject $H_0$\\
+    T5   & 11.08    & 0.0007    & Reject $H_0$\\
+    T6   & 13.07    & 0.0003    & Reject $H_0$\\
+    T7   & 10.08    & 0.0015    & Reject $H_0$\\
+    T8   & 12.07    & 0.0005    & Reject $H_0$\\
+    T9   & 11.08    & 0.0009    & Reject $H_0$\\
+    T10  & 3.13     & 0.0771    & Do not reject $H_0$\\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \begin{table}[htpb]
   \centering
