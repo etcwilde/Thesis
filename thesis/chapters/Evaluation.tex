@@ -797,6 +797,11 @@ correctness.
   \label{fig:agg_accuracy}
 \end{figure}
 
+The results indicate that in all tasks except for task T7, who
+contributed the most changes, merge size did not have a significant
+impact on the \textbf{time} taken to respond. The results are presented
+in Table~\ref{tab:cross_commit_timing}.
+
 \begin{table}[htpb]
   \centering
   \caption{Effect of merge size on response time}
@@ -811,6 +816,79 @@ correctness.
     T8   & 0.99      & Do not reject $H_0$\\
     T9   & 0.70      & Do not reject $H_0$\\
     T10  & 0.77      & Do not reject $H_0$\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Inspecting the results from commit 7, depicted in
+Figure~\ref{fig:task_7_time}, the primary difference stems from the time
+used to respond when using \tool{}. Participants much longer to produce
+a response for the larger merge while using \tool{} than they did for
+the smaller merge. Comparing this with the timing results for task T8,
+in Figure~\ref{fig:task_8_time} where participants took very little time
+to respond for both merges. Participants took considerably less time
+using \tool{} than they did with Gitk.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.5\linewidth]{Figures/evaluation/time/7.pdf}
+  \caption{Difference in time taken to respond to task T7 between merge sizes}
+  \label{fig:task_7_time}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.5\linewidth]{Figures/evaluation/time/8.pdf}
+  \caption{Difference in time taken to respond to task T8 between merge sizes}
+  \label{fig:task_8_time}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/evaluation/time.pdf}
+  \caption{Aggregated Time to respond to summarization tasks}
+  \label{fig:agg_time}
+\end{figure}
+
+The results do not indicate that there is a difference in the time taken
+to respond between merge sizes for the other tasks. In all tasks, except
+for T7, \tool{} does have a statistically significant impact on the time
+taken to respond. \tool{} has a large impact on the time taken to
+respond to tasks T4, T8, T9, and T10, determine the merges that led to
+integration, the number of files modified, which files had the most
+changes, and the modules involved. \tool{} had a medium effect on the
+time taken to respond to tasks T5 and T6, what other commits are
+integrated with this commit, and the other number of authored involved.
+The direction of the effect is visible in Figure~\ref{fig:agg_time}.
+Inspecting the results from task T7 in Figure~\ref{fig:task_7_time},
+\tool{} appears to have an effect, and Cliff's delta indicates that in
+the case of the medium-sized merge, that there is a medium effect. So
+why does the Wilcoxon test indicate that the null hypothesis should not
+be rejected? This is likely due to the sample size; the Wilcoxon test is
+related to the sample size, while the delta effect size is not. Since
+the results in task T7 are not aggregated, the number of samples is
+effectively cut in half, from 22 down to 11, which is not enough to have
+confidence that the results are representative of the population. The
+effect size says that if our sample is representative of the population,
+this is the impact that could be expected. The results of the tests are
+presented in Table~\ref{tab:accuracy_results}.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Aggregated time results, including the Wilcoxon
+    $p$-values and Cliff's Delta Effect size}
+  \label{tab:accuracy_results}
+  \begin{tabular}{clrcc}
+    \toprule
+    Task                & $p$-value & Delta Est. & Conclusion          & Effect\\\midrule
+    T4                  & 0.0006    & 0.605      & Reject $H_0$        & Large\\
+    T5                  & 0.0241    & 0.399      & Reject $H_0$        & Medium\\
+    T6                  & 0.0254    & 0.388      & Reject $H_0$        & Medium\\
+    \multirow{2}{*}{T7} & 0.2586    & 0.289      & Do not reject $H_0$ & Small\\
+                        & 0.1146    & 0.405      & Do not reject $H_0$ & Medium\\
+    T8                  & 0.0018    & 0.545      & Reject $H_0$        & Large\\
+    T9                  & 0.0002    & 0.667      & Reject $H_0$        & Large\\
+    T10                 & 0.0002    & 0.649      & Reject $H_0$        & Large\\
     \bottomrule
   \end{tabular}
 \end{table}
