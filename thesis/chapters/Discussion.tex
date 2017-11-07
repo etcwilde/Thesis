@@ -74,3 +74,31 @@ effective visualization for summarization and comprehension of flat
 trees, it would likely be sufficient to indicate the master branch.
 For the non-flat trees, a more powerful structure would likely be
 necessary.
+
+\section{Comments From a Release Manager}\label{sec:comments_from_a_release_manager}
+
+One of the participants in the study had worked as a release manager for
+more than three years, working with both SVN and CVS repositories. The
+goal of a release manager is to determine how to merge the branches of a
+repository in such a way that it minimizes merge conflicts and maintains
+the meaning of the underlying source code. This section contains
+insights from this participant, providing comments on ways that could
+improve \tool{} and the \mt{} model.
+
+Contributors making merges need to understand more than just what merges
+a commit was collected into before reaching the repository of the
+contributor. It is also important to understand order that the related
+commits were made, as the order tells the story of what the developer
+was thinking as they were writing the changes. The visualization of the
+\mt{} in \tool{} does not order the commits, randomly ordering them in
+each level as atomic units.
+
+This is the primary reason behind why this participant would ask to use
+both tools simultaneously. \tool{} is able to help with the aggregation
+of the information, and provide a better understanding of the next merge
+involved in integrating this commit, but the DAG visualization in Gitk
+provides the full story of the commit instead of hiding it behind a
+layer of abstraction.
+
+The comments from this participant were very insightful, and will help
+to improve the \mt{} model.
