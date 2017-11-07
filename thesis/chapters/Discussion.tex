@@ -102,3 +102,147 @@ layer of abstraction.
 
 The comments from this participant were very insightful, and will help
 to improve the \mt{} model.
+
+\section{Generalization}\label{sec:generalization}
+
+The purpose of generalizing the algorithm is two-fold. First, providing
+a means of working with more than one repository in an efficient manner.
+Second, adjusting the model to take into account the comments made, so
+that it captures the order of the commits, and thus, the story behind
+how an author was working.
+
+Due to the requirements needed to construct the model, it is likely that
+it won't be possible to create accurate \mt{s} for most repositories.
+First, it must be possible to identify the master branch, which can be
+confounded by \foxtrot{} merges. It was due to the strict merge
+discipline found in the Linux repository that made this work possible.
+Second, the repository must make use of merge commits, fast-forward
+merges will hide the existence of a merge. Assuming that \foxtrot{}
+merges do not confound the master branch, and that the repository makes
+use of merge commits, it is possible to create the \mt{s} of the
+repository.
+
+The updated model takes the \mt{} from before, and overlays it back on
+the DAG; the new model still shows the path that a commit took to reach
+the master branch, but removes branch links. Only commits made
+immediately after the branch are leaves.
+
+Going back to the example in Chapter~\ref{chap:Model}, the DAG of the
+example events repeated in Figure~\ref{fig:example_DAG_again}, and the
+original \mt{} repeated in Figure~\ref{fig:example_MT_again}. In this
+model, it appears that the code in 3 is merged at 5, and there is no
+notion of what interaction it has with the commits that are in that
+branch. The new model should change the story, showing that 5 merges the
+changes made in 3 into the changes made in 2. 4 will still be ignored as
+it is already in the master branch. Then 7 modifies the changes that are
+at 5. From there, 9 takes the changes made in 8 and 6, and merges them
+into 7. This new model should maintain the base branch of the merge, in
+the case of 9, it is the yellow branch. The new model is shown in
+Figure~\ref{fig:repoDAGTree}.
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{0.8\textwidth}{!}{
+  \begin{tikzpicture}[auto, on grid, semithick, state/.style={circle, text=black, black}]
+    \node[state, black] (1) {1};
+    \node[state, black, above right= of 1] (2) {2};
+    \node[state, black, above right= 2cm and 1cm of 2] (3) {3};
+    \node[state, black, right= 2cm of 1] (4) {4};
+    \node[state, black, above right=of 4] (5) {5};
+    \node[state, black, above right=of 5] (6) {6};
+    \node[state, black, right=of 5] (7) {7};
+    \node[state, black, above right= 2cm and 1cm of 7](8) {8};
+    \node[state, black, right= 2cm of 7] (9) {9};
+    \node[state, black, right=of 9] (10) {10};
+    \node[state, black, below right=of 9] (11) {11};
+    \node[state, black, draw=chartblue, below right=of 10] (12) {12};
+
+    \draw (12) edge[-stealth] (11) edge[-stealth] (10);
+    \draw (11) edge[-stealth] (4) edge[-stealth] (9);
+    \draw (10) edge[-stealth] (9);
+    \draw (9) edge[-stealth] (8) edge[-stealth] (6)
+              edge[-stealth] (7);
+    \draw (8) edge[-stealth] (7);
+    \draw (7) edge[-stealth] (5);
+    \draw (6) edge[-stealth] (5);
+    \draw (5) edge[-stealth] (3) edge[-stealth] (2)
+              edge[-stealth] (4);
+    \draw (4) edge[-stealth] (1);
+    \draw (3) edge[-stealth] (2);
+    \draw (2) edge[-stealth] (1);
+  \end{tikzpicture}
+  }
+  \caption{The DAG of the repository events}
+  \label{fig:example_DAG_again}
+%\vspace{-3mm}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \resizebox{0.8\textwidth}{!}{
+    \begin{tikzpicture}[auto, on grid, semithick, node distance=1cm, state/.style={circle, text=black, minimum size=7mm}]
+
+      \node[state, draw=chartblue] (1) {1};
+      \node[state, draw=chartblue, right=of 1] (4) {4};
+      \node[state, draw=chartblue, right=of 4] (11) {11};
+      \node[state, draw=chartblue, right=2.5cm of 11] (12) {12};
+
+      \node[state, draw=chartyellow, above right= 1cm and 0.5cm of 11] (7) {7};
+      \node[state, draw=chartyellow, above left= 1cm and 0.5cm of 11] (5) {5};
+      \node[state, draw=chartyellow, right=of 7] (9) {9};
+      \node[state, draw=chartyellow, left=of 5] (2) {2};
+      \node[state, draw=chartmagenta, above=of 5] (3) {3};
+      \node[state, draw=chartmagenta, above left=1cm and 0.5cm of 9] (6) {6};
+      \node[state, draw=chartmagenta, above right=1cm and 0.5cm of 9] (8){8};
+      \node[state, draw=chartyellow, above=of 12] (10) {10};
+
+      \draw (11) edge[chartyellow, stealth-] (2) edge[chartyellow, stealth-] (5) edge[chartyellow, stealth-] (7) edge[chartyellow, stealth-] (9)
+      (5) edge[chartmagenta, stealth-] (3)
+      (9) edge[chartmagenta, stealth-] (6) edge[chartmagenta, stealth-] (8)
+      (12) edge[chartyellow, stealth-] (10);
+    \end{tikzpicture}
+  }
+  \caption{The original \mt{} built from the DAG in Figure~\ref{fig:example_DAG_again}}
+  \label{fig:example_MT_again}
+\end{figure}
+
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{0.8\textwidth}{!}{
+  \begin{tikzpicture}[auto, on grid, semithick, state/.style={circle, text=black}]
+
+    \draw[chartblue]
+      (-0.5, -0.5) -- (8.5, -0.5) -- (8.5, 0.5) -- (-0.5, 0.5) -- (-0.5, -0.5);
+
+    \node[state, draw=chartblue] (1) {1};
+    \node[state, draw=chartyellow, above right= of 1] (2) {2};
+    \node[state, draw=chartmagenta, above right= 2cm and 1cm of 2] (3) {3};
+    \node[state, draw=chartblue, right= 2cm of 1] (4) {4};
+    \node[state, draw=chartyellow, above right=of 4] (5) {5};
+    \node[state, draw=chartred, above right=of 5] (6) {6};
+    \node[state, draw=chartyellow, right=of 5] (7) {7};
+    \node[state, draw=chartmagenta, above right= 2cm and 1cm of 7](8) {8};
+    \node[state, draw=chartyellow, right= 2cm of 7] (9) {9};
+    \node[state, draw=chartyellow, right=of 9] (10) {10};
+    \node[state, draw=chartblue, below right=of 9] (11) {11};
+    \node[state, draw=chartblue, below right=of 10] (12) {12};
+
+    \draw (2) edge[chartyellow, -stealth] (5)
+          (3) edge[chartmagenta, -stealth](5)
+          (5) edge[chartyellow, -stealth] (7)
+          (7) edge[chartyellow, -stealth] (9)
+          (6) edge[chartred, -stealth] (9)
+          (8) edge[chartmagenta, -stealth] (9)
+          (9) edge[chartyellow, -stealth] (11)
+          (10) edge[chartyellow, -stealth] (12);
+  \end{tikzpicture}
+  }
+  \caption{The \mt{} overlayed on the inverted DAG to show the order
+    that commits are created, as ell as the merge sequence for the DAG
+    in Figure~\ref{fig:example_DAG_again}. This requires a
+    post-processing step to combine the \mt produced by
+    Algorithm~\ref{fig:alg} and the DAG.}
+\label{fig:repoDAGTree}
+\vspace{-3mm}
+\end{figure}
