@@ -466,3 +466,40 @@ added to the list of children of 7.
 
 I can continue with the expansion of node 5, but I think that this is
 sufficient for the understanding of phase 1.
+
+\begin{algorithm}
+  \caption{Computing the generalized Merge Tree: Phase 2}
+  \label{alg:generalized_phase_II}
+  \begin{algorithmic}[1]
+    \Function{Phase 2}{initial commit $root$} : Merge tree
+    \State $tree.root \gets root$
+    \State $Q$ // Empty Queue
+
+    \State $parents \gets root.parents$
+    \State $parents \gets tail\ parents$
+    \For {$parent \in parents$}
+    \State $realParent \gets min(\forall child \in parent.children,\ parent.depth >= child.depth)$
+    \If {$realParent$ is $root$}
+    \State $root.children \gets parent$
+    \State $parent.parent \gets root$
+    \State $Q \gets parent$
+    \EndIf
+    \EndFor
+
+    \While{$Q$ not empty}
+    \State $cur \gets Q.dequeue$
+    \State $parents \gets cur.parents$
+    \For{$parent \in parents$}
+    \State $realParent \gets min(\forall child \in parent.children,\ parent.depth >= child.depth)$
+    \If {$realParent$ is $cur$}
+    \State $cur.children \gets parent$
+    \State $parent.parent \gets cur$
+    \State $Q \gets parent$
+    \EndIf
+
+    \EndFor
+    \EndWhile
+
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
