@@ -503,3 +503,22 @@ sufficient for the understanding of phase 1.
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
+
+Phase 2 takes the forward DAG, inverted DAG, and node depths to resolve
+the actual \mt{}. Again, starting at the root merge into the master
+branch, this phase uses a breadth-first approach to find the shortest
+paths for a given commit to reach the master branch. Since this is the
+phase where the parent-child relationship is flipped completely to form
+the tree, the terminology becomes difficult to follow. The $parents$ are
+the DAG parents, the $realparent$ is the tree parent, the $realParent$
+is one of the children from the previous phase. The algorithm looks
+through each of the DAG parents of the current node. A $realParent$ is
+calculated for that parent from the children of the parent. The
+$realParent$ is the DAG child that has the smallest depth that is still
+greater than the depth of the parent. Essentially, it is looking for the
+child that is on the branch closest to the branch, in terms of depth,
+that the parent is on. If the $realParent$ is the current node, then the
+current node is the tree parent to the parent. The DAG parent currently
+being observed is added to the tree children of the current node, and
+the DAG parent is added to the processing queue. \evan{If this makes any
+  sense at all, I will be very happy!}
