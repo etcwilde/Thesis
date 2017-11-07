@@ -246,3 +246,137 @@ Figure~\ref{fig:repoDAGTree}.
 \label{fig:repoDAGTree}
 \vspace{-3mm}
 \end{figure}
+
+The second goal behind the changes is to make it more accessible to
+other repositories. To do this, I designed a small webpage that would
+interact with public Bitbucket repositories and generate \mt{s} from the
+DAGs of those repositories, shown in Figure~\ref{fig:bitbucket_plugin}.
+Since the contents of the repository are accessed through a public API,
+it is important to consider bandwidth usage and limit the amount of data
+being consumed. Building a single \mt{} does not require information for
+every repository event in the repository, only the subset of repository
+events that will be present in the \mt{}. Algorithm~\ref{fig:alg}
+requires information for the entire repository, and constructs every
+\mt{} simultaneously. I designed a second algorithm that constructs only
+a single \mt{}, and attempts to use a subset of the repository events in
+the repository to do this. The new algorithm is broken into two phases.
+
+The first phase performs three operations; first, it tracks the master
+branch of the repository; second, it labels each repository event with
+the depth, or the number of merges that a given node will have to pass
+through to reach the master branch; third, inverting and pruning the
+DAG\@. The first phase takes a repository event along the master branch
+as input, and returns a pruned and inverted DAG with the nodes annotated
+with the depths. The first phase is shown in
+Algorithm~\ref{alg:generalized_phase_I}. The second phase is designed to
+resolve the \mt{} from the inverted DAG\@. The second phase is shown in
+Algorithm~\ref{alg:generalized_phase_II}.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/bitbucket_plugin.png}
+  \caption{Bitbucket plugin showing the updated \mt{} on the repository
+  DAG in Figure~\ref{fig:example_DAG_again}.}
+  \label{fig:bitbucket_plugin}
+\end{figure}
+
+\begin{algorithm}
+  \caption{Computing the generalized Merge Tree: Phase 1}
+  \label{alg:generalized_phase_I}
+  \begin{algorithmic}[1]
+    \Function{Phase 1}{initial commit $root$} : updated tree
+    \State $openBranches \gets 0$
+    \State $Q \gets root$
+    \Do
+    \State $cur \gets Q.dequeue$
+    \State $parents \gets cur.parents$
+    \State $openBranches \gets openBranches + parents.length - 1$
+    \For{$index, parent \in parents$}
+    \If{$parent.depth$ is $undefined$}
+    \State $parent.depth \gets cur.depth + index$
+    \ElsIf {$cur.depth > parent.depth$}
+    \State $openBranches \gets openBranches - 1$
+    \ElsIf {$cur.depth < parent.depth$}
+    \State $openBranches \gets openBranches - 1$
+    \State $parent.depth \gets cur.depth$
+    \EndIf
+    \State $parent.children \gets cur$
+    \If{$parent$ has not been visited}
+    \State $Q \gets parent$
+    \State $parent.visited \gets True$
+    \EndIf
+    \EndFor
+    \doWhile{$Q$ not empty and $openBranches \ne 0$ }
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Unlike the original algorithm, this algorithm works as a breadth-first
+traversal of the DAG. Starting at the root node, the algorithm collects
+the parents of the node. If the root node is not a merge, but a commit
+made directly in the master branch, the \mt{} of this node will only
+contain this node. The node will have only parent, which is the next
+event on the master branch toward the initial commit. This parent will
+get pushed onto the processing Queue, but the number of open branches
+will remain zero, since the root was a commit, and introduced no new
+branches that would then need to reach a branching point. Since the
+number of open branches is still zero, the algorithm terminates without
+further traversal. If the node is a merge node, it will introduce $p -
+1$ new branches that it is merging, where $p$ is the number of parents.
+This number is $p - 1$ because the first parent is on the same branch as
+the current node, and the current branch is already open. Each of the
+$p-1$ branches need to reach a branch point before the algorithm can
+terminate. This does not handle the case where a branch could contain a
+dangling Initial commit, where a branch with an unrelated history is
+merged into the repository. This is usually found in situations where a
+separate repository is merged into the current repository, and did the
+separate repository was not a clone or a fork of the current repository.
+The Linux repository has 3 dangling initial commits and 1 normal initial
+commit, which are found with the command
+\verb|git rev-list --max-parents=0 HEAD|.
+
+The sequence of \verb|if| statements from line 9 to line 16 of the
+algorithm are used for resolving the type of branch and the node depth.
+If the parent has not yet been assigned a depth, then the parent has not
+been visited yet. We assume that it is at the same depth as the current
+node plus, the index. The first parent is on the same branch, the index
+is 0, so the depth of the parent will be the same as the current node.
+Subsequent parents will be assigned accordingly. This assignment of
+depths retains more information that the original \mt{} stricture, since
+the depth includes the order that the branches were merged. If the
+parent has a depth associated with it there are three possibilities for
+this depth, the depths could be equal, the depth of the parent could be
+less than the depth of the current node, or the depth of the parent
+could be greater than the depth of the current node. If both nodes are
+at the same depth no actions need to take place, both nodes are on the
+same branch, so no branch points are detected. In the second case, when
+the depth of the current node is greater than the depth of the parent,
+this indicates that the parent is the branch node for the current node,
+the number of open branches is decremented to indicate this. If the
+depth of the current node is less than the depth of the parent, this is
+also a branch point, but it indicates that the depth of the parent was
+incorrectly assigned. This situation can occur when a branch point has
+fewer repository events on the side branch than on the main branch, as
+seen in Figure~\ref{fig:graph_1}. In this situation, the traversal
+starts at $F$ where the open branches increases by one to include the
+green branch. Following the breadth-first approach, $E$ will be assigned
+the same depth as $F$, while $C$ will be assigned a depth of $F + 1$. On
+the next iteration, $D$ will be assigned the same depth as $F$ and $A$
+will be assigned the depth of $C$, when it should have the same depth as
+$F$. In this situation, $B$ will detect that $A$ as a depth that is
+larger than the correct depth. The green branch did not detect that the
+branch closed at $A$ since the depth of $A$ was undefined, so $B$ must
+replace the depth of $A$ with the depth of $B$, which is the same as the
+depth of $F$, and decrement the number of open branches since the green
+branch did not detect this. In these situations, more nodes will be
+imported than the nodes required, if $A$ were not the initial commit.
+Once a depth has been assigned to the parent, the parent is added to the
+processing queue if it has not already been visited.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[height=4cm]{Figures/graph_1.png}
+  \caption{Situation where an incorrect depth will be assigned to node
+    $A$ initially before being resolved by $B$}
+  \label{fig:graph_1}
+\end{figure}
