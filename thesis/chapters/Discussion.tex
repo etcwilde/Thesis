@@ -380,3 +380,89 @@ processing queue if it has not already been visited.
     $A$ initially before being resolved by $B$}
   \label{fig:graph_1}
 \end{figure}
+
+\begin{table}[htpb]
+  \centering
+  \caption{Example traversal of the example DAG in
+    Figure~\ref{fig:example_DAG_again} starting at merge 11.}
+  \label{tab:ex_traversal}
+  \begin{tabular}{cccc|rl}
+    \toprule
+    Current & Parents & Open Branches & Q       & Visited : Depth & Children\\\midrule
+    -       & -       & 0             & 11      & 11      : 0     & \\
+    11      & 4,9     & 1             & 4,9     & 4       : 0     & 11, 5\\
+    4       & 1       & 1             & 9,1     & 9       : 1     & 11\\
+    9       & 7,6,8   & 3             & 1,7,6,8 & 1       : 0     & 4\\
+    1       &         & 3             & 7,6,8   & 7       : 1     & 9, 8\\
+    7       & 5       & 3             & 6,8,5   & 6       : 2     & 9\\
+    6       & 5       & 2             & 8,5     & 8       : 3     & 9\\
+    8       & 7       & 1             & 5       & 5       : 1     & 7, 6\\
+    5       & 4,2,3   & 2             & 2,3     & 2       : 1     & 5, 3\\
+    2       & 1       & 1             & 3       & 3       : 2     & 5\\
+    3       & 2       & 0             &         &                 & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Table~\ref{tab:ex_traversal}, shows the steps in the traversal of the
+DAG in Figure~\ref{fig:example_DAG_again}, starting at merge 11. Current
+indicates the node being visited at $cur$, Parents, the $parents$ of
+$cur$. Open Branches indicates the number of open branches, stored in
+$openBranches$. Q are the nodes in the processing queue. Visited and
+depth are stored together in this table, simply showing which nodes have
+been visited and the depth of those nodes. Visited is not in perfect
+order with the steps to the left of the vertical bar, but is kept as a
+ledger. Children indicates the children in the reversed DAG of the node
+name in Visited. The Children in the table become the candidate parents
+of each node, when resolving the trees.
+
+Continuing with the example; open branches is initialized to 0, and the
+root, 11 is pushed onto the work queue. Since 11 is provided as the
+root, we assume that it has a depth of 0, and we add it to the visited
+list.
+
+11 is dequeued from the work queue, and the parents 4 and 9 are resolved
+from the DAG. Open branches is updated to 1. Working through the
+parents, neither parent have an assigned depth, so the parent depths are
+assigned. 4 is in the first position, so it is on the same branch depth
+as 11, and 9 is in the second position, so it is one higher than the
+branch depth of 11. 11 is added to the children lists of 4 and 9, which
+provides the inverted links of the DAG.
+
+4 is dequeued from the work queue. 4 only has one parent, 1, so the
+number of open branches remains 1. 1 has a depth of 0 since it is on the
+same branch as 4. 4 is added as a child of 1, and finally 1 is pushed to
+the processing queue and added to the visited list.
+
+9 is dequeued from the work queue. 9 has three parents, 7, 6, and 8, so
+the number of open branches advances to 3. 9 has a depth of 1 and none
+of 7, 6, or 8 have a depth value assigned yet, so 7 is assigned a depth
+of 1, 6 a depth of 2, and 8 a depth of 3. Each of these have 9 added to
+the children list, and are pushed onto the work queue and the visited
+list.
+
+1 is dequeued from the work queue, and has no parents since it is the
+initial commit of the repository. No work needs to be done on 1.
+
+7 is dequeued from the work queue. 7 has one parent, 5. The number of
+open branches remains the same. 5 does not have an associated depth
+value assigned yet, and is the first parent of 7, so 5 is assigned a
+depth of 1. 7 is added to the children list of 5, 5 is pushed to the
+work queue and added to the list of visited nodes.
+
+6 is dequeued from the work queue. 6 has one parent, 5. The number of
+open branches remains the same for now. 5 already has an associated
+depth of 1, and 6 has a depth of 2. Since the depth of the current node
+is greater than the depth of the parent, it indicates that this branch
+is closing, so the number of open branches is decremented to 2. 6 is
+added to the children list of 5. Since 5 is already in the visited list,
+it is not added again.
+
+8 is dequeued from the work queue. 8 has one parent, 7. The number of
+open branches remains the same for now. 7 already has an associated
+depth of 1, and 8 has a depth of 3. Since the depth of 8 is greater than
+the depth of 7, the number of open branches is decremented to 1. 8 is
+added to the list of children of 7.
+
+I can continue with the expansion of node 5, but I think that this is
+sufficient for the understanding of phase 1.
