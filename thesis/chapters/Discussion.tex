@@ -6,3 +6,42 @@ from the study evaluating \tool{}. Included are observations that could
 lead to improvements in the current DAG visualizations, the comments
 from a release manager, and work toward applying the \mt{} model and
 visualizations to other repositories.
+
+\section{Interpreting the Results}\label{sec:interpreting_the_results}
+
+Overall, the results indicate that \tool{} is able to improve the
+correctness and accuracy of responses to various summarization tasks,
+and decrease the time taken to produce the results. This doesn't come as
+a surprise since the goal of the \mt{} model and the visualizations in
+\tool{} are to provide better conceptual understanding and
+summarizations of merges, while Gitk and DAG visualizations are designed
+to show the topology of the entire repository. Since there are no other
+tools for showing how a commit is integrated, and the topology of the
+DAG does contain this information, the DAG visualization is used as a
+proxy to show how a commit reaches the master branch.
+
+One area of interest is the comparison of \tool{} and Gitk on
+correctness in task T10, determining the modules modified in a merge.
+Again, modules are no inherent to Git and are a property of the commits
+in the Linux repository, the module is found in the summary of the
+commit logs. In this task, there was not a statistically significant
+difference in the number of correct responses between \tool{} and Gitk,
+and, while significant, the effect on accuracy was also small. This is
+interesting because \tool{} provided this information directly, while
+users would have to look at the commit logs to determine this
+information from Gitk. Further inspection of the merges show that this
+was the only task where the correct answer was in the commit that was
+provided, and actually required no aggregation of the results.
+
+Another area of interest are the time results for task T7. This is the
+only task where merge size had a significant impact on the performance
+of the participants. There was not a statistically significant
+difference in the time taken to respond to this task between the two
+tools; however, the effect size indicates that the tool has a medium
+effect on the time taken to respond. This is likely due to the sample
+size. In the other tasks, the responses 11 responses for both merges
+were combined, effectively doubling this number, creating 22 samples.
+Since there was a difference in the time taken to respond given the
+merge size, the results had to be analyzed separately. 11 samples is
+quite small, and is likely not enough to have a 95\% confidence in the
+results.
