@@ -45,3 +45,32 @@ Since there was a difference in the time taken to respond given the
 merge size, the results had to be analyzed separately. 11 samples is
 quite small, and is likely not enough to have a 95\% confidence in the
 results.
+
+\section{Study Observations}\label{sec:study_observations}
+
+Identifying the master branch was an issue that consistently came up
+among all participants during the study. Some participants assumed that
+the first line in the DAG visualization indicated the master branch,
+while others assumed that the next branch tag indicated the master
+branch. The DAG visualization provides no indication of which branch is
+the master branch. Furthermore, the visualization in Gitk is not
+consistent, branch colors and positions change between runs; identifying
+the branch once does not guarantee that it is identifiable after
+restarting Gitk.
+
+If the participants were able to easily identify the master branch, the
+results from the study would likely be very different. This would be
+most prominent in the summarization portion of the small merge, since
+summarizing a single item is trivial, but the issue was identifying that
+there was only a single item, which is currently not trivial. With more
+than 25\% of the merges into Linux being single-commit merges, it is
+important that users are able to identify them and understand the
+changes being made within them. The structure of a single-commit tree is
+identical to the structure of a flat tree, all commits are merged
+directly into the master branch, passing through no other merges on the
+way. Flat trees are the most common form of tree in the kernel
+repository. To improve the visualization of the DAG for providing an
+effective visualization for summarization and comprehension of flat
+trees, it would likely be sufficient to indicate the master branch.
+For the non-flat trees, a more powerful structure would likely be
+necessary.
