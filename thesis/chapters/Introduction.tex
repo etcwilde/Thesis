@@ -1,59 +1,71 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Introduction}
 
-Understanding the process in which a piece of software is developed is
-crucial in the process of determining why certain changes were made, how
-the changes were made, and how the surrounding code was modified to
-accept those changes. This information can be used by maintainers to
-understand how the changes being made to the current version are being
-applied, so they can be applied to older versions as well. Git is a
-distributed version control software, designed to facilitate
-collaborative software development between thousands of people working
-independently around the world. Git uses the Directed Acyclic Graph
-(DAG) model to store modifications to code in individual commits. The
-model enables git to have impressive flexibility compared to many other
-version control systems, but suffers from poor visualizations stemming
-from the DAG\@. In large projects, the visualization of the DAG, as
-shown in git, does not provide an adequate summarization of how a commit
-is integrated into the master branch of a repository.
+Visualizations of the directed acyclic graph of an active software
+system repository are difficult to understand. These visualizations are
+used to provide information about the topology of the repository, which
+gives insight on how commits are being integrated. Maintainers must use
+this information to understand the changes that are being made to the
+current version of the software, so that the fixes can be applied to
+older versions as well. This requires them to understand how the commit
+with the necessary changes are integrated, and identifying other commits
+that are necessary for this integration to take place. In large software
+repositories, this task is not trivial. This \paper{} presents the
+design of a new model constructed from the underlying graph of the
+repository.
 
-While there has been extensive research on visualizing git repositories,
-previous work does not focus on showing how a commit is integrated. The
-literature on repository visualization and summarization can be broken
-down into three main subcategories;
-communication\cite{Cubranic2005,Begel2010}, aspect-oriented
-visualization\cite{Ambros2005,Burch2005,Ambros2009}, and organic
-visualizations\cite{ogawa09,Caudwell2010}. A fourth category can be
-added to include non-academic tools, like GitKraken and SourceTree,
+The work in this \paper{} focuses on the Linux repository, which uses
+git for managing changes in the code and helping coordinate
+contributors. Linux is highly active, with more than 8,000 commits added
+per release. Linux is used in many software applications, including
+mobile phones, smart appliances, and even spacecraft. Maintainers must
+be able to port the patches to the current version of the kernel back
+into the version of the kernel that they are maintaining. This requires
+them to determine which commits are relevant to them, and how these
+commits are integrated. This work was originally motivated by the
+request of an external industrial entity, requesting a means of
+visualizing how commits are integrated. \evan{keep this or leave it out?}
+
+Git is a distributed version control system that uses the directed
+acyclic graph (DAG) model to store modifications to code in nodes, and
+help with branching and merging related changes. Git was designed by
+Linus Torvalds in 2005 specifically for the needs of the Linux kernel
+repository after the Linux project switched from Bitkeeper. Since git
+was designed for the Linux project, the repository makes use of nearly
+every feature in git. The DAG model allows git to have impressive
+flexibility compared to many other version control systems, but suffers
+from poor visualizations. In large projects, the visualizations of the
+DAG do not provide an adequate summarization of how a commit is
+integrated into the master branch of a repository.
+
+While there has been extensive research on visualizing software
+repositories, previous work does not focus on the topology of the
+repository, and in extension, how a commit is integrated. The literature
+on repository visualization and summarization can be broken down into
+three main subcategories; communication\cite{Cubranic2005,Begel2010},
+aspect-oriented visualization\cite{Ambros2005,Burch2005,Ambros2009}, and
+organic visualizations\cite{ogawa09,Caudwell2010}. A fourth category can
+be added to include non-academic tools, like GitKraken and SourceTree,
 built as clients to work with git repositories and visualize the DAG
-model directly.
+model directly. The goals of these tools is not to extract new
+information from the repository, but to act as a user-friendly client on
+top of git.
 
-In this \paper{} \evan{dissertation, thesis, or paper?}, we describe the
-design of a model, the \mt{}, and the construction and evaluation of a
-tool, \tool{}, designed to clearly visualize the path that commits take
-to be integrated, and what other commits are related to it. \tool{} is
-built around the \mt{} model using the Linux repository. Linux was
-requested by an external entity with interest in maintenance of older
-versions of the kernel for use in Android distributions. Linux makes
-sense as a good platform for understanding the various uses of git, as
-it was designed to replace Bitkeeper as the version control system for
-the Linux repository in 2005, so the repository makes use of nearly
-every feature of git. Our dataset includes commits from as far back as
-2001 and as recent as 2014, though for this \paper{}, we will mostly
-concern ourselves with the commits contributing to kernel versions 3.1
-through 3.16, or the commits that were integrated into the kernel
-between October, 2011 and August 2014.
-
-When constructing and evaluating the model and tool, three questions
-arose; first, we want to ensure that the visualizations of the directed
-acyclic graph (DAG) do not already provide meaningful summarization of
-how a commit is integrated (RQ\ref{rq:RQ1}). Next, we want to compare
-the visualization of the DAG against the visualization of the \mt{} to
-determine which is capable of providing a better understanding of how a
-commit is integrated (RQ\ref{rq:RQ2}). Finally, the new model should
-make it possible to more easily extract additional aggregate information
-about what is being integrated, and who is making the contributions
-(RQ\ref{rq:RQ3}).
+This \paper{} introduces a new model designed to help clearly visualize
+the path that a commit takes to being integrated into the master branch.
+To test the viability of the model, I build and evaluate a tool called
+\tool{}, which is designed to leverage the capabilities of the \mt{} to
+provide improved summarizations and visualizations of the merges in
+Linux. When constructing and evaluating the model and tool, three
+questions arose; first, we want to ensure that the visualizations of the
+directed acyclic graph (DAG) do not already provide meaningful
+summarization of how a commit is integrated (RQ\ref{rq:RQ1}). Next, we
+want to compare the visualization of the DAG against the visualization
+of the \mt{} to determine which is capable of providing a better
+understanding of how a commit is integrated (RQ\ref{rq:RQ2}). Finally,
+the new model should make it possible to more easily extract additional
+aggregate information about what is being integrated, and who is making
+the contributions (RQ\ref{rq:RQ3}).
 
 %% TODO: Move to methodology section
 \begin{textbox}
