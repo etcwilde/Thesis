@@ -6,7 +6,6 @@ projects. This \paper{} investigates user comprehension of the DAG
 visualization in the Linux repository, and presents the design of a new
 model, and a tool built from the model, with the goal of assisting users
 with comprehending how a commit is integrated into the master branch.
-
 Very few tools have the explicit goal of showing the topology of the
 repository. No academic tools that I am aware of attempt to do this.
 Most of the non-academic tools provide a visualization of the entire
@@ -25,17 +24,18 @@ release, but only a few of these are related to each other. 50\% of the
 merges contain fewer than 7 repository events being merged.
 
 The \mt{} model takes advantage of this structure, breaking the commits
-into groups based on the merge into the master branch. The trees are
-organized to show the path that a commit takes to reach the integrating
-merge into the master branch. A commit may pass through multiple merges
-on the way to the master branch. An algorithm is devised, and evaluated.
-Through the evaluation of the algorithm, I found some interesting events
-in the repository. The logs for the integrating merges contain the
-number of commits being integrated, and a listing of a subset of the
-commit log summaries being merged. This practice was put into place on
-September 4, 2007. A foxtrot merge occurred on December 12, 2006. I
-identified 507 merges, of the 1537 merges made prior to this date, that
-were confounded by the foxtrot.
+into groups based on the merge into the master branch. The commits are
+then organized into trees, the parent of a node is the next merge on the
+way to integration, which shows the path that a commit takes to reach
+the integrating merge into the master branch.  A commit may pass through
+multiple merges on the way to the master branch. An algorithm is
+devised, and evaluated. Through the evaluation of the algorithm, I found
+some interesting events in the repository. The logs for the integrating
+merges contain the number of commits being integrated, and a listing of
+a subset of the commit log summaries being merged. This practice was put
+into place on September 4, 2007. A foxtrot merge occurred on December
+12, 2006. I identified 507 merges, of the 1537 merges made prior to this
+date, that were confounded by the foxtrot.
 
 I constructed a tool, \tool{}, around the \mt{} model. Leveraging the
 model, \tool{} is able to provide simpler visualizations and summarize
@@ -76,7 +76,7 @@ and summarized in a more effective way. Participants in our study found
 visualizations of the \mt{} to be more enjoyable for summarization tasks
 than the visualizations of the DAG. The visualizations of the \mt{}
 model help users to more accurately summarize information about merges
-more quickly. While there are some implementation issues with \tool{},
-\mt{} visualizations are an effective means of providing a clear
-conceptual understanding and simple summarization of the events being
-merged into the master branch of a repository.
+more quickly. While there are still issues with the visualizations in
+\tool{}, \mt{} visualizations are an effective means of providing a
+clear conceptual understanding and simple summarization of the events
+being merged into the master branch of a repository.
