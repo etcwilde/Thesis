@@ -543,3 +543,31 @@ pragmatic reasons and other errors, some threats must be taken into
 account when considering the results. These threats, the mitigation
 techniques, and the steps to minimize other threats are provided in this
 section.
+
+\subsection{Internal Validity}\label{sub:internal_validity}
+
+In order to minimize the effects of order bias, the order that the tools
+were used, the commits were analyzed, and the tasks were performed was
+randomized for each participant. This leaves a lot of room for error in
+the part of the person performing the study. To minimize this room for
+error, a script was used to generate the exact text that needed to be
+used during the study. While this method proved to be very useful, I
+omitted one task during the course on one study. As a result, the
+information collected from this participant were removed from the pool
+during analysis.
+
+The merges chosen from the repository may not be a good representation
+of the merges in the repository. These merges were chosen to be from the
+first and second quartile to help select merges that were of common
+sizes. Of course, these are two merges out of thousands, and were
+selected randomly from the set of all merges.
+
+The answers provided by participants to earlier tasks were not taken
+into account when evaluating the correctness or accuracies to following
+tasks. The results of an incorrect answer may impact the results of the
+tasks that followed. If the participant was unable to determine the
+correct commits that were being merged, then none of the summarizations
+would be correct, even if the response was correct given the commits
+they identified. A future study could mitigate this by providing the
+correct set of commits that are being merged between the conceptual and
+summarization task sets to limit the propagation of errors.
