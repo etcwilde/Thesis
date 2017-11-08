@@ -1,10 +1,82 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Conclusion}\label{chap:conclusion}
 
-The goals of this \paper{} are to introduce a new model for providing
-git users a better understanding of how a commit is integrated into the
-master branch of a repository. The issue surrounding comprehension of
-visualizations of the DAG motivates this work. The \paper{} presents a
-new mode, an algorithm and a validation of that algorithm, a tool, and a
-user study of the tool, to remedy, and evaluate the effect of the new
-model to remedy this issue.
+The visualization of the DAG is difficult to comprehend in large
+projects. This \paper{} investigates user comprehension of the DAG
+visualization in the Linux repository, and presents the design of a new
+model, and a tool built from the model, with the goal of assisting users
+with comprehending how a commit is integrated into the master branch.
+
+Very few tools have the explicit goal of showing the topology of the
+repository. No academic tools that I am aware of attempt to do this.
+Most of the non-academic tools provide a visualization of the entire
+DAG, if they are able to produce a visualization at all. There is little
+variance in the DAG visualizations between these tools, which leaves
+room for improvement.
+
+One major issue in understanding the DAG visualizations is the amount of
+information being presented. The DAG visualization provides information
+about all of the commits, but in the case of the Linux repository, the
+integrating merges in the master branch work nearly independently of
+each other. Only the commits that are merged together are related to
+each other are relevant, while commits that are not included in that
+merge are unrelated. The Linux repository adds thousands of commits per
+release, but only a few of these are related to each other. 50\% of the
+merges contain fewer than 7 repository events being merged.
+
+The \mt{} model takes advantage of this structure, breaking the commits
+into groups based on the merge into the master branch. The trees are
+organized to show the path that a commit takes to reach the integrating
+merge into the master branch. A commit may pass through multiple merges
+on the way to the master branch. An algorithm is devised, and evaluated.
+Through the evaluation of the algorithm, I found some interesting events
+in the repository. The logs for the integrating merges contain the
+number of commits being integrated, and a listing of a subset of the
+commit log summaries being merged. This practice was put into place on
+September 4, 2007. A foxtrot merge occurred on December 12, 2006. I
+identified 507 merges, of the 1537 merges made prior to this date, that
+were confounded by the foxtrot.
+
+I constructed a tool, \tool{}, around the \mt{} model. Leveraging the
+model, \tool{} is able to provide simpler visualizations and summarize
+additional information about the commits being merged, including the
+authors involved and files modified. Through \tool{}, I am able to
+further evaluate the effectiveness of the visualizations of the \mt{}
+compared to the visualizations of the DAG\@.
+
+Using \tool{}, I conducted a 12-user study with two goals. One goal is
+to verify the assumption that the visualizations of the DAG are not able
+to convey information about how a commit is integrated into a project.
+The other goal is to compare the visualizations and summarizations from
+the DAG in git and Gitk to the visualizations and summarizations from
+the \mt{}. The participants were unable to accurately determine how
+commits were integrated from the DAG visualization. Furthermore, the
+visualizations and summarizations in \tool{} helped the participants
+answer questions about a merge more accurately and more quickly. Further
+information gathered from the study indicated that important information
+that was present in the DAG visualizations was lost in the \mt{} model.
+The order of commits with regard to each other tell the story of why a
+developer is making changes. This information is lost in the \mt{}, but
+is retained in the DAG visualizations.
+
+I discuss the design of an updated model, taking into account the lost
+information. The updated model retains the order of the commits by
+overlaying the original \mt{} back on the DAG\@. With the updated model, I
+propose a new algorithm that not only performs the overlay without an
+additional step, it prunes the DAG, taking a smaller subset of the
+original repository DAG to construct individual \mt{s}. A second tool is
+constructed using the updated model. The tool works as a web-interface,
+but instead of working through a backend database, the tool requests
+repository information from public BitBucket repositories. Using this,
+some preliminary evaluation was performed on the new algorithm, but more
+extensive testing is necessary.
+
+\mt{s} are a novel means of processing git repositories to be visualized
+and summarized in a more effective way. Participants in our study found
+visualizations of the \mt{} to be more enjoyable for summarization tasks
+than the visualizations of the DAG. The visualizations of the \mt{}
+model help users to more accurately summarize information about merges
+more quickly. While there are some implementation issues with \tool{},
+\mt{} visualizations are an effective means of providing a clear
+conceptual understanding and simple summarization of the events being
+merged into the master branch of a repository.
