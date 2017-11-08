@@ -593,3 +593,31 @@ the participants have worked with large repositories during the course
 of their research, professional developers are the target audience of
 this tool, so working with professional developers would provide more
 meaningful results.
+
+\section{Limitations}\label{sec:limitations}
+
+The model is designed with the Linux repository in mind. The viability
+of \mt{s} to provide useful and accurate information relies on a few
+properties of the underlying repository. The repository must use a
+branch and merge structure. Some repositories, like the OCaml
+repository, commit directly into the master branch. At release time, a
+branch is created for the version being released. Patches to the version
+are added as necessary. The release branch is never merged back into the
+master branch. Since \mt{s} are designed to show how a commit is
+integrated into the master branch, an \mt{} will not help with a
+repository with this structure.
+
+Repositories cannot have foxtrots. A foxtrot confounds the master
+branch, making it impossible to properly determine where the integrating
+merge occurs. The algorithm will continue to process repositories
+containing foxtrots; however, the resulting \mt{s} will not be
+meaningful.
+
+Repositories should limit the use of fast-forward merging. The goal of
+\mt{s} is to help understand how commits are grouped together, which is
+done at a merge commit. Fast-forward merges splice the changes directly
+into the underlying branch, hiding the fact that there was ever a
+branch. The original branch information is not retrievable and will
+result in many flat trees, where everything is merged directly into the
+master branch, or worse, the master branch contains only individual
+commits.
