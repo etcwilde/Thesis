@@ -248,14 +248,12 @@ commit to the master branch using the inverted DAG.\@
                 \EndIf
                 \EndIf
                 \EndFor
-                \State {\# $c$ is the commit that follows $cid$}
-                \State {\# in its way to master}
+                \State {\# $c$ is the commit that follows $cid$ on it's way to master}
                 \State add edge $(cid, next)$ to $Tree$
                 \State \Return $(d, m, next)$
                 \EndFunction
 
-                \State {\# Compute the distance for each commit}
-                \State {\# discarding result}
+                \State {\# Compute the distance for each commit discarding result}
                 \For{$c \in nodes(DAG)$}
                 \State $MergeAtMaster(c)$
                 \EndFor
