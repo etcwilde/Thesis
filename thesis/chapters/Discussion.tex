@@ -522,3 +522,16 @@ current node is the tree parent to the parent. The DAG parent currently
 being observed is added to the tree children of the current node, and
 the DAG parent is added to the processing queue. \evan{If this makes any
   sense at all, I will be very happy!}
+
+The algorithm has not yet been evaluated against the results of the
+original algorithm, or on the accuracy in the context of the kernel.
+Small repositories have been used to verify that it produces the correct
+trees for various repository topologies. The set of small repositories
+used test for many situations, but are not comprehensive. Further
+evaluation on the quality of the \mt{s} produced is required before the
+algorithm and the new model are ready for a full user study. The new
+algorithm is not minimal, the subset of the DAG contains nodes that are
+not required in the final tree. A more efficient algorithm may be
+possible. Once the results of the algorithm have been fully assessed,
+member checking may be a potential means of determining that the new
+model and new algorithm satisfy the shortcomings of the original model.
