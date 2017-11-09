@@ -1,0 +1,224 @@
+% vim:set et sw=2 ts=4 tw=72:
+\chapter{Implementation Details}
+
+The implementation is broken into two parts, the tool and the database.
+The database uses postgresql, an advanced opensource database management
+system. The tool backend uses Python and the Flask framework.
+Both the database and the \tool{} backend are containerized using
+Docker. This facilitates easy migration between the development
+environment and the server where the system is running. Both components
+are running Alpine 3.5, a simple, light, and secure distribution of
+Linux designed to run as the base of Docker containers. Containers are
+similar to virtual machines, but easier to work with. Instead of using
+virtualization of the hardware, Docker containers run on top of the host
+kernel, making use of \textit{cgroups} to allocate resources to the
+container. Since the container is not a full virtual machine, it only
+needs to contain the information required to run the service. There are
+no device drivers, or even a kernel. A container image can be exported
+and imported from the development environment directly into the
+production environment.
+
+This chapter contains details on the design of the database, the
+extraction of the data, and the implementation of the tool.
+
+\section{Database}\label{sec:database}
+
+The database is made of seven tables;
+
+\begin{itemize}
+  \item
+
+    Baseline contains the commits that have been integrated into the
+    master branch of the repository.
+
+  \item
+
+    Commits contains the metadata for each commit, including the author,
+    committer, the date the commit was authored, and the date the commit
+    was committed, as well as the associated patch.
+
+  \item
+
+    Filesmod contains the information regarding which files were changed,
+    and how many lines were added and removed from each.
+
+  \item
+
+    Logs contains the subject and full log message for every commit.
+
+  \item
+
+    Releases contains information regarding which commits represent the
+    split between versions of the kernel. It contains the version name,
+    the commit, the previous version, the commit for the previous
+    version, the previous candidate and commit, and whether the version
+    is a candidate.
+
+  \item
+
+    Search contains information necessary for the search engine. While
+    this table is not necessary for the operation of the tool, it is
+    used as a cache and index, which improves the performance of the
+    search engine greatly. It contains the search term vector and the
+    associated commit hash.
+
+  \item
+
+    PathToMerge contains the actual merge-tree structures, with
+    references pointing from a given commit to the next merge on the way
+    to integration.
+
+\end{itemize}
+
+\evantodo{In the appendix, actually spell out the schema of each table
+  in the database}
+
+\subsection{Full Text Search}\label{sub:full_text_search}
+
+
+We use the full text search built into PostgreSQL to enable easy
+searching for commits in the database. While it is possible to compute
+the text search vectors for every query, it is faster to pre-compute the
+vectors for each commit. The search vectors are pre-computed and stored
+in the search table, creating a map between search terms and commit
+hash. The search vectors include terms from the commit hash, log
+subject, full log message, commit author name, commit and authorship
+date, and list of files that were modified in the commit.
+
+The search attributes are given different weight when calculating the
+search rank. The attribute weights are listed in
+Table~\ref{tab:search_attribute_rank}. We do not normalize against
+document length when computing the rank. The ranking system is designed
+to associate a higher weight with attributes of more importance. One
+drawback of using full text search is that terms must be in verbatim of
+the term used in the attribute. This has two negative effects, the first
+is that typos will drop commits that are otherwise relevant, and second,
+the entire term must be entered. Trigraphs are a possibility for working
+around this. Trigraphs break the words in the attribute into groups of
+three. Using this on the commit hash, for example, would allow a user to
+perform a substring search, typing only a portion of the commit hash.
+Unfortunately, the Trigraphs are slower to compute, to search, and
+consume more memory, and therefore were infeasible for this project.
+
+\begin{table}[htpb]
+  \centering
+  \caption{Search Attribute Ranking}
+  \label{tab:search_attribute_rank}
+  \begin{tabular}{cc}
+    \toprule
+    Attribute       & Weight\\
+    \midrule
+    Commit Hash     & A \\
+    Log Subject     & A \\
+    Log Full Text   & C \\
+    Author Name     & A \\
+    Commit Date     & B \\
+    Authorship Date & B \\
+    File names      & B \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Postgres applies stop-word elimination when constructing the search
+vectors; stop words are terms that are common in a given language and
+won't help when discriminating items. These terms include words like
+``and'', ``the'', and ``a''. We use the default English stop-words built
+into Postgres version 9.6.2.
+
+\section{Web Interface}\label{sec:web_interface}
+
+The tool itself is implemented as a web-interface to enable people to
+use it without needing to install dependencies or download external
+files. As the compressed database image sits at 976MB, it would not be
+useful for many to download it.
+
+The application is written with asynchronous processing in mind. Most of
+the actual do not contain information that is specific to a given commit
+or query. Instead, the pages are a format, which is filled in later by
+Javascript. Using the asynchronous architecture has advantages and
+disadvantages. Since the main part of the page is the same for every
+commit, it can be cached. When a user clicks on a page, it takes nearly
+no time to get most of the page showing, since it should be cached at
+all hops on the way back to the server. The only waiting period is for
+the commit-specific information to load. The issue is that many requests
+must be passed between the client and the server. When the client
+requests the page, instead of getting a single response, the client will
+wait for the response, then send a request for the commit-specific
+information. There are different requests involved for collecting the
+tree, files, authorship, modules, and message information.
+
+The backend itself is written in Python 3.5, and uses the Flask
+framework to handle routing requests and manage cookies. While flask
+contains a simple built-in HTTP server, I opted to use the uWSGI server,
+which is more secure and runs faster, supporting multiple worker
+threads. The frontend is written in Javascript, HTML, and CSS. Bootstrap
+is used to produce the clean interface, and D3 generates the tree
+visualizations.
+
+\section{Composition}\label{sec:composition}
+
+The database and website backend run in different containers, and must
+be linked together in order to communicate with each other. This section
+describes the architecture of the system, depicted in
+Figure~\ref{fig:webserver_architecture}, describing how the various
+components work together to produce the page.
+
+\begin{figure}[htpb]
+  \begin{center}
+    \begin{tikzpicture}[scale=1, auto, on grid, semithick, transform
+      shape, block/.style={rectangle, text=black, draw=black},
+      extern/.style={ellipse, text=black, draw=black}]
+
+      \node[extern] (void) {The Internet};
+      \node[block, below = 2cm of void] (nginx) {Nginx};
+
+      \node[block, below = 2cm of nginx] (flask) {Flask Application};
+      \node[block, below = 2cm of flask] (psql) {Postgres};
+
+      \draw (nginx) edge[stealth-stealth] node[right] {HTTP} (void)
+            (flask) edge[stealth-stealth] node[right] {WSGI} (nginx)
+            (flask) edge[stealth-stealth] node[right] {Postgres} (psql);
+
+      \draw[chartblue, thick, dashed] ($(flask.north west) + (-0.3, 1.0)$)
+      node[black, above left, rotate=90] {Docker Network}
+      rectangle ($(psql.south east)+(1.2,-0.6)$) ;
+
+    \end{tikzpicture}
+  \end{center}
+  \caption{Webserver Architecture, showing the protocol used for
+    communication between the modules.}
+  \label{fig:webserver_architecture}
+\end{figure}
+
+The built-in Flask HTTP server is not not designed for a production
+environment. It is not designed with performance or security in mind, it
+is designed for debugging. Requests must be passed through an actual web
+server. I chose Nginx to be the outward-facing server, it is modern, and
+designed with speed and security in mind. Apache is another option, but
+for pragmatic reasons I chose Nginx. Nginx receives HTTP requests from a
+user over the internet. It converts the request from HTTP to WSGI, a
+high-performance binary protocol for python applications, and then
+forwards the WSGI request to the Flask application.
+
+The Flask application runs in a Docker container, so Nginx cannot
+communicate directly with the application. Nginx sends requests to the
+Docker network, which applies the local equivalent of port-forwarding to
+pass the requests to the appropriate container. Docker is specifically
+designed for working with scalable systems, so as long as Nginx can
+connect to the Docker network, requests are passed to the container,
+regardless of where the container is running. In our case, everything is
+running on one host, but the architecture would not need to change if
+this were to change.
+
+The Flask application and database are in separate containers. Since
+both are in the same Docker network, they are discoverable to each other
+using the container name as the host name. Again, the containers could
+be running on separate physical hosts, but the Docker overlay network
+would hide this fact, and the system architecture would not have to
+change. Requests are passed between the application and database using
+the PostgreSQL protocol.
+
+Once the Flask application has generated a response, it is sent back to
+Nginx. Nginx generates the appropriate response header, setting the
+cache and MIME information, as well as caching the response, before
+sending the response back to the user.
