@@ -621,3 +621,21 @@ branch. The original branch information is not retrievable and will
 result in many flat trees, where everything is merged directly into the
 master branch, or worse, the master branch contains only individual
 commits.
+
+\section{Future Work}\label{sec:future_work}
+
+The study presents two models. The first has undergone a study, and
+while it helped users summarize aspects of a merge more quickly, there
+was one major shortcoming. The proposed model does not maintain the
+relationship between commits, only that they share a merge. This is
+addressed by the proposal of second model, that maintains this
+information while still removing unnecessary information from the
+visualization. The algorithm has not been verified. The output of the
+algorithm must be verified against the merges in the repository. A
+similar evaluation to the one conducted against the results of the
+original study would work, or simply comparing against the results of
+the original algorithm should be sufficient. Once the trees are
+generated and evaluated, the visualizations of the trees should be
+evaluated to ensure that users are still able to determine how a commit
+is merged, but also to ensure that users are able to understand the
+relationships between the commits.
