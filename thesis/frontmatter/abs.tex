@@ -8,30 +8,29 @@
 \begin{center}
   \textbf{ABSTRACT}
 
-  Understanding how commits are grouped and integrated is vital for
-  understanding how and why changes were made. While direct
-  visualization of the DAG of the repository will contain all
-  information about the events taking place, users are unable to draw a
-  strong conceptual understanding of the events taking place. The DAG
-  visualization becomes overwhelming very quickly, especially at the
-  scale of some of the larger repositories.
+  The visualization of the DAG is difficult to comprehend in large
+  software projects, specifically for the purpose of understanding how a
+  commit is integrated and what other commits are necessary for that
+  integration. Other research on repository visualization focuses on
+  other aspects of the repository, not the topology.
 
-%   Between 8000 and 14000 commits are integrated into the master branch
-%   of the Linux kernel per release. Due to the number of commits being
-%   integrated, maintenance of older versions of the kernel becomes nearly
-%   impossible.
+  This thesis focuses on improving the visualization of the DAG for the
+  Linux kernel repository, which is a large and highly collaborative
+  software project. The repository integrates more than 8000 commits per
+  release, contributed by more than 1000 active authors per release.
+  Using properties found in the Linux repository, a new tree-based model
+  is introduced to alleviate the issues in the DAG visualization.
 
-  Current tools provide information about repositories through the
-  directed acyclic graph (DAG) of the repository, which is helpful for
-  smaller projects. With the scale and number of branches in the kernel
-  repository, the DAG becomes overwhelming very quickly; the DAG
-  visualization shows information that is not relevant to a given
-  commit. Furthermore, the DAG visualization shows all parents of every
-  commit, while maintainers are more interested in how and when a commit
-  is integrated into the master branch.
+  A tool is constructed using the \mt{} model as a proxy to testing the
+  capabilities of the new model. A 12-participant user study is
+  performed to evaluate how well the visualizations in the tool are able
+  to provide comprehension.
 
-  We propose a model designed with the intent of clearly showing how a
-  commit is integrated, a tool that uses this model for summarization
-  and visualizations, and an evaluation of the tool through a user
-  study.
+  The findings indiacate the visualizations of the \mt{} are able to
+  help users comprehend how commits are integrated more quickly and more
+  accurately in the context of the Linux repository. The model should
+  generalize to repositorys with a similar topology, requring that th
+  repositoy must use a branch-and-merge structure, the repository must
+  not have foxtrots, and cannot apply fast-forward merges.
+
 \end{center}
