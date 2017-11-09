@@ -1,12 +1,13 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Model}\label{chap:Model}
 
-Leveraging the topological information in Chapter~\ref{chap:background},
-we design a model that groups commits by the integrating merge into the
-master branch. Since the merges into the Linux kernel are atomic, all
-the context necessary for merging a commit is available at the
-integrating merge. The model is a tree-based model that we call the
-\mt{}.
+The topological information in Chapter~\ref{chap:background} indicates
+that while there are many commits being integrated into the repository,
+relatively few are integrated in a given merge. Leveraging this
+information, I design a model that groups commits by the integrating
+merge into the master branch. Since the merges into the Linux kernel are
+atomic, all the context necessary for merging a commit is available at
+the integrating merge. The model is a tree-based model, the \mt{}.
 
 The \mt model abstracts the DAG of the repository into a set of \mt{s}.
 Each \mt is rooted at a merge into the master branch. The leaves of this
@@ -19,16 +20,18 @@ The \mt{s} also help understand how commits were grouped together in
 order to be integrated. In this model, not only has the DAG been
 inverted (and simplified), but the entire notion of parent-child
 relationship has been reversed. Due to this property, the terminology
-will be different depending on the model we are referring to; when we
-are referring to the \mt, the parent is the next node toward the merge
+will be different depending on the model being referred to; when
+referring to the \mt{}, the parent is the next node toward the merge
 into the master branch, or the root of the tree. When referring to the
 DAG, the parent relationship is in the opposite direction, from the root
 toward the branch-point. In addition to identifying the path that a
-commit took to being merged, we are able to aggregate the commit
-metadata at merges as we retain the parent-child and child-parent
-relationship for each event and know which commits belong to the merge.
+commit took to being merged, the model enables easy aggregation of
+commit metadata at merges, since the parent-child and child-parent
+relationship for each event is known; commits are aware of which merge
+is the next merge toward integration into the master branch, and merges
+are aware of which commits are being merged.
 
-To illustrate this model we will use a small example: assume the commits
+To illustrate this model I will use a small example: assume the commits
 represented in Figure~\ref{fig:repoEvents} show the sequence of events
 in a repository. The sequence starts with the initial commit in the
 master branch of the master repository at time $t_0$. Repository event 1
@@ -100,14 +103,15 @@ representation of these events is shown in Figure~\ref{fig:repoDAG}.
 The DAG does not retain information about where a commit was originally
 created beyond the order of the events in the parent list. This is
 necessary to provide complete flexibility to users, but at the expense
-of maintaining a consistent history. Ideally, we would be able to
+of maintaining a consistent history. Ideally, it would be possible to
 completely reconstruct the information in Figure~\ref{fig:repoEvents}
-from Figure~\ref{fig:repoDAG}, but this may not be possible. Instead, we
-focus on determining the next merge that leads to the integration of a
-commit. Depicted in Figure~\ref{fig:repoTree}, is the first version of
-the \mt. It does not completely rebuild the lost information, but is
-able to show the sequence of merges that a commit follows to be
-integrated, and the commits that were involved with the integration.
+from the information in Figure~\ref{fig:repoDAG}, but this may not be
+possible. Instead, I focus on determining the next merge that leads
+toward the integration of a commit. Depicted in
+Figure~\ref{fig:repoTree}, is the first version of the \mt. It does not
+completely rebuild the lost information, but is able to show the
+sequence of merges that a commit follows to be integrated, and the
+commits that were involved with the integration.
 
 \begin{figure}[htbp]
   \centering
@@ -178,20 +182,21 @@ integrated, and the commits that were involved with the integration.
   \caption{The \mt{s} computed for each commit in
     Figure~\ref{fig:repoDAG} showing the path that each commit takes to
     be merged into the master branch of the repository. This does not
-    indicate how the events being merged are related. We retained the
-    numerical order of the events, but the order can be arbitrary.}
+    indicate how the events being merged are related. This figure
+    retains the numerical order of the events, but the order is
+    arbitrary.}
   \label{fig:repoTree}
 \end{figure}
 
-Using the depth of the node from the root of the tree, we are able to
-reconstruct the branch information. In our events, nodes 2, 5, 7, and 9,
-are all on the same branch, and are merged into node 11. Nodes 5 and 9
-are merge nodes, 5 merges a single commit into the branch, and 9 merges
-two nodes into the branch. In some cases, it is possible that a commit
-was merged twice. In the case of node 9, it is merged into 11, though it
-could also be merged into 12 through 10. We design the merge tree to use
-the shortest distance in hops, and use distance in time as a tie
-breaker.
+Using the depth of the node from the root of the tree, the branch
+information is reconstructed. In our events, nodes 2, 5, 7, and 9, are
+all on the same branch, and are merged into node 11. Nodes 5 and 9 are
+merge nodes, 5 merges a single commit into the branch, and 9 merges two
+nodes into the branch. In some cases, it is possible that a commit was
+merged twice. In the case of node 9, it is merged into 11, though it
+could also be merged into 12 through 10. The \mt{} is designed to use
+the shortest distance in merges, and if two paths have the same distance
+from the master branch, use the shortest distance through time.
 
 \section{Algorithm}
 \label{sec:algorithm}
@@ -200,12 +205,12 @@ Computing the \mt from a DAG for any repository may not be possible;
 however, certain features of the development process of Linux make it
 feasible to compute the \mt for the Linux repository. First, the master
 branch of Linux is maintained by Linus Torvalds, and only Linus has
-write access to it. We have verified this assertion in previous
-research~\cite{German2015}. We have developed a heuristic that is
-presented in Algorithm~\ref{fig:alg}. In short, the algorithm first
+write access to it. This assertion is verified by
+Germán~\cite{German2015}. The heuristic developed from this information
+is presented in Algorithm~\ref{fig:alg}. In short, the algorithm first
 identifies the commits made directly to the master branch, whereafter it
 recursively determines the shortest path, using the DAG, from each
-commit to the master branch using the inverted DAG.\@
+commit to the master branch using the inverted DAG\@.
 
 \begin{algorithm}
         \caption{Computing the \mt of Linux from the DAG}\label{fig:alg}
@@ -276,7 +281,7 @@ way to the master branch. The distance is by shortest path, staying as
 close to the master branch as possible. If there is a tie between two
 paths, the path that merges into the master branch sooner is taken.
 
-To demonstrate the behaviour of the algorithm, we use a short example,
+An example is used to demonstrate the behaviour of the algorithm,
 computing the merge at commit 5 in Figure~\ref{fig:repoEvents}.
 $MergeAtMaster$, recurses along the children of the nodes it visits.
 Eventually every child of every node along the path will be visited at
@@ -298,8 +303,8 @@ no changes are made to the temporary variables.
 The call to 9 recurses to the second child, 11. 11 is a merge into the
 master so it returns $(0, \varnothing, 11)$ to the call from 9. 9 is not
 the first parent of 11, so the $d_c$ is incremented to 1 and $next_c$ is
-changed to 11. The distances $d_c$ and $d$ are the same, so to break the
-tie, we use the time. 12 was merged after 11, so 11 replaces 12 as the
+changed to 11. The distances $d_c$ and $d$ are the same, so time is used
+to break the tie. 12 was merged after 11, so 11 replaces 12 as the
 merge into the master branch for 9, as well as being the next merge. The
 call for 9 returns the triple $(1, 11, 11)$ to the call for 6. 6 is not
 the first parent of 9, so $d_c$ is incremented and $next_c$ is changed
@@ -324,16 +329,15 @@ $next$ to 11. There are no other children, so the function halts.
 \section{Algorithm Evaluation}
 \label{sec:algorithm_evaluation}
 
-We must assure that the trees we created using the algorithm are an
-accurate representation of the events occurring in the repository.
-Evaluation poses some issues, as there is no easy way to accurately
-gather this information directly from the DAG\@. Further inspection of
-the merges provides some insight; Linus Torvalds adds useful information
-about the content of the merges. For each branch being merged, Linus
-includes either the first 20 commit titles and the total number of
-commits being merged (see Figure~\ref{fig:sampleMerge} for an example),
-or the list of titles if 20 or fewer commits are being merged from the
-branch.
+The trees must be validated to ensure that they are an accurate
+representation of the events occurring in the repository. Evaluation
+poses some issues, as there is no easy way to accurately gather this
+information directly from the DAG\@. Further inspection of the merges
+provides some insight; Linus Torvalds adds useful information about the
+content of the merges. For each branch being merged, Linus includes
+either the first 20 commit titles and the total number of commits being
+merged (see Figure~\ref{fig:sampleMerge} for an example), or the list of
+titles if 20 or fewer commits are being merged from the branch.
 
 \begin{figure}[htpb]
   \centering
@@ -361,49 +365,48 @@ md/raid5: ensure we create a unique name for kmem_cache...
   \label{fig:sampleMerge}
 \end{figure}
 
-Using this information, we are able to verify that the results from our
-database match the information in the merge logs, and further
-investigate the merges that don't. If the merge-tree in
-our database has the correct number of commits being merged, and the
-titles listed in the log appear in the merge-tree, then we have
-correctly identified and recorded the commits and merge-tree.
-We use a scripted approach to extract information from both the git logs
-and our database. From the logs, we extract the commit hash, the date
-the merge was created, and the number of commits merged.
+This information is used to verify that the results from the database
+match the information in the merge logs, and further investigate the
+merges that don't. If the merge-tree in our database has the correct
+number of commits being merged, and the titles listed in the log appear
+in the merge-tree, then the commits and \mt{} have been correctly
+identified. A scripted approach was used to extract the information from
+both the git logs and  the database. The commit hash, creation date, and
+number of commits merged are extracted from each merge log.
 
-We gather the information from the logs using two commands;\\
+This information is gathered from the logs using two commands;\\
 \verb|git log --merges --author='Torvalds' v3.16| to collect the merges
 made by Linus, and \verb|git log --format="%H" --first-parent --merges  v3.16| to
 collect merges along the master branch.
 
-Using this technique, we collected 15096 merges by Linus from our
-database, and 15306 merges from the logs. There was an overlap of 14836
-merges between the two, with 470 merges from the logs that were not in
-the database, and 260 merges that were in the database that were not in
-the logs, or a total of 15566 merges.
+15099 merges were collected from the database, and 15306 merges from the
+logs using this technique. There was an overlap of 14836 merges between
+the two, with 470 merges from the logs that were not in the database,
+and 260 merges that were in the database that were not in the logs, or a
+total of 15566 merges.
 
 The main issue behind the disparity between the number commits collected
 from the logs and the commits from the database are the technique that
-they were collected. From the logs, we collect all information for
-merges made by Linus since the merge tag \emph{v3.16}, regardless of
-whether they are in the master branch or not. We annotate the commits
-using the list of commits that are along the first-parent starting at
-the merge tag, which we know is on the master branch. Merges that are
-not on the master branch are not removed from the dataset. The merges
-collected for the database were ones we were able to identify along the
-master branch. Focusing only on the merges in the master branch, the
-difference between the two sets decreases dramatically. There were 14670
-merges along the master branch that were shared by both the logs and by
-our database, 2 merges, \emph{186051d70444742bf1c2bc0257dd4696a3df66e3}
-and \emph{5170a3b24a9141e2349a3420448743b7c68f2223}, from the logs that
-were not in the database, and 426 merges in the database that were not
-in the logs. Examining the two merges from the logs, we find that the
-master branch disappears into a group of commits, which are later
-merged. This is confusing, as Linus is the only one with direct merge
-access into the master branch of the repository. The likely reason for
-this is that these commits were merged in a fast-forward merge, which
-does not insert a merge, and instead splices the commits directly into
-the branch.
+they were collected. All information for merges made by Linus since the
+merge tag \emph{v3.16} were collected from the logs, regardless of
+whether they are in the master branch. The set of repository events
+along the master branch is determined by following the first-parent
+starting at the merge tag, which is on the master branch, and recording
+the events visited. Merges that are not on the master branch are not
+removed from the dataset. Only merges collected for the database were
+identified to be along the master branch. Focusing only on the merges in
+the master branch, the difference between the two sets decreases
+dramatically. There were 14670 merges along the master branch that were
+shared by both the logs and by our database, 2 merges,
+\emph{186051d70444742bf1c2bc0257dd4696a3df66e3} and
+\emph{5170a3b24a9141e2349a3420448743b7c68f2223}, from the logs that were
+not in the database, and 426 merges in the database that were not in the
+logs. Examining the two merges from the logs, the master branch
+disappears into a group of commits, which are later merged. This is
+confusing, as Linus is the only one with direct merge access into the
+master branch of the repository. The likely reason for this is that
+these commits were merged in a fast-forward merge, which does not insert
+a merge, and instead splices the commits directly into the branch.
 
 Conversely, many of the merges and commits that were in our database but
 not found in the logs were due to the fast-forward merges. The commits
@@ -412,9 +415,9 @@ commits into the database, but were not collected by our git log query
 since they were not authored by Linus Torvalds.
 
 Beyond investigating why merges show up in either the database or logs,
-we need the merges to show up in both datasets, and that they have
-associated commit logs in both our database and in the merge log. There
-are 14198 merges with these properties.
+further analysis requires that the merges are present in both the
+database and the merge log. There are 14198 merges with these
+properties.
 
 The results of the evaluation are summarized as follows:
 
@@ -422,8 +425,8 @@ The results of the evaluation are summarized as follows:
   \item
 
     Five merges did not have matching commit counts between the database
-    and the logs. Upon further investigation, we found that four merges
-    had incorrectly formatted logs. The fifth merge,
+    and the logs. Upon further investigation, four merges had
+    incorrectly formatted logs. The fifth merge,
     \emph{42a579a0f960081cd16fc945036e4780c3ad3202}, is a \foxtrot{}
     merge. One commit is on the first-parent of the merge, and is
     therefore not detected when building the merge-tree, but is included
@@ -449,11 +452,10 @@ The results of the evaluation are summarized as follows:
 
     There were 1537 merges made by Linus prior to December 12, 2006. 507
     of these merges are not on the master branch, indicating that a
-    foxtrot occurred. Upon further investigation, we find that Dave
-    Jones merges 29 commits from ranging from October 15, 2006 to
-    December 12, 2006 into the master branch. Due to the \foxtrot{},
-    this merges 4708 repository events, including 199 merges by Linus
-    Torvalds.
+    foxtrot occurred. Upon further investigation, Dave Jones merges
+    29 commits from ranging from October 15, 2006 to December 12, 2006
+    into the master branch. Due to the \foxtrot{}, this merges 4708
+    repository events, including 199 merges by Linus Torvalds.
 
   \item
 

@@ -55,15 +55,13 @@ To test the viability of the model, I build and evaluate a tool called
 \tool{}, which is designed to leverage the capabilities of the \mt{} to
 provide improved summarizations and visualizations of the merges in
 Linux. When constructing and evaluating the model and tool, three
-questions arose; first, we want to ensure that the visualizations of the
-directed acyclic graph (DAG) do not already provide meaningful
-summarization of how a commit is integrated (RQ\ref{rq:RQ1}). Next, we
-want to compare the visualization of the DAG against the visualization
-of the \mt{} to determine which is capable of providing a better
-understanding of how a commit is integrated (RQ\ref{rq:RQ2}). Finally,
-the new model should make it possible to more easily extract additional
-aggregate information about what is being integrated, and who is making
-the contributions (RQ\ref{rq:RQ3}).
+questions arose; first, does the directed acyclic graph not already
+provide a meaningful summarization of how a commit is integrated
+(RQ\ref{rq:RQ1}). Second, how does the visualization of the DAG compare
+to the visualization of the \mt{} for understanding how a commit is
+integrated (RQ\ref{rq:RQ2})? Finally, what additional information can be
+extracted from the \mt{} over the information in the DAG
+(RQ\ref{rq:RQ3})?
 
 %% TODO: Move to methodology section
 \begin{textbox}
@@ -102,8 +100,8 @@ order to use the information stored in the VCS, users must be able to
 gain a clean understanding and summarization of the changes being made
 and how they interact with the rest of the source code. Various
 visualizations of have been written to tackle various aspects of this
-challenge, but we are aware of no git repository visualization tool that
-was designed with the explicit goal of showing how commits are
+challenge, but I am not aware of a git repository visualization tool
+that was designed with the explicit goal of showing how commits are
 integrated into the master branch of the repository. There has, however,
 been a lot of work in providing visualizations of various aspects of a
 repository.

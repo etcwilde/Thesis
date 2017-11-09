@@ -338,23 +338,24 @@ commit, which are found with the command
 The sequence of \verb|if| statements from line 9 to line 16 of the
 algorithm are used for resolving the type of branch and the node depth.
 If the parent has not yet been assigned a depth, then the parent has not
-been visited yet. We assume that it is at the same depth as the current
-node plus, the index. The first parent is on the same branch, the index
-is 0, so the depth of the parent will be the same as the current node.
-Subsequent parents will be assigned accordingly. This assignment of
-depths retains more information that the original \mt{} stricture, since
-the depth includes the order that the branches were merged. If the
-parent has a depth associated with it there are three possibilities for
-this depth, the depths could be equal, the depth of the parent could be
-less than the depth of the current node, or the depth of the parent
-could be greater than the depth of the current node. If both nodes are
-at the same depth no actions need to take place, both nodes are on the
-same branch, so no branch points are detected. In the second case, when
-the depth of the current node is greater than the depth of the parent,
-this indicates that the parent is the branch node for the current node,
-the number of open branches is decremented to indicate this. If the
-depth of the current node is less than the depth of the parent, this is
-also a branch point, but it indicates that the depth of the parent was
+been visited yet. An initial assumption is made that it is at the same
+depth as the current node, plus the index. Future steps correct the
+depth. The first parent is on the same branch, the index is 0, so the
+depth of the parent will be the same as the current node. Subsequent
+parents will be assigned accordingly. This assignment of depths retains
+more information that the original \mt{} stricture, since the depth
+includes the order that the branches were merged. If the parent has a
+depth associated with it there are three possibilities for this depth,
+the depths could be equal, the depth of the parent could be less than
+the depth of the current node, or the depth of the parent could be
+greater than the depth of the current node. If both nodes are at the
+same depth no actions need to take place, both nodes are on the same
+branch, so no branch points are detected. In the second case, when the
+depth of the current node is greater than the depth of the parent, this
+indicates that the parent is the branch node for the current node, the
+number of open branches is decremented to indicate this. If the depth of
+the current node is less than the depth of the parent, this is also a
+branch point, but it indicates that the depth of the parent was
 incorrectly assigned. This situation can occur when a branch point has
 fewer repository events on the side branch than on the main branch, as
 seen in Figure~\ref{fig:graph_1}. In this situation, the traversal
@@ -418,8 +419,8 @@ of each node, when resolving the trees.
 
 Continuing with the example; open branches is initialized to 0, and the
 root, 11 is pushed onto the work queue. Since 11 is provided as the
-root, we assume that it has a depth of 0, and we add it to the visited
-list.
+root, the assumption is that it is along the master branch, therefore
+having a depth of 0, and is then added to the visited list.
 
 11 is dequeued from the work queue, and the parents 4 and 9 are resolved
 from the DAG. Open branches is updated to 1. Working through the

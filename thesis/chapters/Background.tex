@@ -29,41 +29,41 @@ is on. Maintainers must be able to easily find these commits, as they
 will be necessary for back-porting the commit of interest into older
 versions of the software.
 
-We specifically study the Linux kernel repository. Older versions of the
-Linux kernel are used in a wide variety of situations including various
-Linux desktop distributions, internet of things device firmware, web
-servers, spacecrafts\footnote{Linux is used heavily at SpaceX
-  \url{https://lwn.net/Articles/540368/}}, and in mobile devices as the
-base of the Android platform. These kernels are sometimes modified forks
-of the official Linux kernel, made to be more suitable for the specific
-needs of the application. Due to these application-specific
-modifications, it is not feasible to update to the latest version of the
-kernel for every official update. While it may not be feasible to
-update, the changes being made to the official version are necessary as
-they fix bugs, patch security issues, and improve performance. Due to
-the sometimes critical nature of the patches being merged into the
-current version of the kernel, it is necessary for maintainers working
-on application-specific forks of the kernel to sift through the commits
-coming into the official version, looking for the changes that may
-impact the kernel they are maintaining. In Section~\ref{sec:linux}, we
-describe the structure of the Linux repository, the dataset collected
-from the repository, and investigate the nature of the repository
-integration and merge behaviour.
+The repository of the Linux kernel is studied in this \paper{}. Older
+versions of the Linux kernel are used in a wide variety of situations
+including various Linux desktop distributions, internet of things device
+firmware, web servers, spacecrafts\footnote{Linux is used heavily at
+  SpaceX \url{https://lwn.net/Articles/540368/}}, and in mobile devices
+as the base of the Android platform. These kernels are sometimes
+modified forks of the official Linux kernel, made to be more suitable
+for the specific needs of the application. Due to these
+application-specific modifications, it is not feasible to update to the
+latest version of the kernel for every official update. While it may not
+be feasible to update, the changes being made to the official version
+are necessary as they fix bugs, patch security issues, and improve
+performance. Due to the sometimes critical nature of the patches being
+merged into the current version of the kernel, it is necessary for
+maintainers working on application-specific forks of the kernel to sift
+through the commits coming into the official version, looking for the
+changes that may impact the kernel they are maintaining. The structure
+of the Linux repository, the dataset collected from the repository, and
+the nature of the integration and merge behaviours are described in
+Section~\ref{sec:linux}.
 
 Linux uses git as the version control system, managing the distributed
 nature of the kernel development and storing the changes to the kernel.
-In Section~\ref{sec:git}, we discuss the structure of git, repository
-visualizations available, and challenges it poses against answering the
-two main questions.
+The structure of git, the repository visualizations already available,
+and the challenges that these pose are discussed in
+Section~\ref{sec:git}.
 
 \section{Linux}\label{sec:linux}
 
 Linux is open source, using git to track and manage the source code in
 the kernel. A mirror of the repository is available on
 GitHub\footnote{\url{https://github.com/torvalds/linux}}, which makes
-data collection relatively straightforward. In this section, we describe
-the dataset that we collected, looking at the number of authors,
-commits, and merges.
+data collection relatively straightforward. Described in this section is
+the dataset that was collected, further investigating the number of
+authors, commits, and merges.
 
 The data extracted from the repository involves all merges into the
 master branch between April 18, 2005 and August 14, 2014. This
@@ -81,17 +81,14 @@ October 14, 2014. The average difference between when a commit was
 created and when it was committed is 16 days and 10 hours; 25\% of the
 commits were committed within 2 hours of being authored, 50\% committed
 within 2 days and 8 hours, 75\% within 15 days, and all commits were
-merged within 9.5 years of being authored. In this breakdown of the
-kernel data, we will focus on the commits integrated into kernel
-versions Linux 3.1 to Linux 3.16, translating to the merges between July
-21, 2011 and August 3, 2014.
+merged within 9.5 years of being authored. This breakdown of the kernel
+data focuses on the commits integrated into kernel versions Linux 3.1 to
+Linux 3.16, translating to the merges between July 21, 2011 and August
+3, 2014.
 
-\evan{How much of this should I be describing here versus in in a later
-section?}
-
-As expected, we find that the Linux kernel is highly collaborative, and
-is very active. Between 1000 and 1500 authors have contributions
-accepted into the official kernel per release (shown in
+As expected, the Linux kernel is highly collaborative and is very
+active. Between 1000 and 1500 authors have contributions accepted into
+the official kernel per release (shown in
 Figure~\ref{fig:linux_authors_per_release}). These authors contribute
 between 8000 and 14000 commits per release
 (Figure~\ref{fig:linux_commits_per_release}). Between 275 and 400 merges
@@ -101,9 +98,6 @@ repository is a prime example of a successful open source project,
 exemplifying the collaborative nature of modern software development.
 The sheer number of commits being contributed make the task of filtering
 the important or relevant commits impractical.
-
-\evan{Having some troubles getting enough text mixed in with the plots.
-  Should I just move some of them to the appendix later?}
 
 \begin{figure}[htpb]
   \centering
@@ -141,8 +135,8 @@ has increased from slightly over 20 commits per merge in Linux 3.1 up to
   \label{fig:linux_commits_per_merge_per_release}
 \end{figure}
 
-Grouping commits by the merge that integrates it into the master branch,
-we get a different view of the kernel. The individual merges contain
+Grouping commits by the merge that integrates it into the master branch
+shows a different view of the kernel. The individual merges contain
 relatively few commits, 25\% of the merges merge only a single commit,
 and 50\% of the merges merge at most 7 events
 (Figure~\ref{fig:linux_merge_distribution_per_release}).
@@ -198,10 +192,10 @@ self-hosting in less than 2 weeks\footnote{From the git mailing list
 The core model used to store the repository is a \define{directed
   acyclic graph}{DAG}. Git refers to the nodes of the DAG as commits,
 not distinguishing between the code-carrying commits and the structural
-commits that merge two branches together. In this \paper{}, we will
-refer to the code-carrying commits as commits, the structural merge
-commits as merges, and refer to both types without discrimination as
-repository events. Each repository event contains an ordered list of one
+commits that merge two branches together. The code-carrying commits will
+be referred to as commits, the structural merge commits as merges, and
+both without discrimination as repository events for the remainder of
+this \paper{}. Each repository event contains an ordered list of one
 or more parents, except the initial commit which has no parents. The
 parent relationship points from the current event toward the initial
 commit. Commits have a single parent, while merges will have at least

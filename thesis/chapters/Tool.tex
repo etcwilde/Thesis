@@ -35,8 +35,10 @@ designed with maintainers in mind.
   These users do have a specific commit in mind.
 \end{textbox}
 
-While we designed \tool{} with Use-Case 1 in mind, Use-Case 2 is more
-pertinent to our primary research questions. The tool uses full-text
+\evantodo{what?}
+
+While \tool{} was designed with Use-Case 1 in mind, Use-Case 2 is more
+pertinent to the primary research questions. The tool uses full-text
 search to gather the repository events that the user is interested in,
 two summarization views, and three visualizations of the merge-tree for
 the repository events.
@@ -102,11 +104,11 @@ number of commits that are in the \mt{} that work with the module, and a
 details button to provide the links to those commits, shown in
 Figure~\ref{fig:linvis_modules_results}. Modules are not an inherent
 part of git, but are a property of most commit log previews in the Linux
-repository. We noticed that the text up to the first colon in the commit
-log preview tended to indicate the subsystem of the kernel that was
-being modified. In Figure~\ref{fig:sampleMerge}, the first commit is
-from the ``md'' subsystem, which virtualizes multiple physical devices
-into a single virtual device.
+repository. The text up to the first colon in the commit log preview
+tends to indicate the subsystem of the kernel that is being modified. In
+Figure~\ref{fig:sampleMerge}, the first commit is from the ``md''
+subsystem, which virtualizes multiple physical devices into a single
+virtual device.
 
 \begin{figure}[htpb]
   \centering
@@ -121,8 +123,8 @@ information. It shows the sum of the lines added, removed, modified, and
 the delta within the \mt{}. It also shows the number of files that were
 modified by the author. The details are organized slightly differently
 than in the files tab. Instead of showing the commits that make the
-modifications, we show the individual files that are modified, as well
-as the commit hash. As multiple files can be modified in the same
+modifications, \tool{} shows the individual files that are modified, as
+well as the commit hash. As multiple files can be modified in the same
 commit, commit hashes are not unique in this table. The authors tab is
 shown in Figure~\ref{fig:linvis_authors_results}.
 
@@ -253,16 +255,16 @@ smallest nodes, containing no other nodes; inner nodes contain other
 nodes within them; the root is the outermost circle, containing all
 other nodes within it.
 
-We investigated the bubble tree\cite{Boardman2000}, as it uses a similar
-metaphor, but due to limitations with the bubble tree, the pack tree
-seemed more suitable with our goals. The initial bubble tree
-visualization starts with a single circle, the root. Hovering over that
-circle shows the contents of the node. This works recursively, hovering
-the cursor over an inner node will reveal the contents of that node.
-While this is designed to prevent overwhelming users, the user cannot
-quickly determine what the tree looks like without hovering their cursor
-over each inner node. Due to this limitation, we decided to use the pack
-tree.
+The bubble tree\cite{Boardman2000} was seen as a possible visualization
+for the trees, as it uses a similar metaphor but due to limitations with
+the bubble tree, the pack tree seemed more suitable with our goals. The
+initial bubble tree visualization starts with a single circle, the root.
+Hovering over that circle shows the contents of the node. This works
+recursively, hovering the cursor over an inner node will reveal the
+contents of that node. While this is designed to prevent overwhelming
+users, the user cannot quickly determine what the tree looks like
+without hovering their cursor over each inner node. Due to this
+limitation, the pack tree was a better option.
 
 An example of the pack tree visualization used in \tool{} is depicted in
 Figure~\ref{fig:linvis_bubble_tree}. The outer-most circle that contains

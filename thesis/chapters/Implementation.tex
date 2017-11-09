@@ -76,20 +76,20 @@ The database is made of seven tables;
 \subsection{Full Text Search}\label{sub:full_text_search}
 
 
-We use the full text search built into PostgreSQL to enable easy
-searching for commits in the database. While it is possible to compute
-the text search vectors for every query, it is faster to pre-compute the
-vectors for each commit. The search vectors are pre-computed and stored
-in the search table, creating a map between search terms and commit
-hash. The search vectors include terms from the commit hash, log
-subject, full log message, commit author name, commit and authorship
-date, and list of files that were modified in the commit.
+The search engine uses the full text search built into PostgreSQL to
+enable easy searching for commits in the database. While it is possible
+to compute the text search vectors for every query, it is faster to
+pre-compute the vectors for each commit. The search vectors are
+pre-computed and stored in the search table, creating a map between
+search terms and commit hash. The search vectors include terms from the
+commit hash, log subject, full log message, commit author name, commit
+and authorship date, and list of files that were modified in the commit.
 
 The search attributes are given different weight when calculating the
 search rank. The attribute weights are listed in
-Table~\ref{tab:search_attribute_rank}. We do not normalize against
-document length when computing the rank. The ranking system is designed
-to associate a higher weight with attributes of more importance. One
+Table~\ref{tab:search_attribute_rank}. The rank calculation does not
+normalize against document length. The ranking system is designed to
+associate a higher weight with attributes of more importance. One
 drawback of using full text search is that terms must be in verbatim of
 the term used in the attribute. This has two negative effects, the first
 is that typos will drop commits that are otherwise relevant, and second,
@@ -122,8 +122,8 @@ consume more memory, and therefore were infeasible for this project.
 Postgres applies stop-word elimination when constructing the search
 vectors; stop words are terms that are common in a given language and
 won't help when discriminating items. These terms include words like
-``and'', ``the'', and ``a''. We use the default English stop-words built
-into Postgres version 9.6.2.
+``and'', ``the'', and ``a''. The default English stop-words built into
+Postgres version 9.6.2 are used to clean the queries.
 
 \section{Web Interface}\label{sec:web_interface}
 
