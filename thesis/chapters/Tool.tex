@@ -4,7 +4,7 @@
 In order to assess the usefulness of the model, it is necessary to
 construct a tool that can be used for testing purposes. I designed and
 built a tool called \tool{} to inspect and navigate through the
-merge-trees representing the integrations into the kernel repository.
+\mt{s} representing the integrations into the kernel repository.
 \tool{} is web-based to enable ease of use, requiring nothing more than
 a web-browser to access, otherwise users would need to install the
 software and the database of repository data.
@@ -35,13 +35,9 @@ designed with maintainers in mind.
   These users do have a specific commit in mind.
 \end{textbox}
 
-\evantodo{what?}
-
-While \tool{} was designed with Use-Case 1 in mind, Use-Case 2 is more
-pertinent to the primary research questions. The tool uses full-text
-search to gather the repository events that the user is interested in,
-two summarization views, and three visualizations of the merge-tree for
-the repository events.
+The tool uses full-text search to gather the repository events that the
+user is interested in, two summarization views, and three visualizations
+of the \mt{} for the repository events.
 
 \section{Search}\label{sec:search}
 
@@ -56,17 +52,17 @@ the author name, the filenames, the commit hash, the date the commit was
 authored, and the date the commit was committed.
 
 Before presenting the results, the repository events are grouped by
-merge-tree root. Each group of events has the link to the root at the
+\mt{} root. Each group of events has the link to the root at the
 top, followed by a table of the relevant commits and merges from that
 tree, shown in Figure~\ref{fig:linvis_search_results}. The table of
 results includes the relevancy rank assigned by the search engine,
 commit preview, author, commit date, and the authored date. The
-merge-tree groups are ordered by the mean of the relevancy scores.
+\mt{} groups are ordered by the mean of the relevancy scores.
 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.9\linewidth]{Figures/Linvis/search_results.png}
-  \caption{A single merge-tree in the search results of \tool{}, showing
+  \caption{A single \mt{} in the search results of \tool{}, showing
     the link to the root at the top, and the relevant commits in the
     table below.}
   \label{fig:linvis_search_results}
@@ -161,7 +157,7 @@ item in the list is the root of the tree; item node will be indented
 further than this item. Due to the complexity of some of the trees, this
 tree visualization is rooted at the node that is currently selected.
 \tool{} also provides breadcrumbs showing the path that the current
-repository event took to being merged into the root of the merge-tree to
+repository event took to being merged into the root of the \mt{} to
 ensure that a user can navigate both toward the root and toward the
 leaves using this visualization.
 

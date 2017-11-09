@@ -367,9 +367,9 @@ md/raid5: ensure we create a unique name for kmem_cache...
 
 This information is used to verify that the results from the database
 match the information in the merge logs, and further investigate the
-merges that don't. If the merge-tree in our database has the correct
+merges that don't. If the \mt{} in our database has the correct
 number of commits being merged, and the titles listed in the log appear
-in the merge-tree, then the commits and \mt{} have been correctly
+in the \mt{}, then the commits and \mt{} have been correctly
 identified. A scripted approach was used to extract the information from
 both the git logs and  the database. The commit hash, creation date, and
 number of commits merged are extracted from each merge log.
@@ -429,7 +429,7 @@ The results of the evaluation are summarized as follows:
     incorrectly formatted logs. The fifth merge,
     \emph{42a579a0f960081cd16fc945036e4780c3ad3202}, is a \foxtrot{}
     merge. One commit is on the first-parent of the merge, and is
-    therefore not detected when building the merge-tree, but is included
+    therefore not detected when building the \mt{}, but is included
     in the merge log.
 
   \item
