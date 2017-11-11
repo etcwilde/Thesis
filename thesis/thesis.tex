@@ -2,9 +2,12 @@
 \newif\ifdraft
 \drafttrue
 
+\include{preamble}
 \include{macros/style}
 \include{macros/use_packages}
 \include{macros/my_macros}
+\include{macros/environments}
+\include{macros/colors}
 
 \begin{document}
 
@@ -12,7 +15,21 @@
 
 \newpage
 
+\include{chapters/Introduction}
+\include{chapters/Background}
+\include{chapters/Model}
+\include{chapters/Tool}
+\include{chapters/Implementation}
+\include{chapters/Evaluation}
+\include{chapters/Discussion}
+\include{chapters/Conclusion}
 \appendix
+
+\nocite{*}
+
+\TOCadd{Bibliography}
+\bibliographystyle{plain}
+\bibliography{references}
 
 \end{document}
 

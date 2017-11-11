@@ -6,5 +6,31 @@
 \panel
 
 \begin{center}
-\textbf{ABSTRACT}
+  \textbf{ABSTRACT}
+
+  The visualization of the DAG is difficult to comprehend in large
+  software projects, specifically for the purpose of understanding how a
+  commit is integrated and what other commits are necessary for that
+  integration. Other research on repository visualization focuses on
+  other aspects of the repository, not the topology.
+
+  This thesis focuses on improving the visualization of the DAG for the
+  Linux kernel repository, which is a large and highly collaborative
+  software project. The repository integrates more than 8000 commits per
+  release, contributed by more than 1000 active authors per release.
+  Using properties found in the Linux repository, a new tree-based model
+  is introduced to alleviate the issues in the DAG visualization.
+
+  A tool is constructed using the \mt{} model as a proxy to testing the
+  capabilities of the new model. A 12-participant user study is
+  performed to evaluate how well the visualizations in the tool are able
+  to provide comprehension.
+
+  The findings indiacate the visualizations of the \mt{} are able to
+  help users comprehend how commits are integrated more quickly and more
+  accurately in the context of the Linux repository. The model should
+  generalize to repositorys with a similar topology, requring that th
+  repositoy must use a branch-and-merge structure, the repository must
+  not have foxtrots, and cannot apply fast-forward merges.
+
 \end{center}

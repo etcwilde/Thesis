@@ -4,6 +4,16 @@
 *.log
 *.lot
 *.toc
+*.bbl
+*.blg
+*.out
+
+# Generated Figures
+thesis/Figures/background/linux_authors_per_release.pdf
+thesis/Figures/background/linux_commits_per_release.pdf
+thesis/Figures/background/linux_commits_per_year.pdf
+thesis/Figures/background/linux_merge_distribution_per_release.pdf
 
 # Directories
 output/
+auto/

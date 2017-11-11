@@ -1,0 +1,13 @@
+\newenvironment{textbox}
+    {\begin{center}
+    \begin{tabular}{|p{0.9\textwidth}|}
+    \hline\\
+    }
+    {
+    \\\\\hline
+    \end{tabular}
+    \end{center}
+    }
+
+\newcounter{rqcounter}
+\newcommand{\rqs}[1]{\refstepcounter{rqcounter}\therqcounter\label{#1}}
