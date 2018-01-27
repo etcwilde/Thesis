@@ -60,14 +60,16 @@ from poor visualizations. In large projects, the visualizations of the
 DAG do not provide an adequate summarization of how a commit is
 integrated into the master branch of a repository.
 
-This \paper{} introduces a new model designed to help clearly visualize
-the path that a commit takes to being integrated into the master branch.
-To test the viability of the model, I build and evaluate a tool called
-\tool{}, which is designed to leverage the capabilities of the \mt{} to
-provide improved summarizations and visualizations of the merges in
-Linux. When constructing and evaluating the model and tool, three
-questions arose; first, does the directed acyclic graph not already
-provide a meaningful summarization of how a commit is integrated
+This \paper{} introduces a new tree-based visualization constructed from
+the underlying graph of the repository. The visualization is designed to
+help clearly visualized the path that a commit takes to being integrated
+into the master branch of a git repository. I call the structure the
+\mt{}. To test the viability of the model, I built and evaluated a tool
+called \tool{}, which is designed to leverage the capabilities of the
+\mt{} to provide improved summarizations and visualizations of the
+merges in Linux. When constructing and evaluating the model and tool,
+three questions arose; first, does the directed acyclic graph not
+already provide a meaningful summarization of how a commit is integrated
 (RQ\ref{rq:RQ1}). Second, how does the visualization of the DAG compare
 to the visualization of the \mt{} for understanding how a commit is
 integrated (RQ\ref{rq:RQ2})? Finally, what additional information can be
