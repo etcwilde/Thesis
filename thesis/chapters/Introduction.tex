@@ -38,27 +38,6 @@ commits that are merged with that commit. In large, active, software
 repositories this task is not trivial. The graph can be large and
 complicated, making the visualizations of it difficult to understand.
 
-The work in this \paper{} focuses on the Linux repository, which uses
-git for managing changes in the code and helping coordinate
-contributors. Linux is highly active, with more than 8,000 commits added
-per release. Linux is used in many software applications, including
-mobile phones, smart appliances, and even spacecraft. Maintainers must
-be able to port the patches to the current version of the kernel back
-into the version of the kernel that they are maintaining. This requires
-them to determine which commits are relevant to them, and how these
-commits are integrated.
-
-Git is a distributed version control system that uses the directed
-acyclic graph (DAG) model to store modifications to code in nodes, and
-help with branching and merging related changes. Git was designed by
-Linus Torvalds in 2005 specifically for the needs of the Linux kernel
-repository after the Linux project switched from Bitkeeper. Since git
-was designed for the Linux project, the repository makes use of nearly
-every feature in git. The DAG model allows git to have impressive
-flexibility compared to many other version control systems, but suffers
-from poor visualizations. In large projects, the visualizations of the
-DAG do not provide an adequate summarization of how a commit is
-integrated into the master branch of a repository.
 
 This \paper{} introduces a new tree-based visualization constructed from
 the underlying graph of the repository. The visualization is designed to
