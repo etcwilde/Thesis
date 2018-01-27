@@ -13,6 +13,19 @@ changes, and which files are being changed the most. While version
 control can be used in any context where file history is desirable,
 version control is usually used in the software development process.
 
+Git is the version control system designed for and used by the Linux
+kernel project. In order to handle the number of people contributing to
+the kernel project, git was designed to be distributed. Unlike in
+centralized repositories, a user can clone the entire repository, giving
+them access to all of the commits and branches. This gives users the
+ability to change the structure of the repository and make changes that
+would not work in a centralized repository. In order to support the
+repository goals, git uses a directed acyclic graph to represent the
+repository. Edges point from more recently applied changes toward the
+initial commit of the repository. The changes to the code are stored in
+the nodes of the graph, along with metadata about who is making the
+changes, when the changes were made, and the parents of the commit.
+
 Visualizations of the directed acyclic graph of an active software
 system repository are difficult to understand. These visualizations are
 used to provide information about the topology of the repository, which
