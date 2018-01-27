@@ -26,18 +26,17 @@ initial commit of the repository. The changes to the code are stored in
 the nodes of the graph, along with metadata about who is making the
 changes, when the changes were made, and the parents of the commit.
 
-Visualizations of the directed acyclic graph of an active software
-system repository are difficult to understand. These visualizations are
-used to provide information about the topology of the repository, which
-gives insight on how commits are being integrated. Maintainers must use
-this information to understand the changes that are being made to the
-current version of the software, so that the fixes can be applied to
-older versions as well. This requires them to understand how the commit
-with the necessary changes are integrated, and identifying other commits
-that are necessary for this integration to take place. In large software
-repositories, this task is not trivial. This \paper{} presents the
-design of a new model constructed from the underlying graph of the
-repository.
+Visualizations of the graph are used to answer questions about the
+development of the software including what changes are being made into
+various branches, how the changes to the code are grouped, and who is
+working with whom, among others. Maintainers use the visualizations to
+understand what changes are being made to the current version of the
+software in order to apply the necessary fixes to older versions of the
+software to keep them secure and performing correctly. This requires
+understanding how a commit is integrated into the repository, and other
+commits that are merged with that commit. In large, active, software
+repositories this task is not trivial. The graph can be large and
+complicated, making the visualizations of it difficult to understand.
 
 The work in this \paper{} focuses on the Linux repository, which uses
 git for managing changes in the code and helping coordinate
