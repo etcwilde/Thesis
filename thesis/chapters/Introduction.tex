@@ -179,28 +179,34 @@ positioned more closely to the center of the circle.
   \label{fig:evolution_radar}
 \end{figure}
 
-Codebook, Hipikat, Fractal Figures, EPOSee, and Evolution Radar all
+Hoozizat, Hipikat, Fractal Figures, EPOSee, and Evolution Radar all
 extract data from CVS repositories. Our goal is to provide information
 about git repositories. Fewer tools are available for generating
 visualizations and summaries of git repositories, potentially due to the
 DAG model used as the internal structure of git repositories.
 
-Heller et al.\cite{Heller2011} apply geo-spatial information to the
-commits in git repositories to see organic patterns that arise in
-collaboration between contributors to a repository.
-Gource\cite{Caudwell2010} is a tool for providing an interactive
-timelapse of the changes being made to various files stored in the
-repository. Gource uses a graph metaphor for representing the file
-structure in the repository. Files are the nodes in the graph, and the
-clustering of the file represents directories. The edges are the links
-between directories. User avatars move around the graph emitting
-different color light depending on the change being made to the file.
-Green indicates the creation of a new file, yellow indicates a
-modification, and red indicates the deletion of the file (shown in
-Figure~\ref{fig:gource_view}). Codeswarm\cite{ogawa09} is similar to
-Gource, using an organic timelapse approach to visualizing the events in
-the repository. Unlike Gource, which focuses on files, Codeswarm focuses
-on developers and the number of commits each developer is making.
+Organic visualizations show patterns in cooperation and communication
+that arise within a software project organically. Heller et
+al.\cite{Heller2011} plots communication on a map. This visualization
+shows communication and cooperation patterns that arise, and how they
+cross country boundaries, within a software project.
+Gource\cite{Caudwell2010}, shown in Figure~\ref{fig:gource_view}, shows
+which files contributors are working on. Using this, it is possible to
+draw conclusion about which parts of a project a given contributor is
+working on and the group of contributors working on a given area. Gource
+uses a graph metaphor structure to represent the file structure of a
+repository. Files in the same directory cluster together to form a node.
+Edges between the directory clusters represent which directory contains
+another, although there is no way to determine the direction of the
+relationship. User avatars move around the graph emitting different
+beams of colored light depending on the change being made to the file.
+Greed indicates the creation of a new file, yellow indicates a
+modification, and red indicates the deletion of a file. The
+visualization is animated to show how a project grows over time.
+Codeswarm\cite{ogawa09} is similar to Gource, using an organic timelapse
+approach to visualizing the events in the repository. Unlike Gource,
+which focuses on files, Codeswarm focuses on developers and the number
+of commits each developer is making.
 
 \begin{figure}[htpb]
   \centering
