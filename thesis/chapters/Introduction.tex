@@ -142,15 +142,20 @@ system.
 \end{figure}
 
 Most visualization systems provide information about a certain aspect of
-the contents in the repository. Fractal Figures\cite{Ambros2005} uses a
-square to represent a component of a project. Then subdividing the
-square based on the proportion of an author's contributions to that
-component. EPOSee\cite{Burch2005} and Evolution Radar\cite{Ambros2009}
-perform further analysis to determine which files are created together,
-and see what changes are made over a sequence of commits. The goals of
-these two projects differ slightly, but both use evolution over time to
-extract information about how different parts of a software system are
-related.
+the contents in the repository. The goal being Fractal
+Figures\cite{Ambros2005} is to show the division of work between
+contributors. The project is represented as a square. The square is then
+subdivided based on the proportion that a given contributor contributed
+to the project, shown in Figure~\ref{fig:fractal_figures}. The
+visualization makes it easy to see where work is evenly divided versus
+the projects where a single contributor is doing most of the work.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/fractal_figures.png}
+  \caption{Construction of Fractal Figures}
+  \label{fig:fractal_figures}
+\end{figure}
 
 Codebook, Hipikat, Fractal Figures, EPOSee, and Evolution Radar all
 extract data from CVS repositories. Our goal is to provide information
