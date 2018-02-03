@@ -13,18 +13,19 @@ changes, and which files are being changed the most. While version
 control can be used in any context where file history is desirable,
 version control is usually used in the software development process.
 
-Git is the version control system designed for and used by the Linux
-kernel project. In order to handle the number of people contributing to
-the kernel project, git was designed to be distributed. Unlike in
-centralized repositories, a user can clone the entire repository, giving
-them access to all of the commits and branches. This gives users the
-ability to change the structure of the repository and make changes that
-would not work in a centralized repository. In order to support the
-repository goals, git uses a directed acyclic graph to represent the
-repository. Edges point from more recently applied changes toward the
-initial commit of the repository. The changes to the code are stored in
-the nodes of the graph, along with metadata about who is making the
-changes, when the changes were made, and the parents of the commit.
+Git is the \define{version control system}{VCS} designed for and used by
+the Linux kernel project. In order to handle the number of people
+contributing to the kernel project, git was designed to be distributed.
+Unlike in centralized repositories, a user can clone the entire
+repository, giving them access to all of the commits and branches. This
+gives users the ability to change the structure of the repository and
+make changes that would not work in a centralized repository. In order
+to support the repository goals, git uses a directed acyclic graph to
+represent the repository. Edges point from more recently applied changes
+toward the initial commit of the repository. The changes to the code are
+stored in the nodes of the graph, along with metadata about who is
+making the changes, when the changes were made, and the parents of the
+commit.
 
 Visualizations of the graph are used to answer questions about the
 development of the software including what changes are being made into
@@ -61,27 +62,27 @@ meaningful way that gives insight into how commits are integrated.
 
 \section{Related Work}\label{sec:related_work}
 
-The \define{Version Control System}{VCS} tracks the development of a
-software project, recording each change as it happens. By tracking the
-changes, the VCS contains an entire story of the software, rich with
-information about who the authors are, what files are being modified,
-what where changes are being made. This makes the VCS vital in providing
-information about how a software project is being developed and how the
-software is structured. In order to use the information stored in the
-VCS, users must be able to gain a clear understanding and summarization
-of the changes being made, and how they interact with the rest of the
-source code. While there has been extensive research on visualizing
-software repositories, previous work does not focus on how commits and
-merges are structures in the repository graph, and in extension, how
-commits are integrated into a repository. The literature on repository
-visualization and summarization can be broken down into three academic
-subcategories; communication\cite{Cubranic2005,Begel2010},
-aspect-oriented visualization\cite{Ambros2005,Burch2005,Ambros2009}, and
-organic visualizations\cite{ogawa09,Caudwell2010}. A fourth industrial
-category exists, including tools like GitKraken and SourceTree. The goal
-of the industrial tools is not to extract or synthesize new information
-from the repository, but to act as a user-friendly client on top of what
-git already provides.
+The Version Control System tracks the development of a software project,
+recording each change as it happens. By tracking the changes, the VCS
+contains an entire story of the software, rich with information about
+who the authors are, what files are being modified, what where changes
+are being made. This makes the VCS vital in providing information about
+how a software project is being developed and how the software is
+structured. In order to use the information stored in the VCS, users
+must be able to gain a clear understanding and summarization of the
+changes being made, and how they interact with the rest of the source
+code. While there has been extensive research on visualizing software
+repositories, previous work does not focus on how commits and merges are
+structures in the repository graph, and in extension, how commits are
+integrated into a repository. The literature on repository visualization
+and summarization can be broken down into three academic subcategories;
+communication\cite{Cubranic2005,Begel2010}, aspect-oriented
+visualization\cite{Ambros2005,Burch2005,Ambros2009}, and organic
+visualizations\cite{ogawa09,Caudwell2010}. A fourth industrial category
+exists, including tools like GitKraken and SourceTree. The goal of the
+industrial tools is not to extract or synthesize new information from
+the repository, but to act as a user-friendly client on top of what git
+already provides.
 
 Many tools focus on addressing the issue in communication between
 developers in inter-team collaborative work. Hipikat\cite{Cubranic2005}
