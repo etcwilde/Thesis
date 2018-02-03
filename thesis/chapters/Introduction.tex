@@ -157,6 +157,28 @@ the projects where a single contributor is doing most of the work.
   \label{fig:fractal_figures}
 \end{figure}
 
+EPOSee\cite{Burch2005} and Evolution Radar\cite{Ambros2009} use the
+information from the version control to determine which files are edited
+together. The tools from these papers are designed to help a user
+identify the degree to which two files are coupled. Two files are
+edited and committed together frequently are said to be more tightly
+coupled. This makes it possible to determine when two classes are
+semantically related. The evolution radar shown in
+Figure~\ref{fig:evolution_radar} places points on a circle based on the
+name and coupled they are. The files are arranged around the circle
+based on the file name, including the full file path. This has the
+effect of grouping files that are from the same directory. The distance
+from the center of the circle is dependent on how tightly coupled the
+file is to the file be analyzed. A more tightly-coupled file will be
+positioned more closely to the center of the circle.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/evo_radar.png}
+  \caption{Evolution Radar visualization}
+  \label{fig:evolution_radar}
+\end{figure}
+
 Codebook, Hipikat, Fractal Figures, EPOSee, and Evolution Radar all
 extract data from CVS repositories. Our goal is to provide information
 about git repositories. Fewer tools are available for generating
