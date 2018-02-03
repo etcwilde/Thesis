@@ -38,45 +38,26 @@ commits that are merged with that commit. In large, active, software
 repositories this task is not trivial. The graph can be large and
 complicated, making the visualizations of it difficult to understand.
 
-This \paper{} introduces a new tree-based visualization constructed from
-the underlying graph of the repository. The visualization is designed to
-help clearly visualized the path that a commit takes to being integrated
-into the master branch of a git repository. I call the structure the
-\mt{}. To test the viability of the model, I built and evaluated a tool
-called \tool{}, which is designed to leverage the capabilities of the
-\mt{} to provide improved summarizations and visualizations of the
-merges in Linux. When constructing and evaluating the model and tool,
-three questions arose; first, does the directed acyclic graph not
-already provide a meaningful summarization of how a commit is integrated
-(RQ\ref{rq:RQ1}). Second, how does the visualization of the DAG compare
-to the visualization of the \mt{} for understanding how a commit is
-integrated (RQ\ref{rq:RQ2})? Finally, what additional information can be
-extracted from the \mt{} over the information in the DAG
-(RQ\ref{rq:RQ3})?
+This \paper{} makes four contributions. First, a new tree-based model,
+called the \mt{}, constructed from the underlying graph of the
+repository.  Second, visualizations that take advantage of the \mt{}
+model. Third, an implementation of the visualizations in a tool, called
+\tool{}. Finally, an evaluation of the tool to determine whether
+visualizing the repository using the model is useful. This \paper{}
+specifically studies the Linux repository. The Linux repository is large
+and complex, with more than 1000 contributors making changes every
+release. Details about the repository are provides in
+Section~\ref{sec:linux}.
 
-%% TODO: Move to methodology section
-\begin{textbox}
-  \textbf{RQ\rqs{rq:RQ1}:} Do visualizations of the DAG provide
-  users with a meaningful visualization of how commits are integrated?
-\end{textbox}
-
-\evan{Not sure about the first research question. Its essentially
-  motivation. ``What are weaknesses in the DAG visualizations'' might be
-  better. That was found in the Conceptual understanding part. ``Does
-  the DAG provide users with meaningful visualization of small merges''}
+The central thesis of the paper is finding a means of visualizing a
+repository that is as large and complex as the Linux repository in a
+meaningful way that gives insight into how commits are integrated.
 
 \begin{textbox}
-  \textbf{RQ\rqs{rq:RQ2}:} How does the visualization of the \mt{}
-  compare with the visualization of the DAG to determine how commits are
+  \textbf{Thesis:} How do we effectively visualize the graph of the
+  Linux repository in a way that gives insight into how commits are
   integrated?
 \end{textbox}
-
-\begin{textbox}
-  \textbf{RQ\rqs{rq:RQ3}:} What other information can be drawn from the
-  \mt{} model that cannot easily be drawn from the DAG.
-\end{textbox}
-
-%% TODO: More is described in the background section of the paper
 
 \section{Related Work}\label{sec:related_work}
 
