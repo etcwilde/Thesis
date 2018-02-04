@@ -185,10 +185,16 @@ beams of colored light depending on the change being made to the file.
 Greed indicates the creation of a new file, yellow indicates a
 modification, and red indicates the deletion of a file. The
 visualization is animated to show how a project grows over time.
-Codeswarm\cite{ogawa09} is similar to Gource, using an organic timelapse
-approach to visualizing the events in the repository. Unlike Gource,
-which focuses on files, Codeswarm focuses on developers and the number
-of commits each developer is making.
+Codeswarm\cite{ogawa09}, shown in Figure~\ref{fig:codeswarm}, is similar
+to Gource, using an organic timelapse approach to visualizing the events
+in the repository. Unlike Gource, which constructs a graph from the
+directory structure of project, Codeswarm does not have a graph
+structure. Developers are the center of the visualizations. When a
+developer makes a change to a file, the file lights up and flies toward
+the developer. As a developer makes more changes, the files that the
+developer is modifying will form a ring around the developer. If
+multiple developers are modifying a file, the developer nodes are drawn
+together.
 
 \begin{figure}[htpb]
   \centering
@@ -196,6 +202,13 @@ of commits each developer is making.
   \caption{View of Gource file graph with users operating on a
     repository}
   \label{fig:gource_view}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/codeswarm.png}
+  \caption{View of the Postgresql repository in Codeswarm}
+  \label{fig:codeswarm}
 \end{figure}
 
 There are many non-academic tools that are designed as an interface to
