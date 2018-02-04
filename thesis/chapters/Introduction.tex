@@ -5,27 +5,36 @@ Version control records the changes being made to the files of a
 project, enabling users to view previous versions of the files, view the
 individual changes made, and restore the files back to a previous state
 if necessary. The version control system also maintains a log of who
-made changes and when those changes were made. The version control
-system effectively stores the history of the project. Presented in the
-right way, there are many opportunities to make this information help
-users understand the architecture of the software system, who is making
-changes, and which files are being changed the most. While version
-control can be used in any context where file history is desirable,
-version control is usually used in the software development process.
+made changes and when those changes were made. By storing this
+information, the version control system stores the history of the
+project. Presented in the right way, there are many opportunities to use
+this information to help users understand the architecture of the
+software system, who is making changes, and which files are being
+changed the most. While version control can be used in any context where
+file history is desirable, version control is usually used in the
+software development process.
 
 Git is the \define{version control system}{VCS} designed for and used by
 the Linux kernel project. In order to handle the number of people
-contributing to the kernel project, git was designed to be distributed.
-Unlike in centralized repositories, a user can clone the entire
-repository, giving them access to all of the commits and branches. This
-gives users the ability to change the structure of the repository and
-make changes that would not work in a centralized repository. In order
-to support the repository goals, git uses a directed acyclic graph to
-represent the repository. Edges point from more recently applied changes
-toward the initial commit of the repository. The changes to the code are
-stored in the nodes of the graph, along with metadata about who is
-making the changes, when the changes were made, and the parents of the
-commit.
+contributing to the kernel from different countries, git was designed to
+be distributed. Unlike in centralized repositories, where users must
+re-synchronize with the server, a distributed version control system
+provides each user with a full first-class repository. This allows the
+user to have additional flexibility, and means that a user has to
+synchronize less often. Furthermore, each user has a copy of the entire
+repository, which means that they have access to all of the branches and
+commits in the repository. This gives users the ability to change the
+structure of the repository and make changes that would not work in a
+centralized repository. To make it more useful to the Linux project, git
+was designed to allow easy branching. Branches allow users to work on a
+logically separate part of the repository, then the changes into the
+repository once the feature is finished or the bug is fixed. This lets
+users work for longer without needing to synchronize with the rest of
+the project as often. To support these requirements, git uses a directed
+acyclic graph to represent the repository. The nodes of the graph
+represent the commits, containing the actual changes being made, along
+with metadata about who is making the changes, when the changes were
+made, and the parent nodes of the commit.
 
 Visualizations of the graph are used to answer questions about the
 development of the software including what changes are being made into
@@ -37,7 +46,7 @@ software to keep them secure and performing correctly. This requires
 understanding how a commit is integrated into the repository, and other
 commits that are merged with that commit. In large, active, software
 repositories this task is not trivial. The graph can be large and
-complicated, making the visualizations of it difficult to understand.
+complicated, making the visualizations difficult to understand.
 
 This \paper{} makes four contributions. First, a new tree-based model,
 called the \mt{}, constructed from the underlying graph of the
