@@ -1,160 +1,209 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Introduction}
 
-Visualizations of the directed acyclic graph of an active software
-system repository are difficult to understand. These visualizations are
-used to provide information about the topology of the repository, which
-gives insight on how commits are being integrated. Maintainers must use
-this information to understand the changes that are being made to the
-current version of the software, so that the fixes can be applied to
-older versions as well. This requires them to understand how the commit
-with the necessary changes are integrated, and identifying other commits
-that are necessary for this integration to take place. In large software
-repositories, this task is not trivial. This \paper{} presents the
-design of a new model constructed from the underlying graph of the
-repository.
+Version control records the changes being made to the files of a
+project, enabling users to view previous versions of the files, view the
+individual changes made, and restore the files back to a previous state
+if necessary. The version control system also maintains a log of who
+made changes and when those changes were made. By storing this
+information, the version control system stores the history of the
+project. Presented in the right way, there are many opportunities to use
+this information to help users understand the architecture of the
+software system, who is making changes, and which files are being
+changed the most. While version control can be used in any context where
+file history is desirable, version control is usually used in the
+software development process.
 
-The work in this \paper{} focuses on the Linux repository, which uses
-git for managing changes in the code and helping coordinate
-contributors. Linux is highly active, with more than 8,000 commits added
-per release. Linux is used in many software applications, including
-mobile phones, smart appliances, and even spacecraft. Maintainers must
-be able to port the patches to the current version of the kernel back
-into the version of the kernel that they are maintaining. This requires
-them to determine which commits are relevant to them, and how these
-commits are integrated.
+Git is the \define{version control system}{VCS} designed for and used by
+the Linux kernel project. In order to handle the number of people
+contributing to the kernel from different countries, git was designed to
+be distributed. Unlike in centralized repositories, where users must
+re-synchronize with the server, a distributed version control system
+provides each user with a full first-class repository. This allows the
+user to have additional flexibility, and means that a user has to
+synchronize less often. Furthermore, each user has a copy of the entire
+repository, which means that they have access to all of the branches and
+commits in the repository. This gives users the ability to change the
+structure of the repository and make changes that would not work in a
+centralized repository. To make it more useful to the Linux project, git
+was designed to allow easy branching. Branches allow users to work on a
+logically separate part of the repository, then the changes into the
+repository once the feature is finished or the bug is fixed. This lets
+users work for longer without needing to synchronize with the rest of
+the project as often. To support these requirements, git uses a directed
+acyclic graph to represent the repository. The nodes of the graph
+represent the commits, containing the actual changes being made, along
+with metadata about who is making the changes, when the changes were
+made, and the parent nodes of the commit.
 
-Git is a distributed version control system that uses the directed
-acyclic graph (DAG) model to store modifications to code in nodes, and
-help with branching and merging related changes. Git was designed by
-Linus Torvalds in 2005 specifically for the needs of the Linux kernel
-repository after the Linux project switched from Bitkeeper. Since git
-was designed for the Linux project, the repository makes use of nearly
-every feature in git. The DAG model allows git to have impressive
-flexibility compared to many other version control systems, but suffers
-from poor visualizations. In large projects, the visualizations of the
-DAG do not provide an adequate summarization of how a commit is
-integrated into the master branch of a repository.
+Visualizations of the graph are used to answer questions about the
+development of the software including what changes are being made into
+various branches, how the changes to the code are grouped, and who is
+working with whom, among others. Maintainers use the visualizations to
+understand what changes are being made to the current version of the
+software in order to apply the necessary fixes to older versions of the
+software to keep them secure and performing correctly. This requires
+understanding how a commit is integrated into the repository, and other
+commits that are merged with that commit. In large, active, software
+repositories this task is not trivial. The graph can be large and
+complicated, making the visualizations difficult to understand.
 
-While there has been extensive research on visualizing software
-repositories, previous work does not focus on the topology of the
-repository, and in extension, how a commit is integrated. The literature
-on repository visualization and summarization can be broken down into
-three main subcategories; communication\cite{Cubranic2005,Begel2010},
-aspect-oriented visualization\cite{Ambros2005,Burch2005,Ambros2009}, and
-organic visualizations\cite{ogawa09,Caudwell2010}. A fourth category can
-be added to include non-academic tools, like GitKraken and SourceTree,
-built as clients to work with git repositories and visualize the DAG
-model directly. The goals of these tools is not to extract new
-information from the repository, but to act as a user-friendly client on
-top of git.
+This \paper{} makes four contributions. First, a new tree-based model,
+called the \mt{}, constructed from the underlying graph of the
+repository.  Second, visualizations that take advantage of the \mt{}
+model. Third, an implementation of the visualizations in a tool, called
+\tool{}. Finally, an evaluation of the tool to determine whether
+visualizing the repository using the model is useful. This \paper{}
+specifically studies the Linux repository. The Linux repository is large
+and complex, with more than 1000 contributors making changes every
+release. Details about the repository are provides in
+Section~\ref{sec:linux}.
 
-This \paper{} introduces a new model designed to help clearly visualize
-the path that a commit takes to being integrated into the master branch.
-To test the viability of the model, I build and evaluate a tool called
-\tool{}, which is designed to leverage the capabilities of the \mt{} to
-provide improved summarizations and visualizations of the merges in
-Linux. When constructing and evaluating the model and tool, three
-questions arose; first, does the directed acyclic graph not already
-provide a meaningful summarization of how a commit is integrated
-(RQ\ref{rq:RQ1}). Second, how does the visualization of the DAG compare
-to the visualization of the \mt{} for understanding how a commit is
-integrated (RQ\ref{rq:RQ2})? Finally, what additional information can be
-extracted from the \mt{} over the information in the DAG
-(RQ\ref{rq:RQ3})?
-
-%% TODO: Move to methodology section
-\begin{textbox}
-  \textbf{RQ\rqs{rq:RQ1}:} Do visualizations of the DAG provide
-  users with a meaningful visualization of how commits are integrated?
-\end{textbox}
-
-\evan{Not sure about the first research question. Its essentially
-  motivation. ``What are weaknesses in the DAG visualizations'' might be
-  better. That was found in the Conceptual understanding part. ``Does
-  the DAG provide users with meaningful visualization of small merges''}
+The central thesis of the paper is finding a means of visualizing a
+repository that is as large and complex as the Linux repository in a
+meaningful way that gives insight into how commits are integrated.
 
 \begin{textbox}
-  \textbf{RQ\rqs{rq:RQ2}:} How does the visualization of the \mt{}
-  compare with the visualization of the DAG to determine how commits are
+  \textbf{Thesis:} How do we effectively visualize the graph of the
+  Linux repository in a way that gives insight into how commits are
   integrated?
 \end{textbox}
 
-\begin{textbox}
-  \textbf{RQ\rqs{rq:RQ3}:} What other information can be drawn from the
-  \mt{} model that cannot easily be drawn from the DAG.
-\end{textbox}
-
-%% TODO: More is described in the background section of the paper
-
 \section{Related Work}\label{sec:related_work}
 
-The \define{Version Control System}{VCS} tracks the development of a
-software project, recording each change as it happens. In many cases,
-the VCS contains the entire story of the software, with rich information
-about the authors, files, and changes being made. This makes the VCS
-vital in providing information about how a software project is being
-developed, how the software is structured, and extending Conway's law,
-can reflects the communication structure within an organization. In
-order to use the information stored in the VCS, users must be able to
-gain a clean understanding and summarization of the changes being made
-and how they interact with the rest of the source code. Various
-visualizations of have been written to tackle various aspects of this
-challenge, but I am not aware of a git repository visualization tool
-that was designed with the explicit goal of showing how commits are
-integrated into the master branch of the repository. There has, however,
-been a lot of work in providing visualizations of various aspects of a
-repository.
+The Version Control System tracks the development of a software project,
+recording each change as it happens. By tracking the changes, the VCS
+contains an entire story of the software, rich with information about
+who the authors are, what files are being modified, what where changes
+are being made. This makes the VCS vital in providing information about
+how a software project is being developed and how the software is
+structured. In order to use the information stored in the VCS, users
+must be able to gain a clear understanding and summarization of the
+changes being made, and how they interact with the rest of the source
+code. While there has been extensive research on visualizing software
+repositories, previous work does not focus on how commits and merges are
+structures in the repository graph, and in extension, how commits are
+integrated into a repository. The literature on repository visualization
+and summarization can be broken down into three academic subcategories;
+communication\cite{Cubranic2005,Begel2010}, aspect-oriented
+visualization\cite{Ambros2005,Burch2005,Ambros2009}, and organic
+visualizations\cite{ogawa09,Caudwell2010}. A fourth industrial category
+exists, including tools like GitKraken and SourceTree. The goal of the
+industrial tools is not to extract or synthesize new information from
+the repository, but to act as a user-friendly client on top of what git
+already provides.
 
 Many tools focus on addressing the issue in communication between
 developers in inter-team collaborative work. Hipikat\cite{Cubranic2005}
 investigates communication between developers, focusing on assisting
 with the integration of new developers into a project though
 communication, providing the new developer with searchable artifacts of
-the changes being made, and where to find them. Codebook\cite{Begel2010}
-also focuses on communication, but where Hipikat focuses on assisting
-new developers find artifacts, Codebook assists developers with finding
-who was responsible for creating the artifact. Codebook uses a
-data-mining technique to determine the developer of a piece of code, the
-program manager who wrote the specification for the code, and the
-program managers and developers on the team who were working together.
-Neither tool is designed with the goal of providing information on the
-topological structure of a source code repository, nor are these tools
-designed for visualization purposes.
+the changes being made, and where to find them. The artifacts may
+include files or bug information, shown in Figure~\ref{fig:hipikat}.
+Codebook\cite{Begel2010} also focuses on communication, but where
+Hipikat focuses on assisting new developers find artifacts, Codebook
+assists developers with finding who was responsible for creating the
+artifact. Codebook uses a data-mining technique to determine the
+developer of a piece of code, the program manager who wrote the
+specification for the code, and the program managers and developers on
+the team who were working together. A screenshot of Hoozizat, an
+implementation of codebook, is shown in Figure~\ref{fig:codebook}.
+Hoozizat and Hipikat use the version control as the archive of artifacts
+that are being queried. Neither tool is designed with the goal of
+providing information on the topological structure of a source code
+repository, nor are these tools designed for visualization purposes, but
+they do draw information from the contents of the version control
+system.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/introduction/hipikat_bug.png}
+  \includegraphics[width=0.9\linewidth]{Figures/introduction/hipikat.png}
+  \caption{View of Hipikat, listing bugs that are similar to the one
+  being viewed}
+  \label{fig:hipikat}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/codebook.png}
+  \caption{A screenshot of the search results on Hoozizat, an
+    implementation of codebook.}
+  \label{fig:codebook}
+\end{figure}
 
 Most visualization systems provide information about a certain aspect of
-the contents in the repository. Fractal Figures\cite{Ambros2005} uses a
-square to represent a component of a project. Then subdividing the
-square based on the proportion of an author's contributions to that
-component. EPOSee\cite{Burch2005} and Evolution Radar\cite{Ambros2009}
-perform further analysis to determine which files are created together,
-and see what changes are made over a sequence of commits. The goals of
-these two projects differ slightly, but both use evolution over time to
-extract information about how different parts of a software system are
-related.
+the contents in the repository. The goal being Fractal
+Figures\cite{Ambros2005} is to show the division of work between
+contributors. The project is represented as a square. The square is then
+subdivided based on the proportion that a given contributor contributed
+to the project, shown in Figure~\ref{fig:fractal_figures}. The
+visualization makes it easy to see where work is evenly divided versus
+the projects where a single contributor is doing most of the work.
 
-Codebook, Hipikat, Fractal Figures, EPOSee, and Evolution Radar all
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/fractal_figures.png}
+  \caption{Construction of Fractal Figures}
+  \label{fig:fractal_figures}
+\end{figure}
+
+EPOSee\cite{Burch2005} and Evolution Radar\cite{Ambros2009} use the
+information from the version control to determine which files are edited
+together. The tools from these papers are designed to help a user
+identify the degree to which two files are coupled. Two files are
+edited and committed together frequently are said to be more tightly
+coupled. This makes it possible to determine when two classes are
+semantically related. The evolution radar shown in
+Figure~\ref{fig:evolution_radar} places points on a circle based on the
+name and coupled they are. The files are arranged around the circle
+based on the file name, including the full file path. This has the
+effect of grouping files that are from the same directory. The distance
+from the center of the circle is dependent on how tightly coupled the
+file is to the file be analyzed. A more tightly-coupled file will be
+positioned more closely to the center of the circle.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/evo_radar.png}
+  \caption{Evolution Radar visualization}
+  \label{fig:evolution_radar}
+\end{figure}
+
+Hoozizat, Hipikat, Fractal Figures, EPOSee, and Evolution Radar all
 extract data from CVS repositories. Our goal is to provide information
 about git repositories. Fewer tools are available for generating
 visualizations and summaries of git repositories, potentially due to the
 DAG model used as the internal structure of git repositories.
 
-Heller et al.\cite{Heller2011} apply geo-spatial information to the
-commits in git repositories to see organic patterns that arise in
-collaboration between contributors to a repository.
-Gource\cite{Caudwell2010} is a tool for providing an interactive
-timelapse of the changes being made to various files stored in the
-repository. Gource uses a graph metaphor for representing the file
-structure in the repository. Files are the nodes in the graph, and the
-clustering of the file represents directories. The edges are the links
-between directories. User avatars move around the graph emitting
-different color light depending on the change being made to the file.
-Green indicates the creation of a new file, yellow indicates a
-modification, and red indicates the deletion of the file (shown in
-Figure~\ref{fig:gource_view}). Codeswarm\cite{ogawa09} is similar to
-Gource, using an organic timelapse approach to visualizing the events in
-the repository. Unlike Gource, which focuses on files, Codeswarm focuses
-on developers and the number of commits each developer is making.
+Organic visualizations show patterns in cooperation and communication
+that arise within a software project organically. Heller et
+al.\cite{Heller2011} plots communication on a map. This visualization
+shows communication and cooperation patterns that arise, and how they
+cross country boundaries, within a software project.
+Gource\cite{Caudwell2010}, shown in Figure~\ref{fig:gource_view}, shows
+which files contributors are working on. Using this, it is possible to
+draw conclusion about which parts of a project a given contributor is
+working on and the group of contributors working on a given area. Gource
+uses a graph metaphor structure to represent the file structure of a
+repository. Files in the same directory cluster together to form a node.
+Edges between the directory clusters represent which directory contains
+another, although there is no way to determine the direction of the
+relationship. User avatars move around the graph emitting different
+beams of colored light depending on the change being made to the file.
+Greed indicates the creation of a new file, yellow indicates a
+modification, and red indicates the deletion of a file. The
+visualization is animated to show how a project grows over time.
+Codeswarm\cite{ogawa09}, shown in Figure~\ref{fig:codeswarm}, is similar
+to Gource, using an organic timelapse approach to visualizing the events
+in the repository. Unlike Gource, which constructs a graph from the
+directory structure of project, Codeswarm does not have a graph
+structure. Developers are the center of the visualizations. When a
+developer makes a change to a file, the file lights up and flies toward
+the developer. As a developer makes more changes, the files that the
+developer is modifying will form a ring around the developer. If
+multiple developers are modifying a file, the developer nodes are drawn
+together.
 
 \begin{figure}[htpb]
   \centering
@@ -164,49 +213,76 @@ on developers and the number of commits each developer is making.
   \label{fig:gource_view}
 \end{figure}
 
-There are many non-academic programs that are designed as an interface
-to git. While not all of these programs provide visualizations, those
-that do use a visual metaphor of the DAG to show topological information
-about the repository. Some of the interfaces are shown in
-Figure~\ref{fig:non_academic_work}. While they ultimately show the same
-information, the topology of the repository, the organization of that
-information is different. GitKraken is a popular commercially written
-git interface that aims to be efficient, elegant, and reliable,
-according to the GitKraken website. On visual inspection, it appears to
-be all of these things. GitLab and GitHub are both online repository
-hosts, with visualization and summarization provided as well. While the
-GitLab visualization does not appear to provide any additional
-information, the GitHub visualization does take advantage of it's
-internal knowledge of forks. Through this visualization, GitHub displays
-the branch history of the repository network, including the branches of
-the main repository and forks from that. Giteye and most of the other
-visualizations are relatively conventional, simply cleaning up the
-interface of Gitk, the visualizer that is shipped with git. With the
-exception of Gitk, no GUI visualizers are able to produce a
-visualization for the Linux repository, due to its size. The GitHub
-visualizer displays an error message, stating that there are too may
-forks to display. The GitKraken interface will freeze and eventually
-crash while trying to load the repository, while Giteye and the other
-visualizers will consume all of the system memory before they are able
-to produce a visualization. The Gitk interface is the least polished,
-but is able to produce a visualization of the repository.
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/codeswarm.png}
+  \caption{View of the Postgresql repository in Codeswarm}
+  \label{fig:codeswarm}
+\end{figure}
+
+There are many non-academic tools that are designed as an interface to
+git. While not all of these programs provide visualizations, those that
+do use a visual metaphor of the DAG to show topological information
+about the repository. While they ultimately show the same information,
+the topology of the repository, the organization of that information is
+different.
+
+GitKraken, shown in Figure~\ref{fig:gitkraken_main},  is a popular
+commercially written git interface that aims to be efficient, elegant,
+and reliable, according to the official website. On visual inspection,
+it appears to satisfy these goals. Overall, the interface is clean, most
+actions that are possible with the git command line are available in the
+graphical interface. Overall, the tool is clean and garners online
+approval from users. The graph itself, shown in the center of the main
+view provides users with the same information as the graph visualization
+in gitk and the git command line, though it may be visually more
+appealing.
 
 \begin{figure}[htpb]
   \centering
-  \begin{tabular}{cc}
-    \includegraphics[height=3.5cm]{Figures/introduction/giteye_graph.jpg}
-    &
-    \includegraphics[height=3.5cm]{Figures/introduction/github_dag.png}
-    \\
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/gitkraken_main.png}
+  \caption{Screenshot of the main view in GitKraken}
+  \label{fig:gitkraken_main}
+\end{figure}
 
-    \includegraphics[height=3.5cm]{Figures/introduction/gitkraken_graph.jpg}
-    &
-    \includegraphics[height=3.5cm]{Figures/introduction/gitlab_graph.jpg}
-  \end{tabular}
+GitLab and GitHub are both online repository hosts, with
+visualization and summarization provided as well. While the GitLab
+visualization does not appear to provide any additional information, the
+visualization provided by GitHub takes advantage of additional internal
+knowledge to display information about forks. Through this
+visualization, GitHub displays the branch history of the repository
+network, including the branches of the main repository and forks from
+that. Giteye and most of the other visualizations are relatively
+conventional, simply cleaning up the interface of Gitk, the visualizer
+that is shipped with git. With the exception of Gitk, no GUI visualizers
+are able to produce a visualization for the Linux repository, due to its
+size. The GitHub visualizer displays an error message, stating that
+there are too may forks to display. The GitKraken interface will freeze
+and eventually crash while trying to load the repository, while Giteye
+and the other visualizers will consume all of the system memory before
+they are able to produce a visualization. The Gitk interface is the
+least polished, but is able to produce a visualization of the
+repository.
 
-  \caption{Various non-academic git interfaces. In clockwise order from the
-    top-left; Giteye, Github, Gitlab, and GitKraken.}
-  \label{fig:non_academic_work}
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/giteye_graph.jpg}
+  \caption{Screenshot of Giteye DAG view of a repository}
+  \label{fig:giteye_screenshot}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/github_dag.png}
+  \caption{GitHub online network view of a repository}
+  \label{fig:github_dag_screenshot}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/gitlab_graph.jpg}
+  \caption{GitLab online graph view}
+  \label{fig:gitlab_dag_screenshot}
 \end{figure}
 
 \section{Thesis Organization}\label{sec:thesis_organization}
