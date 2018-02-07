@@ -30,14 +30,6 @@ atomic properties of committing, the server will momentarily lock to
 ensure that no changes happen while a commit is being processed or a
 conflict resolved.
 
-To understand how a change is integrated into the master branch of a
-repository, it is vital to understand the merges that led to the
-integration of the commit, and the commits that are merged into the
-master branch with the commit of interest. Maintainers of software must
-sift through the commits to determine which changes being made to the
-current version of the software pertain to the area of the software that
-they are maintaining. Specifically, maintainers must be able to answer
-two questions;
 
 Due to the limitations of a centralized architecture, the Linux kernel
 uses a distributed version control system. Until April of 2005, the
@@ -53,11 +45,35 @@ version of git was roughly 1300 lines of code and was written and
 self-hosting in less than two\footnote{From the git mailing list
   \url{https://marc.info/?l=git&m=117254154130732}}.
 
+Git is an implementation of a distributed version control system (DVCS).
+Distributed Version Control gives developers more flexibility with their
+local repository and requires synchronization less often than the
+centralized version control systems. When a developer clones a
+repository using git, the clone is a full stand-alone repository. A
+developer is able to work independently on a feature committing and
+branching within their local repository. Once the feature is complete,
+the developer can push their changes to the upstream repository. Because
+the local repository is completely separate, the developer has more
+flexibility to alter the structure of their repository before pushing
+the results back into the master repository. The developer can flatten
+or add merges, and re-order, squash, edit, and split commits. These
+features make it possible to commit more often without worrying about
+commits being complete because the changes can be cleaned up before
+being released.
+
+With the additional flexibility, the structure of large and active
+repositories is more complex than the repositories in SVN or CVS. This
+poses a problem for maintainer who must understand how a commit is
+integrated and the other commits that are integrated with that commit.
+Maintainers must sift through thousands of commits to determine which
+changes being made to the current version of the software pertain to the
+area of the software that they are maintaining. Specifically,
+maintainers must be able to answer two questions;
 
 \begin{textbox}
 \begin{itemize}
   \item How is a commit integrated?
-  \item What other commits are related to a given commit?
+  \item What other commits are integrated with the commit?
 \end{itemize}
 \end{textbox}
 
