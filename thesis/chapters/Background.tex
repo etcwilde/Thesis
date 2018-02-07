@@ -12,6 +12,24 @@ In addition to fulfilling the two primary purposes, modern version
 control maintains a log of who is making the changes and when the
 changes were made.
 
+Early version control systems were designed for local development and
+provided no means of collaboration. As software projects grew, the model
+quickly became outdated, being replaced with a centralized server model.
+Concurrent Version System (CVS) and Apache Subversion (SVN) are two
+examples of centralized version control systems. The centralized version
+control system provides means of collaboration through a client-server
+interface. The repository is stored in a central server. Developers use
+a client to check out parts of the repository, choosing parts that
+pertain to the part they are editing.
+
+In large open source projects, the centralized architecture becomes a
+burden. Common tasks such as committing and changing branches requires
+re-synchronization with the central server. In order to work, the
+developer must always have access to the central server. To maintain the
+atomic properties of committing, the server will momentarily lock to
+ensure that no changes happen while a commit is being processed or a
+conflict resolved.
+
 To understand how a change is integrated into the master branch of a
 repository, it is vital to understand the merges that led to the
 integration of the commit, and the commits that are merged into the
