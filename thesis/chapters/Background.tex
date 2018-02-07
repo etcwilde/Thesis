@@ -39,6 +39,21 @@ current version of the software pertain to the area of the software that
 they are maintaining. Specifically, maintainers must be able to answer
 two questions;
 
+Due to the limitations of a centralized architecture, the Linux kernel
+uses a distributed version control system. Until April of 2005, the
+kernel project used BitKeeper. In April 2005, the licensing became too
+restrictive and the project needed to change the version control system.
+Git was written as a replacement to BitKeeper. Git needed to be
+implemented quickly so that Linus could return to the kernel, but was
+also required to have the capacity to maintain a similar level of patch
+granularity as BitKeeper\footnote{initial announcement of git on the
+  mailing list
+  \url{https://marc.info/?l=linux-kernel&m=111280216717070}}. The first
+version of git was roughly 1300 lines of code and was written and
+self-hosting in less than two\footnote{From the git mailing list
+  \url{https://marc.info/?l=git&m=117254154130732}}.
+
+
 \begin{textbox}
 \begin{itemize}
   \item How is a commit integrated?
@@ -206,17 +221,6 @@ for large open source projects, like Linux, it does pose additional
 challenges related to the complexities that arise as a result of being
 distributed.
 
-Git is a DVCS, implemented for handling development on the Linux kernel,
-written to replace BitKeeper due to issues with highly restrictive
-licensing in April of 2005. The primary goals for git were to be able to
-support development of the kernel, be implemented quickly so as not to
-hinder the development of the kernel, and to maintain similar levels of
-patch granularity as BitKeeper\footnote{initial announcement of git on
-  the mailing list
-  \url{https://marc.info/?l=linux-kernel&m=111280216717070}}. The
-initial version of git was around 1300 lines of code and was written and
-self-hosting in less than 2 weeks\footnote{From the git mailing list
-  \url{https://marc.info/?l=git&m=117254154130732}}.
 
 The core model used to store the repository is a \define{directed
   acyclic graph}{DAG}. Git refers to the nodes of the DAG as commits,
