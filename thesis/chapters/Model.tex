@@ -1,35 +1,44 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Model}\label{chap:model}
 
-The topological information in Chapter~\ref{chap:background} indicates
-that while there are many commits being integrated into the repository,
-relatively few are integrated in a given merge. Leveraging this
-information, I design a model that groups commits by the integrating
-merge into the master branch. Since the merges into the Linux kernel are
-atomic, all the context necessary for merging a commit is available at
-the integrating merge. The model is a tree-based model, the \mt{}.
+This chapter introduces the \mt{} model and the algorithm used to
+convert the DAG into the \mt{s}. Starting with an introduction of the
+\mt{} model, the chapter includes the algorithm to convert the DAG into
+\mt{s}, and an evaluation of that algorithm.
 
-The \mt model abstracts the DAG of the repository into a set of \mt{s}.
-Each \mt is rooted at a merge into the master branch. The leaves of this
-tree are the commits and the merges are the inner nodes. A \mt is built
-recursively with every merge in the \mt merging a sub-\mt. Any merges
-that a commit must pass through to reach the master branch become an
-inner node of the tree. Effectively, a \mt is a tree that shows the path
-that commits follow in their way to the master branch of a repository.
-The \mt{s} also help understand how commits were grouped together in
-order to be integrated. In this model, not only has the DAG been
-inverted (and simplified), but the entire notion of parent-child
-relationship has been reversed. Due to this property, the terminology
-will be different depending on the model being referred to; when
-referring to the \mt{}, the parent is the next node toward the merge
-into the master branch, or the root of the tree. When referring to the
-DAG, the parent relationship is in the opposite direction, from the root
-toward the branch-point. In addition to identifying the path that a
-commit took to being merged, the model enables easy aggregation of
-commit metadata at merges, since the parent-child and child-parent
-relationship for each event is known; commits are aware of which merge
-is the next merge toward integration into the master branch, and merges
-are aware of which commits are being merged.
+Thousands of commits are merged into the repository per year. Directly
+visualizing all of the information in a meaningful way is difficult, or
+potentially impossible. The merges into the master branch contain
+relatively few commits, with the median number of commits being seven.
+Seven nodes is trivial for visualization purposes, which indicates that
+building a model that groups repository events based on the merge into
+the master branch may provide more meaningful visualizations.
+Furthermore, the merges into the kernel are atomic, all of the context
+necessary for integrating a commit is available at the merge into the
+master branch.
+
+The \mt{} model is an abstracted representation of the DAG\@. Each \mt{}
+is rooted at a merge into the master branch. The leaves of this tree are
+the commits and the merges are the inner nodes. A \mt{} is built
+recursively with every merge in the \mt{} merging a sub-\mt{}. Any
+merges that a commit must pass through to reach the master branch become
+an inner node of the tree. A \mt{} is effectively a collection of
+shortest paths from a commit to the merge into the master branch,
+showing the path that the commit takes. The \mt{s} also help people
+understand how commits were grouped together in order to be integrated.
+In this model, not only has the DAG been inverted (and simplified), but
+the entire notion of parent-child relationship has been reversed. Due to
+this property, the terminology will be different depending on the model
+being referred to; when referring to the \mt{}, the parent is the next
+node toward the merge into the master branch, or the root of the tree.
+When referring to the DAG, the parent relationship is in the opposite
+direction, from the root toward the branch-point. In addition to
+identifying the path that a commit took to being merged, the model
+enables easy aggregation of commit metadata at merges, since the
+parent-child and child-parent relationship for each event is known;
+commits are aware of which merge is the next merge toward integration
+into the master branch, and merges are aware of which commits are being
+merged.
 
 To illustrate this model I will use a small example: assume the commits
 represented in Figure~\ref{fig:repoEvents} show the sequence of events
