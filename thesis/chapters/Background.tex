@@ -30,7 +30,6 @@ atomic properties of committing, the server will momentarily lock to
 ensure that no changes happen while a commit is being processed or a
 conflict resolved.
 
-
 Due to the limitations of a centralized architecture, the Linux kernel
 uses a distributed version control system. Until April of 2005, the
 kernel project used BitKeeper. In April 2005, the licensing became too
@@ -62,13 +61,14 @@ commits being complete because the changes can be cleaned up before
 being released.
 
 With the additional flexibility, the structure of large and active
-repositories is more complex than the repositories in SVN or CVS. This
-poses a problem for maintainer who must understand how a commit is
-integrated and the other commits that are integrated with that commit.
-Maintainers must sift through thousands of commits to determine which
-changes being made to the current version of the software pertain to the
-area of the software that they are maintaining. Specifically,
-maintainers must be able to answer two questions;
+repositories is more complex than the repositories that are in
+centralized version control. This poses a problem for maintainer who
+must understand how a commit is integrated and the other commits that
+are integrated with that commit. Maintainers must sift through thousands
+of commits to determine which changes being made to the current version
+of the software pertain to the area of the software that they are
+maintaining. Specifically, maintainers must be able to answer two
+questions;
 
 \begin{textbox}
 \begin{itemize}
@@ -77,46 +77,188 @@ maintainers must be able to answer two questions;
 \end{itemize}
 \end{textbox}
 
-Commits being integrated into a repository may pass through multiple
-merges on the path to the master branch. The merges form logical
-groupings of related code; furthermore, in some repository structures,
-merges are used to resolve conflicts between commits. In order to apply
-the changes in one commit, modifications to other parts of the codebase
-may be necessary. While they are necessary to the integration of the
-commit of interest, these modifications will likely be in separate
-commits, and possibly merged into the branch that the commit of interest
-is on. Maintainers must be able to easily find these commits, as they
-will be necessary for back-porting the commit of interest into older
-versions of the software.
+The remainder of this chapter includes a description of git, the
+directed acyclic graph, and information about the Linux kernel
+repository.
 
-The repository of the Linux kernel is studied in this \paper{}. Older
-versions of the Linux kernel are used in a wide variety of situations
-including various Linux desktop distributions, internet of things device
-firmware, web servers, spacecrafts\footnote{Linux is used heavily at
-  SpaceX \url{https://lwn.net/Articles/540368/}}, and in mobile devices
-as the base of the Android platform. These kernels are sometimes
-modified forks of the official Linux kernel, made to be more suitable
-for the specific needs of the application. Due to these
-application-specific modifications, it is not feasible to update to the
-latest version of the kernel for every official update. While it may not
-be feasible to update, the changes being made to the official version
-are necessary as they fix bugs, patch security issues, and improve
-performance. Due to the sometimes critical nature of the patches being
-merged into the current version of the kernel, it is necessary for
-maintainers working on application-specific forks of the kernel to sift
-through the commits coming into the official version, looking for the
-changes that may impact the kernel they are maintaining. The structure
-of the Linux repository, the dataset collected from the repository, and
-the nature of the integration and merge behaviours are described in
-Section~\ref{sec:linux}.
+\section{Git}
+\label{sec:git}
 
-Linux uses git as the version control system, managing the distributed
-nature of the kernel development and storing the changes to the kernel.
-The structure of git, the repository visualizations already available,
-and the challenges that these pose are discussed in
-Section~\ref{sec:git}.
+% Objects;
+At the deepest level, git is a key-value store with additional
+components on top. Objects are the most basic internal-unit in
+git\footnote{More information about git objects is available at
+  \url{https://git-scm.com/book/en/v2/Git-Internals-Git-Objects}}. Git
+stores all of the actual data stored in a repository as objects. There
+are three types of objects; blob objects, tree objects, and commit
+objects. Blob objects contain the contents of the files in the
+repository. Tree objects are the equivalent of Unix directories. The
+tree objects contain one or more sha-1 references to blob or tree
+objects that are contained within that tree. Commit objects are used to
+store the commit metadata. Git objects are exposed through the plumbing,
+but are not designed to be used directly. While git is technically a
+key-value store with an internet connection, it is best to use it as a
+version control system.
+
+% Commits;
+Commits are the most basic unit of change in the git repository that is
+exposed through the normal git interface. Commits are how the changes
+and metadata are stored. Commits in git are immutable; they cannot be
+changed once they are created. Instead, modifying a commit will result
+in a new commit with a different commit hash. Because the commits that
+follow have references to the updated commit, those commits are copied
+and receive a new commit hash as well. Commits store the associated
+commit object, commit hash, commit date, committer, author, and
+authorship date, the patch, and an ordered list of parents. The parents
+of a commit are the next commits toward the initial commit. The first
+parent in the list is the commit that is on the same branch as the
+commit that is being created, i.e, the branch that the other branches
+are being merged into. The remaining commits are the branches being
+merged, in the order that they are specified in the merge. A non-merging
+commit will only have one parent. To clarify the difference, non-merging
+commits are referred to as commits, merging commits as merges, and both
+indiscriminately as repository events or just events for the rest of
+this \paper{}. The patch are set of changes being made to the files of
+the repository.
+
+% Integration;
+Integration is the process by which the changes in a commit are added to
+the main repository. Small changes have fewer dependencies in other
+code, sometimes no dependencies. It is possible to merge these changes
+into the main repository without additional commits making changes
+elsewhere to accommodate this the small fix. These commits are usually
+in the form of a bugfix, where only a single line is modified. Adding
+larger features to a project usually requires additional support from
+the rest of the project. The changes are not directly part of the
+feature, but are required for the feature to be added to the software.
+Sometimes the interface with a function needs to be updated; this type
+of change causes breakage Wherever the function is called. The changes
+that are made to the rest of the project to accommodate the interface
+change are part of the integration of the change. Sometimes, it is
+possible to implement a more efficient or secure version of a function
+where the data meets certain requirements. There are changes that need
+to be made in the rest of the project to take advantage of the faster
+version of the function. The code involved with taking advantage of the
+new function is part of the integration of those changes. The commits
+that update the rest of the source to accommodate the new feature,
+updated function, or new functions, are the commits that are involved
+with integrating a commit. In order to integrate the changes, the
+commits must be merged into the master branch of the repository. Commits
+may be merged directly into the master branch, or may be merged into
+multiple branches before finally reaching the master branch. To
+understand how a commit is integrated, it is necessary to know which
+merges a commit passes through to reach the master branch, and which
+commits are merged with it.
+
+Commits may pass through multiple merges on the path to the master
+branch. The merges generally form logical separations, grouping related
+code. Merges are a type of commit; it is possible to make additional
+changes while merging. When two commits from different branches make
+changes to the same file, a conflict occurs. Git is unable to determine
+which changes are correct, so it flags them as a merge conflict, which
+stops the merging process. The person making the merge decides which
+change should be kept, and which should be removed. The resolution of
+merge conflicts is stored as the patch of merge conflicts. The Linux
+repository has no merge conflicts. This is attained through a different
+workflow. When a developer wants to merge their changes, they must first
+rebase their branch onto the most up-to-date commit of the repository.
+Rebasing is the process of moving a branch to another commit in the
+repository. When this happens, if there are conflicts, git will require
+the developer to make the fixes. The main difference being that the
+developer fixes conflicts, not the person performing the merge. The idea
+behind this is that the developer likely has a better understanding of
+which change is the correct, or how to integrate both changes.
+
+\section{Directed Acyclic Graph}
+\label{sec:directed_acyclic_graph}
+
+To allow for the flexibility needed for a distributed control system,
+git uses a \define{directed acyclic graph}{DAG} as the central
+repository model. The repository events make up the nodes in the graph,
+and the child-parent relationship represents the edges. Commits will
+have a single parent, which is the repository event that is at the head
+of the current branch. Merge nodes have an ordered list of
+parents\footnote{It is possible for a merge to have many parents, commit
+  2cde51fbd0f310c8a2c5f977e665c0ac3945b46d has 66 parents}, each parent
+is the head of each branch being merged. The first parent is the head of
+the current branch, and the other parents are the heads for the other
+branches being merged, in the order that they are specified in the merge
+command. Every repository will have at least one initial commit, which
+will have no parents, but it is possible for repositories to have
+multiple initial commits. Furthermore, it is possible for the graph of a
+repository to be disconnected; these branches are known as orphan
+branches.
+
+The model itself is quite simple but flexible. While the flexibility of
+a git repository is usually a strength, there are situations where it
+makes reasoning about the contents more difficult. The idea of a main
+master branch is useful for people who are working with the repository.
+Unlike many centralized repositories, which have a concept of a main
+branch, usually referred to as the trunk, git has no functional
+requirement for the existence of a main branch. Instead, the main branch
+is maintained by the discipline of the people committing code to the
+repository. As a convention in git, the first parent of a node is on the
+same branch as that node. A \foxtrot\footnote{See
+  \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html}
+  for a full description of the issue.} merge occurs when the parent
+list is re-ordered, thus confounding the branch relationships
+(depicted in Figure~\ref{fig:foxtrot_steps}).
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{ccc}
+    \includegraphics[width=114px]{Figures/background/foxtrot_initial.png} &
+    \includegraphics[width=145px]{Figures/background/foxtrot_good.png} &
+    \includegraphics[width=145px]{Figures/background/foxtrot_bad.png} \\
+    Initial Repository & No Foxtrot & Foxtrot
+  \end{tabular}
+  \caption{Depiction of a foxtrot merge, where the master branch is
+    confounded by \emph{branch2}}
+  \label{fig:foxtrot_steps}
+\end{figure}
+
+The nodes in the DAG are immutable; once a commit or merge is created,
+it cannot be changed. Git allows operations to alter the events and
+re-order them, but this will create a new event with a new commit hash.
+This property makes it impossible for nodes to store information about
+the children, and in extension, how the commit is being merged as this
+information is not available when the commit is created. Git provides
+the command \verb|git log --children|, which traverses the DAG and
+inverts the edges. Combining this with the graph output partially solves
+the problem of understanding how a commit is merged into the master
+branch as it shows how a commit was merged; however, the resulting graph
+is still complicated.
+
+Most repositories are simple enough that it is possible to identify how
+commits are integrated using the visualizations of the DAG that are
+available with the current tools. Difficulties arise in larger
+repositories. The master branch can be counfounded with \foxtrot{}
+merges, making it difficult to identify. Sheer number of commits being
+added to various branches at a given time can make it difficult to
+understand which branch a commit is being added to.
 
 \section{Linux}\label{sec:linux}
+
+This \paper{} studies the repository of the Linux kernel. The repository
+itself is complex, contain tens of thousands of commits per year and
+thousands of merges. Older versions of the kernel are used in a wide
+variety of situations including various Linux desktop distributions,
+internet of things device firmware, web servers,
+spacecrafts\footnote{Linux is used heavily at SpaceX
+  \url{https://lwn.net/Articles/540368/}}, and in mobile devices as the
+base of the Android platform. These kernels are sometimes modified forks
+of the official Linux kernel, made to be more suitable for the specific
+needs of the application. Due to these application-specific
+modifications, it is not feasible to update to the latest version of the
+kernel. While it may not be feasible to update, the changes being made
+to the official version are necessary as they fix bus, patch security
+issues, and improve performance. Due to the sometimes critical nature of
+the patches being merged into the current version of the kernel, it is
+necessary for maintainers working on an application-specific fork of the
+kernel to sift through the commits coming into the official version,
+looking for changes that may impact the kernel that they are
+maintaining. This section presents some statistics about the contents of
+the kernel repository.
 
 Linux is open source, using git to track and manage the source code in
 the kernel. A mirror of the repository is available on
@@ -209,90 +351,7 @@ and 50\% of the merges merge at most 7 events
   \label{fig:linux_merge_distribution_per_release}
 \end{figure}
 
-Initially, the repository looks very large and unmanageable. Breaking
-the commits down by the integrating merge looks like a promising means
-of simplifying the content. Most of the groups of commits will only
-contain 7 elements, which is nearly trivial to visualize.
-
-\section{Git}\label{sec:git}
-
-\define{Version control software}{VCS} supports software development,
-assisting with efficient storage of code, archival of the modifications,
-and navigation of code. The goals of version control software is to
-provide means of efficient source code storage, logging changes made to
-the code, and retrieving historical versions. Source Code Control System
-(SCCS) and its successor, Revision Control System (RCS), were designed
-for local development, providing no means of collaboration. As software
-projects grew, this model quickly became outdated, being replaced by a
-client-server model. \define{Concurrent Versions System}{CVS} and Apache
-\define{Subversion}{SVN} are examples of two client-server VCSs, which
-adds support for collaborative development. As projects grew, the
-client-server was no longer sufficient to meet the requirements of
-development teams, which gave rise to the \define{distributed version
-  control system}{DVCS}. Distributed version control systems are more
-flexible than either the local systems or client-server systems as they
-give the user more control of their local clone and have further support
-for distributed workflows. The distributed version control is necessary
-for large open source projects, like Linux, it does pose additional
-challenges related to the complexities that arise as a result of being
-distributed.
-
-
-The core model used to store the repository is a \define{directed
-  acyclic graph}{DAG}. Git refers to the nodes of the DAG as commits,
-not distinguishing between the code-carrying commits and the structural
-commits that merge two branches together. The code-carrying commits will
-be referred to as commits, the structural merge commits as merges, and
-both without discrimination as repository events for the remainder of
-this \paper{}. Each repository event contains an ordered list of one
-or more parents, except the initial commit which has no parents. The
-parent relationship points from the current event toward the initial
-commit. Commits have a single parent, while merges will have at least
-two parents, the parent on the current branch followed by the repository
-events being merged. This model allows merging of multiple branches
-simultaneously in octopus merges, where the order of the parents
-represents the order that the branches were specified for being
-merged\footnote{One octopus merge in Linux
-  (2cde51fbd0f310c8a2c5f977e665c0ac3945b46d) has 66 parents}.
-A \foxtrot\footnote{See
-  \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html}
-  for a full description of the issue.} merge occurs when the parent on
-the current branch is replaced by a parent from a branch being merged
-into the current branch, thus confounding the branch relationships
-(depicted in Figure~\ref{fig:foxtrot_steps}).
-
-\begin{figure}[htpb]
-  \centering
-  \begin{tabular}{ccc}
-    \includegraphics[width=114px]{Figures/background/foxtrot_initial.png} &
-    \includegraphics[width=145px]{Figures/background/foxtrot_good.png} &
-    \includegraphics[width=145px]{Figures/background/foxtrot_bad.png} \\
-    Initial Repository & No Foxtrot & Foxtrot
-  \end{tabular}
-  \caption{Depiction of a foxtrot merge, where the master branch is
-    confounded by \emph{branch2}}
-  \label{fig:foxtrot_steps}
-\end{figure}
-
-The repository events in the DAG are immutable; once a repository event
-is created, it can't be changed. Git allows operations to alter
-repository events and re-order them, but this will create a new event
-with a new commit hash. This property makes a repository event unable to
-record the traversal of merges into the master branch of the repository.
-Introducing an additional field to track the path to the master branch
-would create a circular dependency between the parent and child. Any
-updates to the DAG would modify the commit hashes for all repository
-events in the repository. To alleviate this, git provides the command
-\verb|git log --children| which traverses the DAG and prints the
-inverted edges relationship between events.
-
-Under perfect conditions, visualizations of the DAG should show how a
-commit is integrated as the DAG stores all information about the
-repository, and the events within. It includes information about where
-branches are being made, where merges are occurring, who is making
-changes, when the changes are being made, what files are being modified,
-and how much is being changed. Most repositories are simple, with only a
-few small branches and a clear well-defined master branch; however, in
-large, active, repositories, the master branch can be confounded by
-\foxtrot{} merges, making it difficult to identify. This consequently
-would make it difficult to determine how a commit is merged.
+Initially, the repository looks very large and unmanageable. Grouping
+the commits using the merge into the master branch looks like a
+promising means of simplifying the content. Most of the merges are only
+merging 7 events, which is nearly trivial to visualize.
