@@ -1,10 +1,12 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Design and Implementation}\label{chap:design_and_implementation}
 
-In order to assess the usefulness of the model, it is necessary to
-construct a tool that can be used for testing purposes. I designed and
-built a tool called \tool{} to inspect and navigate through the
-\mt{s} representing the integrations into the kernel repository.
+A model is difficult to assess directly, instead it is possible to
+convert the model into visualizations, which can be assessed as a proxy
+to the effectiveness of the model. This chapter presents various
+visualizations that take advantage of the \mt{} model, and a tool,
+called \tool{}, that uses these visualizations.
+
 \tool{} is web-based to enable ease of use, requiring nothing more than
 a web-browser to access, otherwise users would need to install the
 software and the database of repository data.
@@ -49,7 +51,9 @@ search engine takes a plain-text query from the user and returns the
 results ordered by the relevancy to the query. Relevancy is computed by
 weighted similarity, taking into account the contents of the commit log,
 the author name, the filenames, the commit hash, the date the commit was
-authored, and the date the commit was committed.
+authored, and the date the commit was committed. More information about
+the design of the search engine are available in
+Section~\ref{sub:full_text_search}.
 
 Before presenting the results, the repository events are grouped by
 \mt{} root. Each group of events has the link to the root at the
