@@ -98,6 +98,8 @@ industrial tools is not to extract or synthesize new information from
 the repository, but to act as a user-friendly client on top of what git
 already provides.
 
+\evantodo{Add links to GitKraken and SourceTree}
+
 Many tools focus on addressing the issue of communication between
 developers in inter-team collaborative work. Hipikat\cite{Cubranic2005}
 investigated communication between developers, focusing on assisting
@@ -181,29 +183,30 @@ about git repositories. Fewer tools are available for generating
 visualizations and summaries of git repositories, potentially due to the
 DAG model used as the internal structure of git repositories.
 
+\evantodo{Look at this one}
 Organic visualizations show patterns in cooperation and communication
 that arise within a software project organically. Heller et
 al.\cite{Heller2011} plots communication on a map. This visualization
 shows communication and cooperation patterns that arise, and how they
-cross country boundaries, within a software project.
-Gource\cite{Caudwell2010}, shown in Figure~\ref{fig:gource_view}, shows
-which files contributors are working on. Using this, it is possible to
-draw conclusion about which parts of a project a given contributor is
-working on and the group of contributors working on a given area. Gource
-uses a graph metaphor structure to represent the file structure of a
-repository. Files in the same directory cluster together to form a node.
-Edges between the directory clusters represent which directory contains
-another, although there is no way to determine the direction of the
-relationship. User avatars move around the graph emitting different
-beams of colored light depending on the change being made to the file.
-Greed indicates the creation of a new file, yellow indicates a
-modification, and red indicates the deletion of a file. The
-visualization is animated to show how a project grows over time.
-Codeswarm\cite{ogawa09}, shown in Figure~\ref{fig:codeswarm}, is similar
-to Gource, using an organic timelapse approach to visualizing the events
-in the repository. Unlike Gource, which constructs a graph from the
-directory structure of project, Codeswarm does not have a graph
-structure. Developers are the center of the visualizations. When a
+cross country boundaries, within a software project. The visualizations
+proposed in Gource\cite{Caudwell2010}, shown in
+Figure~\ref{fig:gource_view}, shows which files contributors are working
+on. Using this, it is possible to draw conclusion about which parts of a
+project a given contributor is working on and the group of contributors
+working on a given area. Gource uses a graph metaphor structure to
+represent the file structure of a repository. Files in the same
+directory cluster together to form a node. Edges between the directory
+clusters represent which directory contains another, although there is
+no way to determine the direction of the relationship. User avatars move
+around the graph emitting different beams of colored light depending on
+the change being made to the file. Greed indicates the creation of a new
+file, yellow indicates a modification, and red indicates the deletion of
+a file. The visualization is animated to show how a project grows over
+time. Codeswarm\cite{ogawa09}, shown in Figure~\ref{fig:codeswarm}, is
+similar to Gource, using an organic timelapse approach to visualizing
+the events in the repository. Unlike Gource, which constructs a graph
+from the directory structure of project, Codeswarm does not have a graph
+structure; developers are the center of the visualizations. When a
 developer makes a change to a file, the file lights up and flies toward
 the developer. As a developer makes more changes, the files that the
 developer is modifying will form a ring around the developer. If
@@ -228,16 +231,16 @@ together.
 There are many non-academic tools that are designed as an interface to
 git. While not all of these programs provide visualizations, those that
 do use a visual metaphor of the DAG to show topological information
-about the repository. While they ultimately show the same information,
-the topology of the repository, the organization of that information is
-different.
+about the commits in the repository. While they ultimately show the same
+information, the topology of the repository, the organization of that
+information is different.
 
 GitKraken, shown in Figure~\ref{fig:gitkraken_main},  is a popular
 commercially written git interface that aims to be efficient, elegant,
-and reliable, according to the official website. On visual inspection,
+and reliable, according to it's official website. On visual inspection,
 it appears to satisfy these goals. Overall, the interface is clean, most
 actions that are possible with the git command line are available in the
-graphical interface. Overall, the tool is clean and garners online
+graphical interface. Overall, the tool is effective and garners online
 approval from users. The graph itself, shown in the center of the main
 view provides users with the same information as the graph visualization
 in gitk and the git command line, though it may be visually more
@@ -261,8 +264,8 @@ that. Giteye and most of the other visualizations are relatively
 conventional, simply cleaning up the interface of Gitk, the visualizer
 that is shipped with git. With the exception of Gitk, no GUI visualizers
 are able to produce a visualization for the Linux repository, due to its
-size. The GitHub visualizer displays an error message, stating that
-there are too may forks to display. The GitKraken interface will freeze
+size: the GitHub visualizer displays an error message, stating that
+there are too may forks to display; the GitKraken interface will freeze
 and eventually crash while trying to load the repository, while Giteye
 and the other visualizers will consume all of the system memory before
 they are able to produce a visualization. The Gitk interface is the
@@ -297,8 +300,8 @@ contains background information about the motivation, the Linux
 repository, and the structure of git.
 
 Chapter~\ref{chap:model} introduces the \mt{} model. This chapter
-includes a description of the model, an algorithm to convert the from
-the DAG to the \mt{}, and an evaluation of the resulting trees.
+includes a description of the model, an algorithm to convert from the
+DAG to the \mt{}, and an evaluation of the resulting trees.
 
 Chapter~\ref{chap:design_and_implementation} introduces \tool{},
 providing the use-cases that were being targeted. This chapter also
@@ -307,11 +310,11 @@ search engine, the summarization tables, and the tree visualizations.
 More details on how the tool was implemented are included in
 Chapter~\ref{chap:implementation_details}.
 
-Chapter~\ref{chap:evaluation} includes the methodology and results of a
-two-part study. The first part evaluates user comprehension of the DAG
-and the second part compares visualizations and summarizations of the
-DAG in Gitk against the visualizations and summarizations of the \mt{}
-in \tool{}.
+Chapter~\ref{chap:evaluation} is the empirical evaluation of \tool{},
+and include the methodology and results of this two-part study. The
+first part evaluates user comprehension of the DAG and the second part
+compares visualizations and summarizations of the DAG in Gitk against
+the visualizations and summarizations of the \mt{} in \tool{}.
 
 Chapter~\ref{chap:discussion} discusses the results of the study
 providing more insight on the results. The chapter includes observations
