@@ -1,20 +1,22 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Background and Related Work}\label{chap:background}
 
-A version control system tracks information, and how that information
-changes over time. While it can be used for storing any digital
-information, version control is usually used in the context of software
-development; it is used for storing and managing the information about
-the project, the source code, and the binary assets. Version control has
-two primary purposes, first as a means of storing information, and
-second as a means of retrieving historical versions of that information.
+A version control system tracks files, and how that information changes over time.
+While it can be used for storing any digital information,
+version control is usually used in the context of software development;
+it is used for storing and managing the information about
+the project, the source code, and the binary assets.
+Version control has two primary purposes,
+first as a means of storing information,
+and second as a means of retrieving historical versions of that information.
 In addition to fulfilling the two primary purposes, modern version
 control maintains a log of who is making the changes and when the
 changes were made.
 
-Early version control systems were designed for local development and
-provided no means of collaboration. As software projects grew, the model
-quickly became outdated, being replaced with a centralized server model.
+Early version control systems, such as revision control system (RCS),
+were designed for local development and provided no means of collaboration.
+As software projects grew, the model quickly became outdated,
+being replaced with a centralized server model.
 Concurrent Version System (CVS) and Apache Subversion (SVN) are two
 examples of centralized version control systems. The centralized version
 control system provides means of collaboration through a client-server
@@ -24,11 +26,12 @@ pertain to the part they are editing.
 
 In large open source projects, the centralized architecture becomes a
 burden. Common tasks such as committing and changing branches requires
-re-synchronization with the central server. In order to work, the
-developer must always have access to the central server. To maintain the
-atomic properties of committing, the server will momentarily lock to
-ensure that no changes happen while a commit is being processed or a
-conflict resolved.
+re-synchronization with the central server.
+To work with the repository,
+the developer must always have access to the central server.
+To maintain the atomic properties of committing, the server will
+momentarily lock the repository to ensure that no changes happen while a
+commit is being processed or a conflict resolved.
 
 Due to the limitations of a centralized architecture, the Linux kernel
 uses a distributed version control system. Until April of 2005, the
