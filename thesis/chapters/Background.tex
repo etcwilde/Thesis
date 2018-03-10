@@ -378,51 +378,79 @@ The patch are set of changes being made to the files of the repository.
 
 % Integration;
 Integration is the process by which the changes in a commit are added to
-the main repository. Small changes have fewer dependencies in other
-code, sometimes no dependencies. It is possible to merge these changes
-into the main repository without additional commits making changes
-elsewhere to accommodate this the small fix. These commits are usually
-in the form of a bugfix, where only a single line is modified. Adding
-larger features to a project usually requires additional support from
-the rest of the project. The changes are not directly part of the
-feature, but are required for the feature to be added to the software.
-Sometimes the interface with a function needs to be updated; this type
-of change causes breakage Wherever the function is called. The changes
-that are made to the rest of the project to accommodate the interface
-change are part of the integration of the change. Sometimes, it is
-possible to implement a more efficient or secure version of a function
-where the data meets certain requirements. There are changes that need
-to be made in the rest of the project to take advantage of the faster
-version of the function. The code involved with taking advantage of the
-new function is part of the integration of those changes. The commits
-that update the rest of the source to accommodate the new feature,
-updated function, or new functions, are the commits that are involved
-with integrating a commit. In order to integrate the changes, the
-commits must be merged into the master branch of the repository. Commits
-may be merged directly into the master branch, or may be merged into
-multiple branches before finally reaching the master branch. To
-understand how a commit is integrated, it is necessary to know which
+the master repository.
+A small change with few dependencies are easier to integrate than
+changes.
+It is possible to merge these changes into the master repository
+without additional commits making changes.
+The changes are directly merged into the master repository.
+Many times, these changes are small, localized, bug fixes, or modifications to
+documentation, which can be integrated with the rest of the project
+without making changes beyond the scope of the bug or documentation.
+An example of this from the Linux repository is shown in
+Figure~\ref{fig:single_commit_merge}.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/background/single_commit.png}
+  \caption{Example of a merge that only integrates a single commit}
+  \label{fig:single_commit_merge}
+\end{figure}
+
+
+Adding additional functionality to a project may require additional
+support from other components of the project.
+Non-localized changes may be necessary to provide the additional
+information needed for the new function.
+Commits can be logically grouped based on the submodule that grouped
+based on what part of the project they are modifying.
+In the Linux kernel, it is customary to have commits related to
+networking in a single merge.
+This merge has sub-merges containing wireless networking, Bluetooth,
+and Ethernet, among the other implementations of networking.
+In this form, the merges act in a similar manner to subdirectories in a
+file system, where each directory contains files that work together.
+
+Projects may also be shared between multiple organizations.
+The organizations will likely have their own internal master
+repositories that they work with before pushing the full set of
+changes upstream to the public master repository.
+In git, it is possible to merge repositories since they are treated in
+the same way as local branches.
+
+In order to integrate the changes, the commits must be merged into the
+master branch of the repository.
+Commits may be merged directly into the master branch, or may be merged
+into multiple branches before finally reaching the master branch.
+To understand how a commit is integrated, it is necessary to know which
 merges a commit passes through to reach the master branch, and which
 commits are merged with it.
+Merging commits is the process of integrating them.
 
-Commits may pass through multiple merges on the path to the master
-branch. The merges generally form logical separations, grouping related
-code. Merges are a type of commit; it is possible to make additional
-changes while merging. When two commits from different branches make
-changes to the same file, a conflict occurs. Git is unable to determine
-which changes are correct, so it flags them as a merge conflict, which
-stops the merging process. The person making the merge decides which
-change should be kept, and which should be removed. The resolution of
-merge conflicts is stored as the patch of merge conflicts. The Linux
-repository has no merge conflicts. This is attained through a different
-workflow. When a developer wants to merge their changes, they must first
-rebase their branch onto the most up-to-date commit of the repository.
-Rebasing is the process of moving a branch to another commit in the
-repository. When this happens, if there are conflicts, git will require
-the developer to make the fixes. The main difference being that the
-developer fixes conflicts, not the person performing the merge. The idea
-behind this is that the developer likely has a better understanding of
-which change is the correct, or how to integrate both changes.
+Merges are a type of commit; it is possible to make additional
+changes while merging.
+
+When two commits from different branches make changes to the same file,
+a conflict occurs.
+Git is unable to determine which changes are correct, so it flags them
+as a merge conflict, which stops the merging process.
+The person making the merge decides which change should be kept,
+and which should be removed.
+The resolution of merge conflicts is stored as the patch of merge
+conflicts.
+The Linux repository has no merge conflicts.
+This is attained through a different workflow.
+When a developer wants to merge their changes, they must first rebase
+their branch onto the most up-to-date commit of the repository.
+Rebasing is the process of moving a branch from one ancestor to another
+commit in the repository.
+When this happens, if there are conflicts, git will require
+the developer to make the fixes.
+The main difference being that the developer fixes conflicts,
+not the person performing the merge.
+The idea behind this is that the developer likely has a better
+understanding of which change is the correct, or how to integrate both
+changes.
 
 \section{Directed Acyclic Graph}
 \label{sec:directed_acyclic_graph}
