@@ -55,6 +55,61 @@ changes to the code and to the
 structure of the repository without needing to re-synchronize with a
 central server.
 
+When the developer makes a copy of a non-local repository, this is
+called cloning.
+The non-local repository is known as the origin repository.
+When changes are made to the origin repository, the local clone must
+resynchronize with origin in order to for those changes to be reflected.
+This resynchronization can be done in one of two ways.
+The normal way of resynchronizing is through the \textit{pull} command,
+which fetches the changes in the origin repository, then merges the
+branches of the origin repository into the corresponding branch in the
+local repository.
+The second way of resynchronization breaks the process into two steps,
+manually issuing the fetch command and then manually merging or rebasing
+branches.
+Rebasing is the process of moving a branch from one ancestor to another
+commit in the repository.
+The process of updating the origin repository with the changes made in
+the local repository is known as pushing.
+If there are no merge conflicts, the merge can perform a fast-forward
+merge, shown in Figure~\ref{fig:fast_forwarded_merge},
+which flattens the changes made in the origin repository into the
+master branch of the local repository.
+Fast-forward merging hides the fact that git would otherwise consider
+the two repositories to be separate branches.
+Without fast-forward merging, any resynchronization would result in the
+addition of a new merge node.
+If there is a merge conflict, or the user has specified that the merge
+should not fast-forward, a merge commit is created, as shown in
+Figure~\ref{fig:merge_node_merge}.
+
+\begin{figure}[htpb]
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+    \includegraphics[width=0.85\textwidth]{Figures/background/repos/base_repo.png}
+    \caption{Example of a basic repository where the local master branch
+      is two commits ahead of the origin master branch.}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{Figures/background/repos/fast_forward.png}
+    \caption{The fast-forward merge moves the origin branch pointer to
+      the current master}
+    \label{fig:fast_forwarded_merge}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{Figures/background/repos/merge_commit.png}
+    \caption{A merge node is created when fast-forwarding is not
+      enabled}
+    \label{fig:merge_node_merge}
+  \end{subfigure}
+  \caption{The distinction between fast forward and non fast forwarding
+  merges is shown}
+  \label{fig:merge_styles}
+\end{figure}
+
 Git is an implementation of a distributed version control system.
 Distributed version control gives developers more flexibility with their
 local repository and requires the developer to synchronize their local
@@ -443,8 +498,6 @@ The Linux repository has no merge conflicts.
 This is attained through a different workflow.
 When a developer wants to merge their changes, they must first rebase
 their branch onto the most up-to-date commit of the repository.
-Rebasing is the process of moving a branch from one ancestor to another
-commit in the repository.
 When this happens, if there are conflicts, git will require
 the developer to make the fixes.
 The main difference being that the developer fixes conflicts,
