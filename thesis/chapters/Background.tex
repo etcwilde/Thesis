@@ -35,33 +35,51 @@ commit is being processed or a conflict resolved.
 
 Due to the limitations of a centralized architecture, the Linux kernel
 uses a distributed version control system. Until April of 2005, the
-kernel project used BitKeeper. In April 2005, the licensing became too
-restrictive and the project needed to change the version control system.
-Git was written as a replacement to BitKeeper. Git needed to be
-implemented quickly so that Linus could return to the kernel, but was
-also required to have the capacity to maintain a similar level of patch
-granularity as BitKeeper\footnote{initial announcement of git on the
-  mailing list
+kernel project used BitKeeper.
+In April 2005, the licensing became too restrictive and Linux was forced
+to change version control systems.
+Git was written as the replacement for BitKeeper, and was designed to
+maintain a similar level of patch granularity as in BitKeeper\footnote{
+  initial announcement of git on the mailing list
   \url{https://marc.info/?l=linux-kernel&m=111280216717070}}. The first
 version of git was roughly 1300 lines of code and was written and
-self-hosting in less than two\footnote{From the git mailing list
+self-hosting in less than two weeks\footnote{From the git mailing list
   \url{https://marc.info/?l=git&m=117254154130732}}.
 
-Git is an implementation of a distributed version control system (DVCS).
-Distributed Version Control gives developers more flexibility with their
-local repository and requires synchronization less often than the
-centralized version control systems. When a developer clones a
-repository using git, the clone is a full stand-alone repository. A
-developer is able to work independently on a feature committing and
-branching within their local repository. Once the feature is complete,
-the developer can push their changes to the upstream repository. Because
-the local repository is completely separate, the developer has more
-flexibility to alter the structure of their repository before pushing
-the results back into the master repository. The developer can flatten
-or add merges, and re-order, squash, edit, and split commits. These
-features make it possible to commit more often without worrying about
-commits being complete because the changes can be cleaned up before
-being released.
+BitKeeper is a distributed version control system (DVCS). In distributed
+version control, the entire repository is mirrored on the developer's
+local computer instead of copying parts of the project. As a result, the
+local copy is much larger on disk than with a centralized repository,
+but the developer has the freedom to make changes to the code and to the
+structure of the repository without needing to re-synchronize with a
+central server.
+
+Git is an implementation of a distributed version control system.
+Distributed version control gives developers more flexibility with their
+local repository and requires the developer to synchronize their local
+copy of the repository with the public upstream repository less often
+than with centralized version control.
+The public upstream repository can be thought of as being the equivalent
+of the central repository in a
+centralized system.
+Unlike with the centralized version control though,
+there is no requirement for the developer to ever push their changes
+back to the public repository;
+the local repository is completely standalone.
+Because the local repository is separate, the developer has more
+flexibility to alter the structure of the repository before pushing
+the results back into the upstream master repository.
+
+It is often desirable to have the features of version control available
+before a feature is ready to be made public, specifically in the case
+where many possible implementations may exist.
+It is also desirable to have the commits in the upstream repository be
+atomic, a given commit will not leave the project in an inconsistent
+state.
+The developer can combine, split, and edit, the intermediate commits
+before pushing their changes into the central repository.
+With centralized version control, all commits should leave the software
+project in a consistent state.
 
 With the additional flexibility, the structure of large and active
 repositories is more complex than the repositories that are in
