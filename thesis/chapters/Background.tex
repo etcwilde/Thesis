@@ -326,42 +326,55 @@ repository.
 \section{Git}
 \label{sec:git}
 
-% Objects;
-At the deepest level, git is a key-value store with additional
-components on top. Objects are the most basic internal-unit in
-git\footnote{More information about git objects is available at
-  \url{https://git-scm.com/book/en/v2/Git-Internals-Git-Objects}}. Git
-stores all of the actual data stored in a repository as objects. There
-are three types of objects; blob objects, tree objects, and commit
-objects. Blob objects contain the contents of the files in the
-repository. Tree objects are the equivalent of Unix directories. The
-tree objects contain one or more sha-1 references to blob or tree
-objects that are contained within that tree. Commit objects are used to
-store the commit metadata. Git objects are exposed through the plumbing,
-but are not designed to be used directly. While git is technically a
-key-value store with an internet connection, it is best to use it as a
-version control system.
-
 % Commits;
-Commits are the most basic unit of change in the git repository that is
-exposed through the normal git interface. Commits are how the changes
-and metadata are stored. Commits in git are immutable; they cannot be
-changed once they are created. Instead, modifying a commit will result
-in a new commit with a different commit hash. Because the commits that
-follow have references to the updated commit, those commits are copied
-and receive a new commit hash as well. Commits store the associated
-commit object, commit hash, commit date, committer, author, and
-authorship date, the patch, and an ordered list of parents. The parents
-of a commit are the next commits toward the initial commit. The first
-parent in the list is the commit that is on the same branch as the
-commit that is being created, i.e, the branch that the other branches
-are being merged into. The remaining commits are the branches being
-merged, in the order that they are specified in the merge. A non-merging
-commit will only have one parent. To clarify the difference, non-merging
-commits are referred to as commits, merging commits as merges, and both
-indiscriminately as repository events or just events for the rest of
-this \paper{}. The patch are set of changes being made to the files of
-the repository.
+Commits are the most basic unit of change in the git repository.
+Commits are how the changes and metadata are stored.
+Commits in git are immutable; they cannot be changed once they are
+created. Instead, modifying a commit will result
+in a new commit with a different commit hash.
+Because the commits that follow have references to the updated commit,
+those commits are copied and receive a new commit hash as well.
+Commits store the commit hash, commit date,
+committer, author, and authorship date, the patch, and an ordered list
+of parents. The metadata is shown in Figure~\ref{fig:commit_metadata}
+for a commit and merge within the repository for this \paper{}.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/background/commit_metadata.png}
+  \caption{Screenshot of commit metadate for a commit and merge in the
+    repository for this \paper{}.}
+  \label{fig:commit_metadata}
+\end{figure}
+
+Git allows commits to be made on the behalf of another person, either
+via email, or simply because the author of the commit doesn't have the
+ability to write to the repository.
+When someone else makes the commit, the committer and author will not
+match. The patch contains the changes being made, including the
+filenames, the line numbers, and the actual change, as shown in
+Figure~\ref{fig:commit_patch}.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/background/commit_patch.png}
+  \caption{Example of a commit patch from the Linux kernel repository
+    from commit \textit{c03567a8e8d5}.}
+  \label{fig:commit_patch}
+\end{figure}
+
+The parents of a commit are the next commits toward the initial commit.
+The first parent in the list is the commit that is on the same branch
+as the commit that is being created, i.e, the branch that the other
+branches are being merged into.
+The remaining commits are the branches being merged, in the order that
+they are specified in the merge.
+A non-merging commit will only have one parent.
+To clarify the difference, non-merging commits are referred to as
+commits, merging commits as merges.
+In the scope of this thesis, repository event or event is used to refer
+to both commits and merges.
+The patch are set of changes being made to the files of the repository.
 
 % Integration;
 Integration is the process by which the changes in a commit are added to
