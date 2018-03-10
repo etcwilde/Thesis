@@ -455,22 +455,26 @@ changes.
 \section{Directed Acyclic Graph}
 \label{sec:directed_acyclic_graph}
 
-To allow for the flexibility needed for a distributed control system,
-git uses a \define{directed acyclic graph}{DAG} as the central
-repository model. The repository events make up the nodes in the graph,
-and the child-parent relationship represents the edges. Commits will
-have a single parent, which is the repository event that is at the head
-of the current branch. Merge nodes have an ordered list of
+To allow for the flexibility needed for a distributed version control
+system, git uses a \define{directed acyclic graph}{DAG} as the central
+repository model.
+The repository events make up the nodes in the graph, and the
+child-parent relationship represents the edges.
+Commits will have a single parent, which is the repository event that
+is at the head of the current branch at the time that the commit
+is created.
+Merge nodes have an ordered list of
 parents\footnote{It is possible for a merge to have many parents, commit
-  2cde51fbd0f310c8a2c5f977e665c0ac3945b46d has 66 parents}, each parent
-is the head of each branch being merged. The first parent is the head of
-the current branch, and the other parents are the heads for the other
-branches being merged, in the order that they are specified in the merge
-command. Every repository will have at least one initial commit, which
+  2cde51fbd0f310c8a2c5f977e665c0ac3945b46d has 66 parents},
+each parent is the head of each branch being merged.
+The first parent is the head of the current branch, and the other
+parents are the heads for the other branches being merged, in the order
+that they are specified in the merge command.
+Every repository will have at least one initial commit, which
 will have no parents, but it is possible for repositories to have
-multiple initial commits. Furthermore, it is possible for the graph of a
-repository to be disconnected; these branches are known as orphan
-branches.
+multiple initial commits.
+Furthermore, it is possible for the graph of a repository to be
+disconnected; these branches are known as orphan branches.
 
 The model itself is quite simple but flexible. While the flexibility of
 a git repository is usually a strength, there are situations where it
