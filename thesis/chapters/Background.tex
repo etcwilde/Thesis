@@ -57,9 +57,9 @@ central server.
 Git is an implementation of a distributed version control system.
 Distributed version control gives developers more flexibility with their
 local repository and requires the developer to synchronize their local
-copy of the repository with the public upstream repository less often
+copy of the repository with the public master repository less often
 than with centralized version control.
-The public upstream repository can be thought of as being the equivalent
+The public master repository can be thought of as being the equivalent
 of the central repository in a centralized system.
 Instead of it being enforced by the version control system,
 it is a socially agreed upon location where the official version of the
@@ -70,12 +70,12 @@ back to the public repository;
 the local repository is completely standalone.
 Because the local repository is separate, the developer has more
 flexibility to alter the structure of the repository before pushing
-the results back into the upstream master repository.
+the results back into the master repository.
 
 It is often desirable to have the features of version control available
 before a feature is ready to be made public, specifically in the case
 where many possible implementations may exist.
-It is also desirable to have the commits in the upstream repository be
+It is also desirable to have the commits in the master repository be
 atomic, a given commit will not leave the project in an inconsistent
 state.
 The developer can combine, split, and edit, the intermediate commits
