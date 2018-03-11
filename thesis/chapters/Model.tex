@@ -22,25 +22,40 @@ branch together filters the number of events down to a manageable size,
 while still containing all of the information necessary to determine how
 a commit is integrated, and the other commits integrated with it.
 
-The \mt{} model is an abstracted representation of the DAG\@. Each \mt{}
-is rooted at a merge into the master branch. The leaves of this tree are
-the commits and the merges are the inner nodes. A \mt{} is built
-recursively with every merge in the \mt{} merging a sub-\mt{}. Any
-merges that a commit must pass through to reach the master branch become
-an inner node of the tree. A \mt{} is effectively a collection of
-shortest paths from a commit to the merge into the master branch,
-showing the path that the commit takes. The \mt{s} also help people
-understand how commits were grouped together in order to be integrated.
-In this model, not only has the DAG been inverted (and simplified), but
-the entire notion of parent-child relationship has been reversed. Due to
-this property, the terminology will be different depending on the model
-being referred to; when referring to the \mt{}, the parent is the next
-node toward the merge into the master branch, or the root of the tree.
-When referring to the DAG, the parent relationship is in the opposite
-direction, from the root toward the branch-point. In addition to
-identifying the path that a commit took to being merged, the model
-enables easy aggregation of commit metadata at merges, since the
-parent-child and child-parent relationship for each event is known;
+\evan{I'm confused about describing the \mt{} first, this is the
+  description of what the tree is. I've tried to fix it, but I don't
+  know what to fix.}
+
+The \mt{} model is a tree structure,
+rooted at the merge into the master branch.
+The leaves of this tree are the commits and the merges are the inner
+nodes.
+The parent of a node is the next merge on the path to the root.
+Merge trees are constructed recursively.
+Starting at a commit, then walking up the children of the DAG until the
+first merge is found.
+All of the nodes that were traversed on the path to that merge are
+children of the merge in the \mt{}.
+Commits can be merged in multiple places.
+The true parent of a commit in the tree is defined by shortest path.
+In the case that there are the same number of intermediate nodes
+between the commit and the root, time is used as a tie-breaker.
+The structure recursively groups commits that are merged together,
+making it easy to identify the commits that are integrated together.
+Commits have a single path to reach the master branch, which makes
+identifying the series of merges to the master branch and, in extension,
+how the commit is integrated into the master branch of the master
+repository.
+
+The structure makes it easier to understand how commits are grouped and
+integrated. This model simplifies and prunes the information from the
+DAG, it also inverts the parent-child relationship. The parent of a node
+in the DAG is the child of that node in the \mt{}.
+
+In addition to identifying the path that a commit took to being merged,
+the model enables easy aggregation of commit metadata at merges,
+since the parent-child and child-parent relationship for each event
+is known;
 commits are aware of which merge is the next merge toward integration
 into the master branch, and merges are aware of which commits are being
 merged.
