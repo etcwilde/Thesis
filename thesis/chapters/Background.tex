@@ -613,17 +613,45 @@ it cannot be changed. Git allows operations to alter the events and
 re-order them, but this will create a new event with a new commit hash.
 This property makes it impossible for nodes to store information about
 the children, and in extension, how the commit is being merged as this
-information is not available when the commit is created. Git provides
-the command \verb|git log --children|, which traverses the DAG and
-inverts the edges. Combining this with the graph output partially solves
-the problem of understanding how a commit is merged into the master
-branch as it shows how a commit was merged; however, the resulting graph
-is still complicated.
+information is not available when the commit is created.
+Git provides the command \verb|git log --children|, which traverses the
+DAG and inverts the edges.
+The goal is to identify the series of merges that a commit takes to
+reach the master branch.
+The next child that is a merge is the first merge on the path to being
+integrated.
+
+The graph combined with the child information gives most of the
+information necessary for understanding how the commit is
+merged into the master branch; however, it is missing which merge is
+into the master branch, and the information is not always easy to
+understand, as shown in Figure~\ref{fig:git_graphs}.
+
+\begin{figure}[htpb]
+  \centering
+  \begin{subfigure}[b]{0.8\textwidth}
+    \includegraphics[width=\textwidth]{Figures/background/git_graph.png}
+    \caption{In the simple case, it is relatively easy to see
+      that \textit{a231d} is merged into \textit{6bf99},
+      which is then merged into \textit{545ea}.}
+    \label{fig:trivial_graph}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.8\textwidth}
+    \includegraphics[width=\textwidth]{Figures/background/git_graph_complex.png}
+    \caption{As the number of merges that a commit passes through
+      increases, it becomes more challenging to understand how the
+      commit is integrated.}
+  \end{subfigure}
+  \caption{The git graph visualization of two sections of the Linux
+    repository.}
+  \label{fig:git_graphs}
+\end{figure}
 
 Most repositories are simple enough that it is possible to identify how
 commits are integrated using the visualizations of the DAG that are
 available with the current tools. Difficulties arise in larger
-repositories. The master branch can be counfounded with \foxtrot{}
+repositories. The master branch can be confounded with \foxtrot{}
 merges, making it difficult to identify. Sheer number of commits being
 added to various branches at a given time can make it difficult to
 understand which branch a commit is being added to.
