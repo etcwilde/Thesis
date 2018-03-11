@@ -658,9 +658,11 @@ understand which branch a commit is being added to.
 
 \section{Linux}\label{sec:linux}
 
-This \paper{} studies the repository of the Linux kernel. The repository
-itself is complex, contain tens of thousands of commits per year and
-thousands of merges. Older versions of the kernel are used in a wide
+This \paper{} studies and proposes a visualization for the Linux kernel
+repository.
+The repository itself is complex, contain tens of thousands of commits
+and thousands of merges per year.
+Older versions of the kernel are used in a wide
 variety of situations including various Linux desktop distributions,
 internet of things device firmware, web servers,
 spacecrafts\footnote{Linux is used heavily at SpaceX
@@ -670,21 +672,19 @@ of the official Linux kernel, made to be more suitable for the specific
 needs of the application. Due to these application-specific
 modifications, it is not feasible to update to the latest version of the
 kernel. While it may not be feasible to update, the changes being made
-to the official version are necessary as they fix bus, patch security
+to the official version are necessary as they fix bugs, patch security
 issues, and improve performance. Due to the sometimes critical nature of
 the patches being merged into the current version of the kernel, it is
 necessary for maintainers working on an application-specific fork of the
 kernel to sift through the commits coming into the official version,
 looking for changes that may impact the kernel that they are
-maintaining. This section presents some statistics about the contents of
-the kernel repository.
-
-Linux is open source, using git to track and manage the source code in
-the kernel. A mirror of the repository is available on
-GitHub\footnote{\url{https://github.com/torvalds/linux}}, which makes
-data collection relatively straightforward. Described in this section is
-the dataset that was collected, further investigating the number of
-authors, commits, and merges.
+maintaining.
+This section presents statistics on the dataset collected from the Linux
+repository. Included is information about the number of authors,
+commits, and merges per release, as well as the range of dates from
+which the data was collected. This information is useful for
+characterizing the problem, and understanding how to best group the
+commits in a way that is useful and easy to understand.
 
 The data extracted from the repository involves all merges into the
 master branch between April 18, 2005 and August 14, 2014. This
