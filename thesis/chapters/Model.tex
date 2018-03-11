@@ -304,19 +304,23 @@ commit to the master branch using the inverted DAG\@.
         \end{algorithmic}
 \end{algorithm}
 
-The algorithm is broken into two phases. The first is determining which
-repository events are on the master branch. This is done by traversing
-the first parent from the master branch reference to the commit that has
-no parents. The second phase is encompassed by the function
+The algorithm is broken into two phases.
+The first is determining which repository events happened on the master
+branch.
+This is done by traversing the first parent from the master branch
+reference to the commit that has no parents.
+The second phase is encompassed by the function
 $MergeAtMaster$ which determines, for each commit, which merge the
 commit is merged at, the depth (as variable $d$ in the algorithm), and
 the next merge on the path to the master branch. The function
 $MergeAtMaster$ has two parts, the first for determining the depth, from
 the master branch, that the repository event is at. The second phase
 determines the merge into the master branch, and the next merge on the
-way to the master branch. The distance is by shortest path, staying as
-close to the master branch as possible. If there is a tie between two
-paths, the path that merges into the master branch sooner is taken.
+way to the master branch.
+The distance is computed by shortest path close to the master branch as
+possible.
+If there is a tie between two paths, the path that merges into the
+master branch sooner is taken.
 
 An example is used to demonstrate the behaviour of the algorithm,
 computing the merge at commit 5 in Figure~\ref{fig:repoEvents}.
