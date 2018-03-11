@@ -6,16 +6,21 @@ convert the DAG into the \mt{s}. Starting with an introduction of the
 \mt{} model, the chapter includes the algorithm to convert the DAG into
 \mt{s}, and an evaluation of that algorithm.
 
-Thousands of commits are merged into the repository per year. Directly
-visualizing all of the information in a meaningful way is difficult, or
-potentially impossible. The merges into the master branch contain
-relatively few commits, with the median number of commits being seven.
-Seven nodes is trivial for visualization purposes, which indicates that
-building a model that groups repository events based on the merge into
-the master branch may provide more meaningful visualizations.
-Furthermore, the merges into the kernel are atomic, all of the context
-necessary for integrating a commit is available at the merge into the
-master branch.
+Thousands of commits are merged into the Linux kernel repository per
+year.
+Directly visualizing all of the information in a meaningful way is
+difficult, or potentially impossible.
+As shown in Figure~\ref{fig:linux_merge_distribution_per_release},
+dividing the commits based on the merge into the master branch results
+in groups that are relatively small;
+the median size of the group being seven repository events.
+The merge into the master branch is atomic, all of the context necessary
+for integrating a commit is available at the merge into the master
+branch.
+Showing only the repository events that are are merged into the master
+branch together filters the number of events down to a manageable size,
+while still containing all of the information necessary to determine how
+a commit is integrated, and the other commits integrated with it.
 
 The \mt{} model is an abstracted representation of the DAG\@. Each \mt{}
 is rooted at a merge into the master branch. The leaves of this tree are
