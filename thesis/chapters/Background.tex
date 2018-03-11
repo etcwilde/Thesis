@@ -530,20 +530,28 @@ multiple initial commits.
 Furthermore, it is possible for the graph of a repository to be
 disconnected; these branches are known as orphan branches.
 
-The model itself is quite simple but flexible. While the flexibility of
-a git repository is usually a strength, there are situations where it
-makes reasoning about the contents more difficult. The idea of a main
-master branch is useful for people who are working with the repository.
-Unlike many centralized repositories, which have a concept of a main
-branch, usually referred to as the trunk, git has no functional
-requirement for the existence of a main branch. Instead, the main branch
-is maintained by the discipline of the people committing code to the
-repository. As a convention in git, the first parent of a node is on the
-same branch as that node. A \foxtrot\footnote{See
-  \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html}
-  for a full description of the issue.} merge occurs when the parent
-list is re-ordered, thus confounding the branch relationships
-(depicted in Figure~\ref{fig:foxtrot_steps}).
+The model is simple, but flexible.
+The flexibility of the model makes it more difficult to reason about,
+stricter models are easier to reason about since the model must follow
+the given rules.
+
+For example, many version control systems have a well-defined notion of
+the master branch.
+In SVN, this is referred to as the ``trunk'' branch.
+There is a single trunk branch, and it is well-defined, it won't be
+confounded with another branch.
+The DAG model in git does not explicitly define a master branch, or even
+enforce the requirement that one exists.
+Instead, the idea of the master branch is a social construct used to
+identify which branch things should be merged into, and where the final
+product will be released from.
+This relies on the discipline of the people committing code to the
+repository to maintain a well-defined master branch.
+
+Git has no internal safe-guards protecting the master branch from
+obfuscation since a master branch is not explicitly defined.
+The parent list of a commit is ordered, if the order is changed, the
+order of the branches changes.
 
 \begin{figure}[htpb]
   \centering
@@ -557,6 +565,29 @@ list is re-ordered, thus confounding the branch relationships
     confounded by \emph{branch2}}
   \label{fig:foxtrot_steps}
 \end{figure}
+
+As a convention, the first parent of a node is on the same branch as
+that node.
+A\foxtrot\footnote{See \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html} for a full description of the issue.}
+merge occurs when the order of the parents is changed, confounding the
+branch relationship (depicted in Figure~\ref{fig:foxtrot_steps}).
+
+Foxtrots tend to happen due to the behaviour of pulling.
+By default, the pull executes a fetch followed by a merge, which merges
+the branches in the origin repository into the branches in the local
+repository.
+If the branches merge cleanly, it will only result in a fast-forward
+merge, not a foxtrot.
+If the branches do not cleanly a merge commit will be created with the
+first parent of the merge commit being the head of the branch at the
+time of commit.
+The head of the branch is pointing at the top of the
+local repository, thus, the first parent will the in the local
+repository.
+This confounds the true master coming from the origin repository with
+the master branch in the local repository; the commits in the local
+repository appear as the commits on the master branch, while the real
+master branch appears to be a branch merged into the local repository.
 
 The nodes in the DAG are immutable; once a commit or merge is created,
 it cannot be changed. Git allows operations to alter the events and
