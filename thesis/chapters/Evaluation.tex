@@ -9,15 +9,18 @@ participants, and the results of the study. The study was performed in a
 controlled environment running Ubuntu 14.04. Participants were allowed
 to use Gitk and the git command-line tools for these tasks, I will refer
 to both tools as Gitk, when working with DAG-based visualizations and
-summarizations. I considered allowing participants to use any of the
-free tools for Linux suggested on the git
-website\footnote{\url{https://git-scm.com/download/gui/linux}}, but
-after attempting to use them, I found that none were able to operate on
-repositories that were as large as the Linux repository. \tool{} was
-used for evaluating the \mt{-based} visualizations.
+summarizations.
 
-The study has two primary goals; first determining if the DAG-based
-visualization is sufficient for conceptual understanding, second
+I considered allowing participants to use any of the
+free tools for Linux suggested on the git website\footnote{}, but
+after attempting to use them, found that none of the tools listed at
+the time were able to operate on repositories that were as large as
+the Linux repository.
+
+\tool{} was used for evaluating the \mt{-based} visualizations.
+
+The study has two primary goals: first determining if the DAG-based
+visualization is sufficient for conceptual understanding; second,
 comparing \tool and Gitk to determine which is more capable of providing
 users with a summarization of various metrics involved with integrating
 a commit into the repository. These were done in two parts of the same
@@ -37,19 +40,19 @@ consistent through each part of the study. Participants would complete
 part one of the study on both commits, the continue with part two, before
 answering a few questions about their opinions and experience in an exit
 interview. A screencapture with audio was taken for the duration of the
-study with each participant. The videos were later analyzed and had the
-information extracted into a more usable form.
+study with each participant.
 
-With some exceptions, three metrics are recorded from each task;
-correctness, accuracy, and time taken. Correctness is simply whether the
-response was correct. Accuracy is how far from the response was from the
-correct answer. An Accuracy of zero indicates that the answer was
-correct. Time indicates how long the participant took to respond. Time
-is measured from the end of the question to the beginning of the final
-response. Since the time measures until the final modification to the
-answer, it is possible for times to overlap between tasks if the
-participant were to change their response after answering another
-question.
+Three metrics are recorded from each task:
+correctness, accuracy, and the time taken to respond.
+Correctness is simply whether the response was correct.
+Accuracy is how far from the response was from the correct answer.
+An Accuracy of zero indicates that the answer was correct.
+Time indicates how long the participant took to respond.
+Time is measured from the end of the question to the beginning of the
+final response.
+Since the time measures until the final modification to the answer,
+it is possible for times to overlap between tasks if the participant
+were to change their response after answering another question.
 
 Order bias was mitigated throughout the study through the use of
 randomization between participants. In both parts, the order that the
@@ -71,25 +74,93 @@ Details on the randomization of the tasks are outlined with the
 methodologies for the specific parts of the study.
 
 Statistical significance testing is performed to verify that the results
-are meaningful. An $\alpha = 0.05$ or a $95\%$ confidence level is used.
+are meaningful.
+An $\alpha = 0.05$ or a $95\%$ confidence level is used.
+The first test is used to determine if the \mt{} size has an effect on
+the result.
+
+If tree size does not have an effect on the correctness, accuracy,
+or time taken, there is nothing interesting to be gained from analyzing
+the results separately and the results are combined.
+This is permissible, as the data comes from the same distribution.
+If tree size does have an effect on the correctness, accuracy, or time
+taken, then the results must be analyzed on the individual trees.
 The Wilcoxon test\cite{Wilcoxon45} is applied between commits to
-determine if the size of the \mt effects timing and accuracy. If there
-is no statistically significant difference between the distributions of
-responses to a task in both commits, then the results of both commits
-are aggregated. The McNemar $\chi^2$ test\cite{McNemar1947} with
+determine if the size of the \mt effects timing and accuracy.
+
+The second test is used to determine if there is a significant
+difference between responses when the participants are using \tool{}
+versus Gitk.
+
+The McNemar $\chi^2$ test\cite{McNemar1947} with
 continuity correction is used to test if there is a difference in the
 correctness of responses made by users when using \tool{} versus Gitk.
 The Wilcoxon test\cite{Wilcoxon45} and Cliff's effect size\cite{Cliff93}
 are applied to the accuracy and timing metrics to determine the
 significance of the difference between the results in \tool{} and Gitk.
 
-Prior to starting the study, participants were introduced to the \mt{}
-model and the conversion from the DAG to the \mt{}. Two examples of how
-the conversion works were given, the examples shown in
-Figure~\ref{fig:DAG_to_MergeTree}. Any questions about the model or
-conversion were answered at this time. Then participants were introduced
-to the tools, Gitk and \tool{}, and could ask questions about either
-interface. These introductions usually lasted no more than 10 minutes.
+The resulting research questions are:
+
+\begin{textbox}
+  \begin{enumerate}
+    \item Are people able to draw a conceptual understanding from the
+      visualization of the DAG in Gitk?
+    \item Does \mt{} size have an effect on the correctness and accuracy
+      of people's ability to summarize aspects of a merge?
+    \item Does \mt{} size have an effect on the time taken to summarize
+      aspects of a merge?
+    \item Does \tool{} have an effect on the correctness and accuracy of
+      the responses?
+    \item Does \tool{} have an effect on the time taken to respond to
+      questions about the merge?
+  \end{enumerate}
+\end{textbox}
+
+The first research question evaluates understanding based on how the
+participants draw the graph and respond to questions about their
+drawing.
+The question does not make comparisons either, so no baseline is set for
+testing against.
+The collected results are stated, but this question is left open.
+\evan{I'm not really sure how to say this\ldots. It might not even be
+  necessary? What do you think of just removing the first question?
+  It would remove the first part of the study though.}
+
+The null hypothesis for the last four research questions are as follows:
+\begin{itemize}
+  \item There is no difference in the correctness nor accuracy between
+    \mt{} sizes
+  \item There is no difference in the time taken to respond between
+    \mt{} sizes
+  \item \tool{} does not have an impact on the correctness or accuracy
+  \item \tool{} does not have an impact on the time taken to respond
+\end{itemize}
+
+The study is broken into two parts, followed by a short exit survey.
+The first part has the participants perform tasks and answer questions
+that require understanding about how and where a commit is merged.
+The second part of the study answers the remaining questions by asking
+the participants to summarize various aspects about the commits being
+integrated with a given commit.
+The responses are recorded, determining if the response was correct,
+the how far from the right answer the incorrect answers were,
+and how long participants took before answering.
+Part one is discussed in detail in Section~\ref{sub:conceptual_study},
+and part two is discussed in Section~\ref{sub:summarization_study}.
+After completing part one and part two, the participants were asked for
+opinions in a short exit interview to collect information about their
+prior experience with version control, and their opinions on the tools
+and visualizations used in the study. The details of which are discussed
+in Section~\ref{sub:user_opinions_and_exit_interview}.
+
+Prior to conducting the study, participants were introduced to the \mt{}
+model and the conversion from the DAG to the \mt{}.
+Two examples of how the conversion works were given,
+the examples are shown in Figure~\ref{fig:DAG_to_MergeTree}.
+Any questions about the model or conversion were answered at this time.
+Then participants were introduced to the tools, Gitk and \tool{},
+and could ask questions about either interface.
+These introductions usually lasted no more than 10 minutes.
 
 \begin{figure}[htpb]
   \begin{center}
@@ -165,16 +236,6 @@ interface. These introductions usually lasted no more than 10 minutes.
 \label{fig:DAG_to_MergeTree}
 \end{figure}
 
-Following the introduction, participants worked through the tasks in the
-conceptual portion of the study and comparative summarization portion of
-the study. Details for the conceptual study and summarization study are
-in Section~\ref{sub:conceptual_study}, and
-Section~\ref{sub:summarization_study} , respectively. The study
-concluded with participant opinions and a short exit interview to
-collect information about the experience of the participants with
-version control software. Details of which are provided in
-Section~\ref{sub:user_opinions_and_exit_interview}.
-
 \subsection{Commit Selection}\label{sub:commit_selection}
 
 Two commits are used in both the conceptual study and summarization
@@ -200,16 +261,21 @@ from trees in the second quartile. These trees contain seven nodes, and
 to increase the complexity of the tree, I required that the tree contain
 at least one internal merge node.
 
+Commits were selected randomly from the trees.
+The small tree was trivial as it contained only a single node.
+A node was chosen randomly from the medium-sized tree.
+
+
 Once the trees were selected, I had to select a commit from the tree.
 Selecting a commit from the small tree was trivial, there was only a
-single node to choose. From the medium-sized tree, I used a script to
-select a commit randomly. The commits selected from the small tree and
-medium tree were \emph{a3c1239eb59c0a907f8be5587d42e950f44543f8} and
-\emph{cdbdd1676a5379f1d5cbd4d476f5e349f445befe} respectively. Commit 1,
-the commit from the small tree is visualized in
+single node to choose.
+The commits selected from the small tree and medium tree were
+\emph{a3c1239eb59c} and \emph{cdbdd1676a53} respectively.
+Commit 1, the commit from the small tree is visualized in
 Figure~\ref{fig:commit_1_visualization}, showing the DAG visualization
-by Gitk and \rt{} tree visualization in Linvis. The same is
-shown for commit 2 in Figure~\ref{fig:commit_2_visualization}.
+by Gitk and \rt{} tree visualization in Linvis.
+The same is shown for commit 2 in
+Figure~\ref{fig:commit_2_visualization}.
 
 \begin{figure}[htpb]
   \centering
@@ -235,12 +301,16 @@ shown for commit 2 in Figure~\ref{fig:commit_2_visualization}.
 
 \subsection{Part 1: Conceptual Study}\label{sub:conceptual_study}
 
-The conceptual portion of the study verifies our initial assumption,
-that the DAG visualization is unable to provide people with a conceptual
-understanding of the events in a repository. Participants in the study
-are asked to perform tasks that are related to understanding how a
-commit is integrated. The tasks for this part of the study are outlined
-in Table~\ref{tab:conceptual_tasks}.
+The conceptual portion of the study seeks to answer the first research
+question, ``Are people able to draw a conceptual understanding from the
+visualization of the DAG in Gitk''.
+This part tests our initial assumption that the visualization of the DAG
+is unable to provide people with a conceptual understanding of the
+events in a repository.
+Participants in the study are asked to perform tasks that are related
+to understanding how a commit is integrated.
+The tasks for this part of the study are outlined in
+Table~\ref{tab:conceptual_tasks}.
 
 \begin{table*}[htpb]
   \centering
@@ -308,25 +378,37 @@ Table~\ref{tab:summarization_tasks}.
                & T7   & Who contributed the most changes?\\
     Files      & T8   & How many files were modified?\\
                & T9   & Which file had the most changes?\\
-    Modules    & T10  & Which modules does this \mt involve?\\
+    Modules    & T10  & Which modules does this \mt{} involve?\\
     \bottomrule
   \end{tabular}
 \end{table}
 
-For each task, where specified, four statistical tests are applied. The
-first test determines if the results from the two commits are from the
-same distribution. If they are, it indicates that the results can be
-aggregated, otherwise, the results must be analyzed for each commit
-separately. The three other tests measure the difference in correctness,
-accuracy, and time between the results for \tool{} and Gitk. The null
-hypothesis for the difference between the commits is that there is no
-difference in the performance metrics between the commits. For the
-correctness metric, the null hypothesis is that \tool{} does not effect
-the correctness of the participants. For the accuracy metric, the null
-hypothesis is that there is no difference in accuracy between the
-results drawn from \tool{} and from Gitk. For the timing metric, the null
-hypothesis is that there is no difference in timing between the time
-taken to draw a result from \tool{} and Gitk.
+For each task, where specified, four statistical tests are applied.
+The first test determines if the results from the two commits are from
+the same distribution.
+If they are, it indicates that the results can be aggregated, otherwise,
+the results must be analyzed for each commit separately.
+
+The following are the null hypotheses for the first test for each
+recorded metric:
+\begin{itemize}
+  \item There is no difference in the correctness of the response
+    between merge sizes
+  \item There is no difference in the accuracy of the response between
+    merge sizes
+  \item There is no difference in the time taken to respond between
+    merge sizes.
+\end{itemize}
+
+The three remaining tests measure the difference in correctness,
+accuracy, and time between the results for \tool{} and Gitk.
+The null hypotheses for each are as follows:
+\begin{itemize}
+  \item \tool{} does not have an impact on the correctness of the
+    response
+  \item \tool{} does not have an impact on the accuracy of the response
+  \item \tool{} doe snot have an impact on the time taken to respond
+\end{itemize}
 
 The tasks are split into four task sets, based on the type of
 information that the task is investigating. The \emph{Merge} tasks set
@@ -479,24 +561,34 @@ branch toward the HEAD node.
 
 \begin{figure}[htpb]
   \centering
+  \begin{subfigure}[b]{0.9\textwidth}
+    \centering
+    \begin{tikzpicture}[commit/.style={ellipse, text=black, draw=black}]
+      \node[commit] (a) {11df};
+      \node[commit, right = of a] (b) {a3c};
+      \node[commit, right = of b] (c) {d2f8};
+      \node[commit, right = of c] (d) {b51e};
+      \node[commit, right = of d] (e) {fb5};
+      \node[commit, right = of e] (f) {37b};
 
-  \begin{tikzpicture}[commit/.style={ellipse, text=black, draw=black}]
-    \node[commit] (a) {11df};
-    \node[commit, right = of a] (b) {a3c};
-    \node[commit, right = of b] (c) {d2f8};
-    \node[commit, right = of c] (d) {b51e};
-    \node[commit, right = of d] (e) {fb5};
-    \node[commit, right = of e] (f) {37b};
-
-    \draw (a) edge[-stealth] (b)
-          (b) edge[-stealth] (c)
-          (c) edge[-stealth] (d)
-          (d) edge[-stealth] (e)
-          (e) edge[-stealth] (f);
-  \end{tikzpicture}
-
+      \draw (a) edge[-stealth] (b)
+      (b) edge[-stealth] (c)
+      (c) edge[-stealth] (d)
+      (d) edge[-stealth] (e)
+      (e) edge[-stealth] (f);
+    \end{tikzpicture}
   \caption{Example of a diagram drawn for the integration of commit 1}
   \label{fig:commit_1_fig}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.9\textwidth}
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit1_linvis.pdf}
+    \caption{The correct diagram showing the integration of commit 1.}
+  \end{subfigure}
+
+  \caption{An example of a drawn diagram for the integration of commit 2
+    compared with the correct answer.}
+
 \end{figure}
 
 This indicates difficulties identifying the master branch in the
@@ -513,20 +605,20 @@ master branch in this case. These participants had experience with SVN
 repositories, and were accustomed to the master branch being the first
 branch in the graph. In the visualization of the DAG for commit 2, the
 master branch returns to the first position in the graph, which some
-participants mentioned meant that it should be the master branch. In
-this case, they are correct in that the first line in the visualizations
-is the master branch in this case, but the reasoning is not correct. The
-first branch is not necessarily the master branch, as is the case with
+participants mentioned that this meant it should be the master branch.
+In this case, they are correct in that the first line in the
+visualizations is the master branch in this case, but the reasoning
+is not correct.
+The first branch is not necessarily the master branch,
+as is the case with
 the results from Commit 1, where the master branch is the third line.
-Furthermore, the line indicating the master branch creates a visual cage
-around the repository events in question, which may have assisted with
-finding the correct commits.
 
-\evan{Since the part about the visual cage is speculation, should that
-  be moved to discussion?}
+% Furthermore, the line indicating the master branch creates a visual cage
+% around the repository events in question, which may have assisted with
+% finding the correct commits.
 
 With some participants, there was confusion about the direction of the
-parent-child relationship. In most data structures, the parents point
+parent-child relationship. In most diagrams, the parents point
 toward the node of interest. In this case, the parents point toward the
 branch point, which is in the opposite direction of the merge, so the
 participant would actually need to follow the child to get to the merge
@@ -551,22 +643,38 @@ structure as what would be constructed from using shortest paths.
 
 \begin{figure}[htpb]
   \centering
-  \begin{tikzpicture}[commit/.style={ellipse, draw=black, text=black}]
-    \node[commit] (a) {$M_3$};
-    \node[commit, below = of a] (b) {$M_2$};
-    \node[commit, below right = of b] (c) {$ALSA\ Fix$};
-    \node[commit, below left = of b] (d) {$M_1$};
-    \node[commit, below = of d] (e) {$start$};
 
-    \draw (e) edge (d)
-          (d) edge (b)
-          (c) edge (b)
-          (b) edge (a);
-  \end{tikzpicture}
-  \caption{Example of a diagram drawn for the integration of commit 2.
-    This diagram is the closest to being a possible representation of
-    the events in the repository, but miss the other commits involved.}
-  \label{fig:commit_2_fig}
+  \begin{subfigure}[b]{0.9\textwidth}
+    \centering
+    \begin{tikzpicture}[commit/.style={ellipse, draw=black, text=black}]
+      \node[commit] (a) {$M_3$};
+      \node[commit, below = of a] (b) {$M_2$};
+      \node[commit, below right = of b] (c) {$ALSA\ Fix$};
+      \node[commit, below left = of b] (d) {$M_1$};
+      \node[commit, below = of d] (e) {$start$};
+
+      \draw (e) edge (d)
+      (d) edge (b)
+      (c) edge (b)
+      (b) edge (a);
+    \end{tikzpicture}
+    \caption{Example of a diagram drawn for the integration of commit 2.
+      This diagram is the closest to being a possible representation of
+      the events in the repository, but miss the other commits involved.}
+    \label{fig:commit_2_fig}
+
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.9\textwidth}
+    \centering
+    \includegraphics[height=4.5cm]{Figures/evaluation/commit2_linvis.pdf}
+    \caption{The correct diagram showing the integration of commit 2.}
+    \label{fig:commit_2_answer}
+  \end{subfigure}
+
+  \caption{An example of a drawn diagram for the integration of commit 2
+    compared with the correct answer.}
+
 \end{figure}
 
 The participants were better able to determine the number of merges a
@@ -637,7 +745,7 @@ finding the other commits being integrated, and task T9, determining
 which file had the most changes, are very close to the $p$-value
 threshold. The results of the Wilcoxon test on correctness are shown
 Table~\ref{tab:cross_commit_correctness}. Most of the $p$-values are
-reasonable far from the threshold of 0.05; however, in tasks T5 and T9,
+reasonably far from the threshold of 0.05; however, in tasks T5 and T9,
 the $p$-value is within 0.01 of the threshold. Further investigation
 reveals that the differences in the distributions stem from the number
 of participants who were incorrect when using \tool{}. Inspecting the
