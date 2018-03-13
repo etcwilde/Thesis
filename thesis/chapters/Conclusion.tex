@@ -1,8 +1,9 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Conclusion}\label{chap:conclusion}
 
-The visualization of the DAG is difficult to comprehend in large
-projects. This \paper{} investigates user comprehension of the DAG
+The visualization of the DAG of a git repository is difficult to
+comprehend in large projects.
+This \paper{} investigates user comprehension of the DAG
 visualization in the Linux repository, and presents the design of a new
 model, and a tool built from the model, with the goal of assisting users
 with comprehending how a commit is integrated into the master branch.
@@ -58,18 +59,6 @@ that was present in the DAG visualizations was lost in the \mt{} model.
 The order of commits with regard to each other tell the story of why a
 developer is making changes. This information is lost in the \mt{}, but
 is retained in the DAG visualizations.
-
-I discuss the design of an updated model, taking into account the lost
-information. The updated model retains the order of the commits by
-overlaying the original \mt{} back on the DAG\@. With the updated model, I
-propose a new algorithm that not only performs the overlay without an
-additional step, it prunes the DAG, taking a smaller subset of the
-original repository DAG to construct individual \mt{s}. A second tool is
-constructed using the updated model. The tool works as a web-interface,
-but instead of working through a backend database, the tool requests
-repository information from public BitBucket repositories. Using this,
-some preliminary evaluation was performed on the new algorithm, but more
-extensive testing is necessary.
 
 \mt{s} are a novel means of processing git repositories to be visualized
 and summarized in a more effective way. Participants in our study found
