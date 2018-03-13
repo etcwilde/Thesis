@@ -175,7 +175,7 @@ code. While there has been extensive research on visualizing software
 repositories, previous work does not focus on how commits and merges are
 structures in the repository graph, and in extension, how commits are
 integrated into a repository. The literature on repository visualization
-and summarization can be broken down into three academic subcategories;
+and summarization can be broken down into three academic subcategories:
 communication\cite{Cubranic2005,Begel2010}, aspect-oriented
 visualization\cite{Ambros2005,Burch2005,Ambros2009}, and organic
 visualizations\cite{ogawa09,Caudwell2010}. A fourth industrial category
@@ -368,7 +368,7 @@ that is shipped with git. With the exception of Gitk, no GUI visualizers
 are able to produce a visualization for the Linux repository, due to its
 size: the GitHub visualizer displays an error message, stating that
 there are too may forks to display; the GitKraken interface will freeze
-and eventually crash while trying to load the repository, while Giteye
+and eventually crash while trying to load the repository; Giteye
 and the other visualizers will consume all of the system memory before
 they are able to produce a visualization. The Gitk interface is the
 least polished, but is able to produce a visualization of the
@@ -401,8 +401,8 @@ repository.
 % Commits;
 Commits are the most basic unit of change in the git repository.
 Commits are how the changes and metadata are stored.
-Commits in git are immutable; they cannot be changed once they are
-created. Instead, modifying a commit will result
+Commits in git are immutable; a commit cannot be changed once created.
+Instead, modifying a commit will result
 in a new commit with a different commit hash.
 Because the commits that follow have references to the updated commit,
 those commits are copied and receive a new commit hash as well.
@@ -535,7 +535,7 @@ is at the head of the current branch at the time that the commit
 is created.
 Merge nodes have an ordered list of
 parents\footnote{It is possible for a merge to have many parents, commit
-  2cde51fbd0f310c8a2c5f977e665c0ac3945b46d has 66 parents},
+  2cde51fbd0f3 has 66 parents},
 each parent is the head of each branch being merged.
 The first parent is the head of the current branch, and the other
 parents are the heads for the other branches being merged, in the order
