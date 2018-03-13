@@ -8,8 +8,7 @@ visualizations that take advantage of the \mt{} model, and a tool,
 called \tool{}, that uses these visualizations.
 
 \tool{} is web-based to enable ease of use, requiring nothing more than
-a web-browser to access, otherwise users would need to install the
-software and the database of repository data.
+a web-browser to access.
 
 \tool{} is designed with two uses-cases in mind, though a user may
 freely switch between the cases as they work. Both use-cases are
@@ -19,8 +18,9 @@ designed with maintainers in mind.
   \textbf{Use-Case 1: top-to-bottom approach}
 
   These users are maintaining a portion of the kernel and would like to
-  pick and entire merge, including all commits being merged, and merge
-  it directly into their version of the kernel.
+  pick an entire merge, including all commits being merged,
+  to inspect and potentially merge it directly into their version of the
+  kernel.
 
   These users do not have a specific commit in mind.
 \end{textbox}
@@ -37,58 +37,62 @@ designed with maintainers in mind.
   These users do have a specific commit in mind.
 \end{textbox}
 
-The tool uses full-text search to gather the repository events that the
-user is interested in, two summarization views, and three visualizations
-of the \mt{} for the repository events.
+\tool{} uses full-text search to find the merges and commits that the
+user is interested in, and provides two summarization views,
+and three visualizations of the \mt{} for the repository events.
 
 \section{Search}\label{sec:search}
 
-\evan{Should I put this section in the implementation details?}
-
 \tool{} provides a search engine for navigating within the kernel
-repository, filtering the repository events that are not relevant. The
-search engine takes a plain-text query from the user and returns the
-results ordered by the relevancy to the query. Relevancy is computed by
-weighted similarity, taking into account the contents of the commit log,
+repository.
+The search engine finds the merges and commits that are relevant for a
+given query.
+The results are then sorted based on the relevancy to the query.
+Relevancy is computed by weighted similarity, taking into account the
+contents of the commit log,
 the author name, the filenames, the commit hash, the date the commit was
-authored, and the date the commit was committed. More information about
-the design of the search engine are available in
+authored, and the date the commit was committed.
+More information about the design of the search engine are available in
 Section~\ref{sub:full_text_search}.
 
-Before presenting the results, the repository events are grouped by
+Before presenting the results, the commits and merges are grouped by
 \mt{} root. Each group of events has the link to the root at the
 top, followed by a table of the relevant commits and merges from that
 tree, shown in Figure~\ref{fig:linvis_search_results}. The table of
 results includes the relevancy rank assigned by the search engine,
 commit preview, author, commit date, and the authored date. The
-\mt{} groups are ordered by the mean of the relevancy scores.
+\mt{s} are ordered by the mean of the relevancy scores.
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=0.9\linewidth]{Figures/Linvis/search_results.png}
-  \caption{A single \mt{} in the search results of \tool{}, showing
-    the link to the root at the top, and the relevant commits in the
-    table below.}
+  \includegraphics[width=0.98\linewidth]{Figures/Linvis/search_results.png}
+  \caption{Two \mt{s} returned from the query for ``net-next''. The top
+    search result contains multiple entries with the search term in the
+    title, whilst the second result contains a single entry with the
+    search term in the title. The groups provide a link to the root at
+    the top, and the relevant commits in the table below.}
   \label{fig:linvis_search_results}
 \end{figure}
 
 \section{Summarization}\label{sec:summarization}
 
 \tool{} uses seven tabs to present the information and visualizations
-for a selected repository event. The informative tabs are; messages,
-files, modules, and authors. The visualization tabs are; list tree, pack
-tree, and \rt{} tree.
+for a selected repository event.
+The informative tabs are: messages, files, modules, and authors.
+The visualization tabs are: list tree, pack tree, and \rt{} tree.
 
 The message tab shows the full commit log message. This does not include
 the patch, but given a commit hash, the patch can be found directly from
-the repository.
+the repository with the \verb|git show| command, or using other tools.
 
-The files tab shows an aggregated table of all files that were modified
-in a merge. It includes metrics like the number of lines added, lines
-removed, total lines modified, and the delta, summed across all commits
-in the \mt{} that modify the selected file. A details drop-down button
-allows a user to see exactly which commits make the changes, as shown in
-Figure~\ref{fig:linvis_files_results}.
+The files tab shows the list of files that were modified in a merge or
+merge.
+The table includes the number of lines added, lines removed, total lines
+modified, and the difference between the number of lines added and
+removed.
+Each metric is aggregated across each commit within the merge.
+A details drop-down button allows a user to see exactly which commits
+make the changes, as shown in Figure~\ref{fig:linvis_files_results}.
 
 \begin{figure}[htpb]
   \centering
@@ -118,15 +122,18 @@ virtual device.
   \label{fig:linvis_modules_results}
 \end{figure}
 
-The authorship tab is similar to the files tab, but shows the authorship
-information. It shows the sum of the lines added, removed, modified, and
-the delta within the \mt{}. It also shows the number of files that were
-modified by the author. The details are organized slightly differently
-than in the files tab. Instead of showing the commits that make the
-modifications, \tool{} shows the individual files that are modified, as
-well as the commit hash. As multiple files can be modified in the same
-commit, commit hashes are not unique in this table. The authors tab is
-shown in Figure~\ref{fig:linvis_authors_results}.
+The authorship tab is similar to the files tab,
+but shows the authorship information.
+It shows the sum of the lines added, removed, modified, and the delta
+within the \mt{}.
+It also shows the number of files that were modified by the author.
+The details are organized slightly differently than in the files tab.
+Instead of showing the commits that make the modifications, \tool{}
+shows each file that was modified by this person, as well as the commit
+where the changes took place.
+As multiple files can be modified in the same commit,
+commit hashes are not unique in this table.
+The authors tab is shown in Figure~\ref{fig:linvis_authors_results}.
 
 \begin{figure}[htpb]
   \centering
@@ -139,10 +146,8 @@ shown in Figure~\ref{fig:linvis_authors_results}.
 
 \section{Visualization}\label{sec:visualization}
 
-While the summarizations are potentially useful, the visualizations are
-what make \tool{} different from the other tools that are visualizing
-the DAG\@. \tool{} provides access to three visualizations, each with a
-specific intention.
+\tool{} provides access to three visualizations, each with a specific
+intention.
 
 \subsection{List Tree}\label{sub:list_tree}
 
@@ -154,16 +159,24 @@ specific intention.
 \end{figure}
 
 The list tree, depicted in Figure~\ref{fig:linvis_list_tree}, is
-constructed from nested lists. The indentation level indicates the
-hierarchy of the tree. This visualization is text-based, making
-searching simple through the browser text search functionality. The top
-item in the list is the root of the tree; item node will be indented
-further than this item. Due to the complexity of some of the trees, this
-tree visualization is rooted at the node that is currently selected.
+constructed from nested lists.
+The commit or merge being inspected is shown first, and each child of
+the subtree is indented recursively.
+If the node is a commit, only the node will be shown.
+
+This visualization is text-based, making
+searching simple through the browser text search functionality.
+
 \tool{} also provides breadcrumbs showing the path that the current
 repository event took to being merged into the root of the \mt{} to
 ensure that a user can navigate both toward the root and toward the
 leaves using this visualization.
+In Figure~\ref{fig:linvis_list_tree}, the merge being inspected is the
+root node, so the breadcrumbs only contain a single link, which is the
+small ``8'' in the top left corner of the image.
+The items in the breadcrumbs are the shortest unique prefix of the
+commit hash in the \mt{}.
+In small trees, this will usually be a single character.
 
 \subsection{\rt{} Tree}
 \label{sub:rt_tree}
@@ -184,7 +197,7 @@ edges between the nodes showing the parent-child relationship.
 
 The \rt{} tree was designed with the goal of producing trees that looked
 tidy. Proposed by Wetherell and Shannon\cite{Wetherell1979}, there were
-three aesthetic requirements behind the design of tidy trees;
+three aesthetic requirements behind the design of tidy trees:
 
 \begin{itemize}
   \item
@@ -251,8 +264,8 @@ of the merge. With the \rt{} tree, it can be difficult to understand
 just how big the large \mt{} are, as they don't fit on the screen. The
 Pack Tree uses a set theory-like model for describing the hierarchical
 structure. Mapping the pack tree metaphor with the tree, leaves are the
-smallest nodes, containing no other nodes; inner nodes contain other
-nodes within them; the root is the outermost circle, containing all
+smallest nodes, containing no other nodes. Inner nodes contain other
+nodes within them and the root is the outermost circle, containing all
 other nodes within it.
 
 The bubble tree\cite{Boardman2000} was seen as a possible visualization
