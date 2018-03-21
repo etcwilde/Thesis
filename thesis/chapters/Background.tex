@@ -55,6 +55,16 @@ changes to the code and to the
 structure of the repository without needing to re-synchronize with a
 central server.
 
+It is often desirable to have the features of version control available
+before a feature is ready to be made public, specifically in the case
+where many possible implementations may exist.
+It is also desirable that the commits into the master branch of the
+master repository leave the project in a state that will both compile
+and operate correctly.
+Distributed version control makes this possible; developers can combine,
+split, and edit commits locally before pushing their changes into the
+central repository.
+
 When the developer makes a copy of a non-local repository, this is
 called cloning.
 The non-local repository is known as the origin repository.
@@ -127,17 +137,6 @@ the local repository is completely standalone.
 Because the local repository is separate, the developer has more
 flexibility to alter the structure of the repository before pushing
 the results back into the master repository.
-
-It is often desirable to have the features of version control available
-before a feature is ready to be made public, specifically in the case
-where many possible implementations may exist.
-It is also desirable to have the commits in the master repository be
-atomic, a given commit will not leave the project in an inconsistent
-state.
-The developer can combine, split, and edit, the intermediate commits
-before pushing their changes into the central repository.
-With centralized version control, all commits should leave the software
-project in a consistent state.
 
 With the additional flexibility, the structure of large and active
 repositories is more complex than the repositories that are in
