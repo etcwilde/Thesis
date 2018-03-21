@@ -572,14 +572,40 @@ order of the branches changes.
 
 \begin{figure}[htpb]
   \centering
-  \begin{tabular}{ccc}
-    \includegraphics[width=114px]{Figures/background/foxtrot_initial.png} &
-    \includegraphics[width=145px]{Figures/background/foxtrot_good.png} &
-    \includegraphics[width=145px]{Figures/background/foxtrot_bad.png} \\
-    Initial Repository & No Foxtrot & Foxtrot
-  \end{tabular}
-  \caption{Depiction of a foxtrot merge, where the master branch is
-    confounded by \emph{branch2}}
+
+  \begin{subfigure}[b]{0.3\textwidth}
+    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_1.png}
+    \caption{The initial local repository.
+      The origin master branch is on commit A.
+      The local master branch on commit B, and the feature branch on commit C.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_2.png}
+    \caption{We perform a fast-forward merge bringing C into the local master branch.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_3.png}
+    \caption{Meanwhile, Commit D is committed and pushed to the master
+      branch of the master branch.}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.3\textwidth}
+    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_6.png}
+    \caption{Pulling directly will merge the master branch of the master
+      repository into the master branch of the local repository.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_7.png}
+    \caption{Pushing the change into the master repository completes the
+      steps of the foxtrot. Commit D started on the master branch of the
+      remote repository, but appears to be on a separate branch due to
+      the flip that occurred when the pull was made.}
+  \end{subfigure}
+
+  \caption{This series of figures show the steps to create a foxtrot.
+    The foxtrot occurs when the remote master branch is merged into the
+    local master branch instead of the local branch being merged into
+    the remote branch.}
   \label{fig:foxtrot_steps}
 \end{figure}
 
