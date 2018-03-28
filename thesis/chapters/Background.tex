@@ -614,21 +614,32 @@ A\foxtrot\footnote{See \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-a
 merge occurs when the order of the parents is changed, confounding the
 branch relationship (depicted in Figure~\ref{fig:foxtrot_steps}).
 
-Foxtrot merges are created when the developer pushes changes to or pulls
-changes from the remote repository.
-By default, the pull executes a fetch followed by a merge, which merges
-the branches in the origin repository into the branches in the local
+Foxtrot merges are created when the developer pushes their changes to
+the remote repository.
+Prior to pushing, the developer will perform a pull, which synchronizes
+their local repository with the remote repository.
+If there are no conflicts between the local and remote repositories, the
+merge is fast-forwarded and no merge commit is created.
+When the developer pushes their changes, the local repository is merged
+into the remote repository.
+This results in a fast-forward merge, there will be no merge conflicts
+because these were corrected in the pull.
+If a conflict should arise, the remote repository will reject the push.
+If there is a conflict when the developer pulls, the developer must
+correct the conflicts.
+These corrections are stored in the merge commit, which merges the
+remote repository into the local repository.
+The creation of this merge commit is the first step in creating the
+foxtrot.
+The first parent of the merge commit will be the commit on the local
+branch, not the head of the remote repository.
+When the changes are pushed back to the server, the master branch of the
+remote repository changes from the original head prior to the merge to
+the merge commit, which flips the branches.
+The end result is that the commits that were made to the developer's
+local branch are shown as the commits to the master branch of the remote
 repository.
-If the branches merge cleanly, it will only result in a fast-forward
-merge, not a foxtrot.
-This is done to keep the repository clean, without this, a merge commit
-would be created for every push and pull.
-If the branches do not cleanly a merge commit will be created with the
-first parent of the merge commit being the head of the branch at the
-time of commit.
-The head of the branch is pointing at the top of the
-local repository, thus, the first parent will the in the local
-repository.
+
 This confounds the true master coming from the remote repository with
 the master branch in the local repository; the commits in the local
 repository appear as the commits added to the master branch, while the real
