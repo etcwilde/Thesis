@@ -564,86 +564,189 @@ product will be released from.
 This relies on the discipline of the people committing code to the
 repository to maintain a well-defined master branch.
 
-Git has no internal safe-guards protecting the master branch from
-obfuscation since a master branch is not explicitly defined.
-The parent list of a commit is ordered, the first parent of the merge
-commit is the branch into which the merge was made.
+The convention in git is that the first parent of the current commit was
+made to the same branch as the commit. Using this definition it is
+possible to define the set of commits in the branch as those that are
+long the first-parent path up to the first place where the first-child
+of the first-parent is not a commit of the branch.
 
-\begin{figure}[htpb]
+\begin{figure}[htbp]
   \centering
+  \resizebox{0.5\textwidth}{!}{
+  \begin{tikzpicture}[auto, on grid, semithick, state/.style={circle, text=black}]
+    \foreach \x in {0, 1, 2, 3}
+    \draw[shift={(\x + 0.5, -0.5)}, color=black] (0cm, 2cm) -- (0pt, -0.2cm);
 
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_1.png}
-    \caption{The initial local repository.
-      The origin master branch is on commit A.
-      The local master branch on commit B, and the feature branch on commit C.}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_2.png}
-    \caption{We perform a fast-forward merge bringing C into the local master branch.}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_3.png}
-    \caption{Meanwhile, Commit D is committed and pushed to the master
-      branch of the master repository.}
-  \end{subfigure}
+    \node[state, draw=chartblue] (1) {1};
+    \node[state, draw=chartyellow, above right=of 1] (2) {2};
+    \node[state, draw=chartblue, right=of 1] (3) {3};
+    \node[state, draw=chartyellow, right=of 2] (4) {4};
+    \node[state, draw=chartblue, right=2cm of 3] (5) {5};
+    \node[state, draw=chartyellow, right=of 4] (6) {6};
+    \node[state, draw=chartblue, right=of 5] (7) {7};
 
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_6.png}
-    \caption{Pulling directly will merge the master branch of the master
-      repository into the master branch of the local repository.}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Figures/background/foxtrot/step_7.png}
-    \caption{Pushing the change into the master repository completes the
-      steps of the foxtrot. Commit D started on the master branch of the
-      remote repository, but appears to be on a separate branch due to
-      the flip that occurred when the pull was made.}
-  \end{subfigure}
+    \draw (2) edge[-stealth, chartyellow] (1);
+    \draw (4) edge[-stealth, chartyellow] (3) edge[-stealth, chartyellow] (2);
+    \draw (6) edge[-stealth, chartyellow] (4);
 
-  \caption{This series of figures show the steps to create a foxtrot.
-    The foxtrot occurs when the remote master branch is merged into the
-    local master branch instead of the local branch being merged into
-    the remote branch.}
-  \label{fig:foxtrot_steps}
+    \draw (3) edge[-stealth, chartblue] (1);
+    \draw (5) edge[-stealth, chartblue] (3) edge[-stealth, chartblue] (4);
+    \draw (7) edge[-stealth, chartblue] (5) edge[-stealth, chartblue] (6);
+
+    \node[rectangle, black, text=black, above=of 6] (branchB) {B};
+    \draw (branchB) edge[black] (6);
+
+    \node[rectangle, black, text=black, above=2cm of 7] (branchA) {A};
+    \draw (branchA) edge[black] (7);
+
+    \foreach \x in {0, 1, 2, 3, 4}
+      \node[shift={(\x, -0.6)}, color=black] {$t_\x$};
+  \end{tikzpicture}
+}
+  \caption{A small example of a sequence of commits and merges.
+    The branch pointer A reference commit 7, which merges the head of
+    branch B, commit 6, into the original head of branch A, which was
+    commit 5. Merge 7 is the most recent change to the repository.}
+  \label{fig:repoEvents2}
+%\vspace{-3mm}
 \end{figure}
 
-As a convention, the first parent of a node is on the same branch as
-that node.
-A\foxtrot\footnote{See \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html} for a full description of the issue.}
-merge occurs when the order of the parents is changed, confounding the
-branch relationship (depicted in Figure~\ref{fig:foxtrot_steps}).
 
-Foxtrot merges are created when the developer pushes their changes to
-the remote repository.
-Prior to pushing, the developer will perform a pull, which synchronizes
-their local repository with the remote repository.
-If there are no conflicts between the local and remote repositories, the
-merge is fast-forwarded and no merge commit is created.
-When the developer pushes their changes, the local repository is merged
-into the remote repository.
-This results in a fast-forward merge, there will be no merge conflicts
-because these were corrected in the pull.
-If a conflict should arise, the remote repository will reject the push.
-If there is a conflict when the developer pulls, the developer must
-correct the conflicts.
-These corrections are stored in the merge commit, which merges the
-remote repository into the local repository.
-The creation of this merge commit is the first step in creating the
-foxtrot.
-The first parent of the merge commit will be the commit on the local
-branch, not the head of the remote repository.
-When the changes are pushed back to the server, the master branch of the
-remote repository changes from the original head prior to the merge to
-the merge commit, which flips the branches.
-The end result is that the commits that were made to the developer's
-local branch are shown as the commits to the master branch of the remote
+Commits that are made to a branch are on the first-parent path starting
+at the branch tag, and up to the point where the first-child of the
+first-parent is not the current node.
+Using the example in Figure~\ref{fig:repoEvents2}, branch B consists of
+nodes 6, 4, and 2. Branch A consists of nodes 7, 5, 3, and 1.
+Git has no internal safe-guards to protect branches from obfuscation.
+
+When certain conditions are met, it is possible to perform an action on
+the repository which results in commits that were in a branch being
+moved to a different branch.
+The series of steps to swap branches is called a foxtrot\footnote{See
+  \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html}
+  for a full description of the issue}.
+
+It is necessary for multiple repositories to be interacting for a
+foxtrot to occur.
+The following is a short example of the series of steps in the foxtrot,
+also shown in Figure~\ref{fig:FoxtrotSteps}.
+Bob and Alice have both made local clones of a remote
 repository.
+Bob and Alice both make local changes to the same file in the
+repository and commit those changes into the same branch.
+Alice pushes her changes to the repository first, which results in a
+fast-forward merge of the remote branch.
+Alice's commit is clearly in the set of commits in this branch.
+Bob attempts to push, but the push fails as his repository is not in
+sync with the remote branch anymore, so Bob pulls.
+The pull merges the difference in the remote branch into the local
+branch.
+Alice and Bob edited the same file creating a merge conflict, so Git
+cannot perform a fast-forward merge.
+Bob resolves the conflict and a merge commit is created to store the
+resolution.
+The head of Bob's local branch at the time of the pull is the first
+parent of this merge commit, and the changes made by Alice are the
+second parent.
+With the merge conflict resolved, Bob pushes the changes back to the
+remote branch.
+Prior to Bob pushing his changes to the remote repository, Alice's
+commit was at the head of the master branch.
+After Bob's push, this information is lost, and it appears that Alice's
+commit was merged into the master branch by Bob.
+The merge commit that merges the remote master branch into Bob's master
+branch is the foxtrot merge, which is correct according to Bob's local
+repository, but is the incorrect action for the remote repository.
 
-This confounds the true master coming from the remote repository with
-the master branch in the local repository; the commits in the local
-repository appear as the commits added to the master branch, while the real
-master branch appears to be a branch merged into the local repository.
+\begin{figure}[htbp]
+  \begin{tabulary}{\textwidth}{LLL}
+    Alice & Origin & Bob\\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} \\
+
+    \tiny{
+    Alice has made a local clone of the remote repository
+    \textit{Origin}.}
+    &
+    &
+    \tiny{Bob has made a local clone of the remote repository
+    \textit{Origin}.}
+    \\
+
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
+
+    \tiny{Alice makes some changes and commits them to her local repository.}
+
+    &
+    &
+    \tiny{Bob makes some changes to the same file as Alice and commits them in
+    his local repository.}
+    \\
+
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
+
+    \tiny{Alice pushes her changes back into the master branch of the remote
+    repository.} &
+    \tiny{The remote repository reflects the push by fast-forward merging
+    Alice's master branch into the remote master branch.} &
+    \tiny{Bob is not made aware of these changes yet.} \\
+
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_3.png} \\
+
+    &
+    &
+    \tiny{Bob attempts to push, but this results in a merge conflict.}
+    \\
+
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
+
+    &
+    &
+    \tiny{Upon fixing the merge conflict, the pull merges the remote master
+    branch into Bob's master branch.}
+    \\
+
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
+
+    &
+    \tiny{Bob's changes are pushed to the remote.}
+    &
+    \\
+  \end{tabulary}
+
+  \caption{The sequence of steps that are part of the foxtrot, from the
+  point of view of each repository. Alice's commit is pushed to the
+  master branch, but as a result of the foxtrot, ends up being merged
+  into the master branch.}
+\label{fig:FoxtrotSteps}
+\end{figure}
+
+The effect of this can have different repercussions depending on the
+project.
+In the best case, the repository visualizations will not give an
+accurate visualization of the repository, which may lead to confusion.
+In a more serious situation, the master branch is considered to be the
+stable branch, where only code that has been reviewed and tested is
+accepted.
+When a regression occurs, the project may need to revert back to a
+previous stable state, where the regression is not present.
+This requires the ability to find and track the master branch, which may
+be confounded by a foxtrot.
+Picking the incorrect commit to revert to could lead to serious
+consequences.
+In the Linux project, the commits and merge to the master branch are the
+code that Linus has reviewed and decided to include in the kernel.
 
 The nodes in the DAG are immutable; once a commit or merge is created,
 it cannot be changed. Git allows operations to alter the events and
