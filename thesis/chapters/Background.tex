@@ -1,19 +1,20 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Background and Related Work}\label{chap:background}
 
-A version control system tracks files, and how that information changes over time.
+A version control system tracks files, and how they are changed over
+time.
 While it can be used for storing any digital information,
 version control is usually used in the context of software development;
-it is used for storing and managing the information about
-the project, the source code, and the binary assets.
-Version control has two primary purposes,
-first as a means of storing information,
-and second as a means of retrieving historical versions of that information.
-In addition to fulfilling the two primary purposes, modern version
-control maintains a log of who is making the changes and when the
+it is used for storing and managing the files of the project, including
+the project's source code and binary assets.
+Version control has two primary purposes: first as a means of storing
+files, and second as a means of retrieving historical versions of those
+files.
+In addition to fulfilling the two primary purposes, a version control
+system maintains a log of who is making the changes and when the
 changes were made.
 
-Early version control systems, such as revision control system (RCS),
+Early version control systems, such as Revision Control System (RCS),
 were designed for local development and provided no means of collaboration.
 As software projects grew, the model quickly became outdated,
 being replaced with a centralized server model.
@@ -30,14 +31,14 @@ re-synchronization with the central server.
 To work with the repository,
 the developer must always have access to the central server.
 To maintain the atomic properties of committing, the server will
-momentarily lock the repository to ensure that no changes happen while a
-commit is being processed or a conflict resolved.
+momentarily lock the repository to ensure that no other changes happen
+while a commit is being processed or a conflict resolved.
 
 Due to the limitations of a centralized architecture, the Linux kernel
 uses a distributed version control system. Until April of 2005, the
 kernel project used BitKeeper.
 In April 2005, the licensing became too restrictive and Linux was forced
-to change version control systems.
+to change version control systems. \evantodo{Find a reference}
 Git was written as the replacement for BitKeeper, and was designed to
 maintain a similar level of patch granularity as in BitKeeper\footnote{
   initial announcement of git on the mailing list
@@ -46,7 +47,7 @@ version of git was roughly 1300 lines of code and was written and
 self-hosting in less than two weeks\footnote{From the git mailing list
   \url{https://marc.info/?l=git&m=117254154130732}}.
 
-BitKeeper is a distributed version control system (DVCS).
+Both BitKeeper and git are distributed version control systems (DVCS).
 In distributed version control, the entire repository is mirrored on
 the developer's local computer instead of copying parts of the project.
 As a result, the local copy is much larger on disk than with a
@@ -56,8 +57,8 @@ structure of the repository without needing to re-synchronize with a
 central server.
 
 It is often desirable to have the features of version control available
-before a feature is ready to be made public, specifically in the case
-where many possible implementations may exist.
+before a feature is ready to be made available in a public-facing
+repository.
 It is also desirable that the commits into the master branch of the
 master repository leave the project in a state that will both compile
 and operate correctly.
@@ -65,11 +66,18 @@ Distributed version control makes this possible; developers can combine,
 split, and edit commits locally before pushing their changes into the
 central repository.
 
-When the developer makes a copy of a non-local repository, this is
-called cloning.
-The non-local repository is known as the origin repository.
-When changes are made to the origin repository, the local clone must
-resynchronize with origin in order to for those changes to be propagated.
+Cloning is when a developer copies a repository.
+The source repository is recorded as a remote repository.
+It is possible for repositories to have many remotes.
+The process of updating a remote repository with the changes made in the
+local repository is known as pushing.
+By default, the remote repository that was cloned will be given the
+label \textit{origin}, which is the repository where git will push to
+and pull from, unless another remote is specified.
+
+After changes are made to a remote, the local repository must
+resynchronize with the remote in order for those changes to be
+propagated.
 This resynchronization can be done in one of two ways.
 The normal way of resynchronizing is through the \textit{pull} command,
 which fetches the changes in the origin repository, then merges the
@@ -80,7 +88,8 @@ manually issuing the fetch command and then manually merging or rebasing
 branches.
 Rebasing is the process of moving one or more commits from one ancestor
 to another.
-The process of updating the origin repository with the changes made in
+
+The process of updating a remote repository with the changes made in
 the local repository is known as pushing.
 If there are no merge conflicts, the merge can perform a fast-forward
 merge, shown in Figure~\ref{fig:fast_forwarded_merge},
@@ -93,6 +102,8 @@ addition of a new merge node.
 If there is a merge conflict, or the user has specified that the merge
 should not fast-forward, a merge commit is created, as shown in
 Figure~\ref{fig:merge_node_merge}.
+
+\evantodo{Talk to Daniel about this example}
 
 \begin{figure}[htpb]
   \centering
@@ -120,7 +131,6 @@ Figure~\ref{fig:merge_node_merge}.
   \label{fig:merge_styles}
 \end{figure}
 
-Git is an implementation of a distributed version control system.
 Distributed version control gives developers more flexibility with their
 local repository and requires the developer to synchronize their local
 copy of the repository with the public master repository less often
@@ -134,14 +144,44 @@ Unlike with the centralized version control though,
 there is no requirement for the developer to ever push their changes
 back to the public repository;
 the local repository is completely standalone.
-Because the local repository is separate, the developer has more
-flexibility to alter the structure of the repository before pushing
-the results back into the master repository.
+Developers can make changes that would otherwise break the workflow of
+other developers because they have a standalone repository.
+These changes include rebasing branches, re-ordering commits,
+splitting commits, and squashing commits into one.
+Once the developer is happy with their set of commits, they may push
+them to the remote repositories.
 
-With the additional flexibility, the structure of large and active
-repositories is more complex than the repositories that are in
-centralized version control. This poses a problem for a maintainer who
-must understand how a commit is integrated into the master branch of a
+Git needs to be designed to handle multiple repositories, with many
+developers working simultaneously.
+It also needs to be able to support the ability to move commits between
+branches, re-order commits, combine multiple commits into a single
+commit, and split a commit into multiple commits.
+
+To support these requirements, Linus chose to use a directed acyclic
+graph to represent the commits and the relationships between commits.
+The graph imposes relatively few constraints on what a developer can do.
+The only requirement is that there is not a cycle in the commits, that
+is, a change that at some point depends on itself.
+For example, SVN always has a well-defined trunk, the SVN equivalent of
+a master branch, whereas git does not require the existence of a master
+branch.
+The graph structure also supports relatively cheap braching compared to
+other version control systems, which makes it possible for developers to
+create more branches without having to worry about consuming excessive
+resources.
+With fewer constraints on the structure of the commit graph in git,
+tools are unable to make as many assumtions when abstracting the graph.
+Many tools avoid this by not abstracting the graph and visualizing other
+properties of the repository, such as the file structure.
+Tools that do visualize the graph do only minimal abstraction, creating
+a visualization of the graph itself.
+
+The graph of large and active repositories is very complicated.
+It is very difficult to understand the relationship between commits, and
+how the commits are integrated into the project from a visualization of
+the graph.
+This poses a problem for a maintainer who must understand how a
+commit is integrated into the master branch of a
 project and the other commits that are integrated with that commit.
 Maintainers must sift through thousands of commits to determine which
 changes being made to the current version of the software pertain to
