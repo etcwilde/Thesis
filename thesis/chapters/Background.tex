@@ -578,10 +578,11 @@ the given commit to be integrated in a meaningful way.
 \label{sec:directed_acyclic_graph}
 
 To allow for the flexibility needed for a distributed version control
-system, git uses a \define{directed acyclic graph}{DAG} as the central
-repository model.
+system, git uses a \define{directed acyclic graph}{DAG} to model the
+relationship between events.
 The repository events make up the nodes in the graph, and the
-child-parent relationship represents the edges.
+child-parent\evan{no, the child has a list of references to it's
+  parents, not the other way around.} relationship represents the edges.
 Commits will have a single parent, which is the repository event that
 is at the head of the current branch at the time that the commit
 is created.
@@ -596,12 +597,16 @@ Every repository will have at least one initial commit, which
 will have no parents, but it is possible for repositories to have
 multiple initial commits.
 Furthermore, it is possible for the graph of a repository to be
-disconnected; these branches are known as orphan branches.
+disconnected; disconnected branches are refered to as orphaned branches
+with respect to the rest of the graph \evan{They are with respect to
+  each other and all other branches in the repository. The documentation
+  doesn't say much on this topic}.
+
 
 The model is simple, but flexible.
 The flexibility of the model makes it more difficult to reason about,
 stricter models are easier to reason about since the model must follow
-the given rules.
+more rules.
 
 For example, many version control systems have a well-defined notion of
 the master branch.
@@ -611,8 +616,8 @@ confounded with another branch.
 The DAG model in git does not explicitly define a master branch, or even
 enforce the requirement that one exists.
 Instead, the idea of the master branch is a social construct used to
-identify which branch things should be merged into, and where the final
-product will be released from.
+identify where releasable code should be merged into, and where the
+final product will be released from.
 This relies on the discipline of the people committing code to the
 repository to maintain a well-defined master branch.
 
@@ -621,6 +626,9 @@ made to the same branch as the commit. Using this definition it is
 possible to define the set of commits in the branch as those that are
 long the first-parent path up to the first place where the first-child
 of the first-parent is not a commit of the branch.
+Using the example in Figure~\ref{fig:repoEvents2}, branch B consists of
+nodes 6, 4, and 2. Branch A consists of nodes 7, 5, 3, and 1.
+
 
 \begin{figure}[htbp]
   \centering
@@ -664,16 +672,10 @@ of the first-parent is not a commit of the branch.
 \end{figure}
 
 
-Commits that are made to a branch are on the first-parent path starting
-at the branch tag, and up to the point where the first-child of the
-first-parent is not the current node.
-Using the example in Figure~\ref{fig:repoEvents2}, branch B consists of
-nodes 6, 4, and 2. Branch A consists of nodes 7, 5, 3, and 1.
 Git has no internal safe-guards to protect branches from obfuscation.
-
 When certain conditions are met, it is possible to perform an action on
-the repository which results in commits that were in a branch being
-moved to a different branch.
+the repository which results in commits to appear as if they were
+performed as part of a different branch.
 The series of steps to swap branches is called a foxtrot\footnote{See
   \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html}
   for a full description of the issue}.
@@ -683,12 +685,13 @@ foxtrot to occur.
 The following is a short example of the series of steps in the foxtrot,
 also shown in Figure~\ref{fig:FoxtrotSteps}.
 Bob and Alice have both made local clones of a remote
+repository and are making changes to the master branch of their local
 repository.
 Bob and Alice both make local changes to the same file in the
 repository and commit those changes into the same branch.
 Alice pushes her changes to the repository first, which results in a
 fast-forward merge of the remote branch.
-Alice's commit is clearly in the set of commits in this branch.
+Alice's commit is clearly pushed to the master branch.
 Bob attempts to push, but the push fails as his repository is not in
 sync with the remote branch anymore, so Bob pulls.
 The pull merges the difference in the remote branch into the local
@@ -706,17 +709,17 @@ Prior to Bob pushing his changes to the remote repository, Alice's
 commit was at the head of the master branch.
 After Bob's push, this information is lost, and it appears that Alice's
 commit was merged into the master branch by Bob.
+This sequence of operations swaps the branches: the commits that were in
+remote's master now appear to be made to a separate branch and merged
+into the master branch, while Bob's commits appears as if they were made
+to the master branch.
 The merge commit that merges the remote master branch into Bob's master
-branch is the foxtrot merge, which is correct according to Bob's local
-repository, but is the incorrect action for the remote repository.
+branch is the foxtrot merge.
+
 
 \begin{figure}[htbp]
   \begin{tabulary}{\textwidth}{LLL}
-    Alice & Origin & Bob\\
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} \\
-
+    Alice's Repo. & Origin Repo. & Bob's Repo.\\
     \tiny{
     Alice has made a local clone of the remote repository
     \textit{Origin}.}
@@ -725,10 +728,9 @@ repository, but is the incorrect action for the remote repository.
     \tiny{Bob has made a local clone of the remote repository
     \textit{Origin}.}
     \\
-
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} \\
 
     \tiny{Alice makes some changes and commits them to her local repository.}
 
@@ -738,8 +740,8 @@ repository, but is the incorrect action for the remote repository.
     his local repository.}
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
     \tiny{Alice pushes her changes back into the master branch of the remote
@@ -748,9 +750,10 @@ repository, but is the incorrect action for the remote repository.
     Alice's master branch into the remote master branch.} &
     \tiny{Bob is not made aware of these changes yet.} \\
 
+
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_3.png} \\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
     &
     &
@@ -759,7 +762,7 @@ repository, but is the incorrect action for the remote repository.
 
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_3.png} \\
 
     &
     &
@@ -768,13 +771,18 @@ repository, but is the incorrect action for the remote repository.
     \\
 
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
 
     &
     \tiny{Bob's changes are pushed to the remote.}
     &
     \\
+
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
+
   \end{tabulary}
 
   \caption{The sequence of steps that are part of the foxtrot, from the
@@ -787,8 +795,9 @@ repository, but is the incorrect action for the remote repository.
 The effect of this can have different repercussions depending on the
 project.
 In the best case, the repository visualizations will not give an
-accurate visualization of the repository, which may lead to confusion.
-In a more serious situation, the master branch is considered to be the
+accurate visualization of how commits were integrated into the project,
+which may lead to confusion.
+In a more serious situation, a specific branch is considered to be the
 stable branch, where only code that has been reviewed and tested is
 accepted.
 When a regression occurs, the project may need to revert back to a
@@ -797,27 +806,31 @@ This requires the ability to find and track the master branch, which may
 be confounded by a foxtrot.
 Picking the incorrect commit to revert to could lead to serious
 consequences.
-In the Linux project, the commits and merge to the master branch are the
-code that Linus has reviewed and decided to include in the kernel.
+In the Linux project, the merges to the master branch are
+the code that Linus has reviewed and accepted into the mainline kernel.
+\evan{I don't think he writes much code anymore, it looks like he mostly
+  merges things that have been reviewed.}
 
-The nodes in the DAG are immutable; once a commit or merge is created,
-it cannot be changed. Git allows operations to alter the events and
-re-order them, but this will create a new event with a new commit hash.
+As mentioned earlier, the nodes in the DAG are immutable;
+once a commit or merge is created, it cannot be changed.
+Git allows operations to alter the events and re-order them,
+but this will create a new event with a new commit hash.
 This property makes it impossible for nodes to store information about
-the children, and in extension, how the commit is being merged as this
-information is not available when the commit is created.
+their children, and in extension, how the commit is being merged, as
+this information is not available when the commit is created.
 Git provides the command \verb|git log --children|, which traverses the
 DAG and inverts the edges.
-The goal is to identify the series of merges that a commit takes to
-reach the master branch.
 The next child that is a merge is the first merge on the path to being
 integrated.
 
 The graph combined with the child information gives most of the
 information necessary for understanding how the commit is
-merged into the master branch; however, it is missing which merge is
-into the master branch, and the information is not always easy to
-understand, as shown in Figure~\ref{fig:git_graphs}.
+merged into the master branch; however, information about the specific
+merge into the master branch is still missing.
+Furthermore, the graph itself is not always easy to understand, as shown
+in Figure~\ref{fig:git_graphs}.
+This figure contrasts the levels of complexity that can be found in a
+given section of the Linux kernel repository.
 
 \begin{figure}[htpb]
   \centering
@@ -842,11 +855,13 @@ understand, as shown in Figure~\ref{fig:git_graphs}.
 
 Most repositories are simple enough that it is possible to identify how
 commits are integrated using the visualizations of the DAG that are
-available with the current tools. Difficulties arise in larger
-repositories. The master branch can be confounded with \foxtrot{}
-merges, making it difficult to identify. Sheer number of commits being
-added to various branches at a given time can make it difficult to
-understand which branch a commit is being added to.
+available with the current tools.
+Difficulties arise in larger repositories.
+The master branch can be confounded due to \foxtrot{}
+merges, making it difficult to identify merges to the master branch.
+Sheer number of commits being added to various branches at a given
+time can make it difficult to understand which branch a commit is
+being added to.
 
 \section{Linux}\label{sec:linux}
 
