@@ -315,7 +315,7 @@ visualizations and summaries of git repositories.
 
 Organic visualizations show patterns in cooperation and communication
 that arise within a software project organically\evan{One definition of
-  Organically: When something happens naturally without planinng and is not forced.}.
+  Organically: When something happens naturally without planing and is not forced.}.
 Heller et al.\cite{Heller2011} plots communication on a map.
 This visualization show patterns in communication as the arise, and how
 these communication channels operate internationally within a software
@@ -463,33 +463,40 @@ repository.
 \label{sec:git}
 
 % Commits;
-Commits are the most basic unit of change in the git repository.
-Commits are how the changes and metadata are stored.
-Commits in git are immutable; a commit cannot be changed once created.
-Instead, modifying a commit will result
-in a new commit with a different commit hash.
-Because the commits that follow have references to the updated commit,
-those commits are copied and receive a new commit hash as well.
-Commits store the commit hash, commit date,
-committer, author, and authorship date, the patch, and an ordered list
-of parents. The metadata is shown in Figure~\ref{fig:commit_metadata}
-for a commit and merge within the repository for this \paper{}.
+Commits are the core of git repositories, storing the patch
+representing the changes being made to the files in the repository, and
+metadata about when the change was made, and who made the change.
+In the metadata, commits store an author, an authordate, a committer,
+and a commit date, and an ordered parent list of the commit hashes.
+The author is the person who first created the patch and issued the
+commit command.
+The author date is when the commit was first created.
+The committer and commit date contain the person who most recently
+updated the commit, and when that update was made.
+This metadata is exemplified in Figure~\ref{fig:commit_metadata} for a
+commit and merge.
 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\linewidth]{Figures/background/commit_metadata.png}
-  \caption{Screenshot of commit metadate for a commit and merge in the
-    repository for this \paper{}.}
+  \caption{Screenshot of commit metadata for a commit and merge in the
+    repository of this \paper{}.}
   \label{fig:commit_metadata}
 \end{figure}
 
-Git allows commits to be made on the behalf of another person, either
-via email, or simply because the author of the commit doesn't have the
-ability to write to the repository.
-When someone else makes the commit, the committer and author will not
-match. The patch contains the changes being made, including the
+Commits are immutable; a commit cannot be modified once created.
+When an update is made, new commit is created, the original metadata is
+copied to the new commit, the relevant changes are made, the comitter
+and commit date are updated, and the original commit is deleted.
+If other commits the modified commit as one of their parents, they
+are updated in the same manner to reflect the changes made .
+This happens recursively until all descendants of the original commit
+have been updated to reflect the new commit hash.
+
+The patch contains the changes being made, including the
 filenames, the line numbers, and the actual change, as shown in
-Figure~\ref{fig:commit_patch}.
+Figure~\ref{fig:commit_patch}
+
 Rebasing will also change the committer and commit date.
 
 \begin{figure}[htpb]
@@ -507,23 +514,18 @@ branches are being merged into.
 The remaining commits are the branches being merged, in the order that
 they are specified in the merge.
 A non-merging commit will only have one parent.
+
 To clarify the difference, non-merging commits are referred to as
-commits, merging commits as merges.
-In the scope of this thesis, repository event or event is used to refer
-to both commits and merges.
-The patch are set of changes being made to the files of the repository.
+commits and merging commits as merges.
+In the scope of this thesis the term, repository event or simply event
+is used to refer to either a commit or a merge.
 
 % Integration;
-Integration is the process by which the changes in a commit are added to
-the master repository.
-A small change with few dependencies are easier to integrate than
-changes.
-It is possible to merge these changes into the master repository
-without additional commits making changes.
-The changes are directly merged into the master repository.
-Many times, these changes are small, localized, bug fixes, or modifications to
-documentation, which can be integrated with the rest of the project
-without making changes beyond the scope of the bug or documentation.
+Integration is the process by which the changes in a commit are
+propagated to the master repository.
+A small change with few dependencies is easier to integrate than changes.
+Many times, Small changes that are localized contain bug fixes or small
+changes to documentation.
 An example of this from the Linux repository is shown in
 Figure~\ref{fig:single_commit_merge}.
 
@@ -534,58 +536,43 @@ Figure~\ref{fig:single_commit_merge}.
   \label{fig:single_commit_merge}
 \end{figure}
 
+Major changes may be broken down into smaller segments and committed
+seperately.
+The set of these commits combined represent the full implmenentation of
+the change,
+which represents a logical separatation from the rest of the code, and
+should be merged separately.
+A set of major changes may be needed to implement an entire feature.
+Each of these major changes may be merged into a feature branch before
+being integrated into the project.
 
-Adding additional functionality to a project may require additional
-support from other components of the project.
-Non-localized changes may be necessary to provide the additional
-information needed for the new function.
-Commits can be logically grouped based on the submodule that grouped
-based on what part of the project they are modifying.
-In the Linux kernel, it is customary to have commits related to
-networking in a single merge.
-This merge has sub-merges containing wireless networking, Bluetooth,
-and Ethernet, among the other implementations of networking.
-In this form, the merges act in a similar manner to subdirectories in a
-file system, where each directory contains files that work together.
+The Linux kernel repository has many examples of merge nesting like this.
+In the Linux kernel, it is customary to have commits related to a single
+subsystem in a single merge.
+The subsystem may then be broken into sub-subsystems, for which there
+are corresponding merges.
+These merges contain the changes that modify the specific sub-subsystem.
 
-Projects may also be shared between multiple organizations.
-The organizations will likely have their own internal master
-repositories that they work with before pushing the full set of
-changes upstream to the public master repository.
-In git, it is possible to merge repositories since they are treated in
-the same way as local branches.
-
-In order to integrate the changes, the commits must be merged into the
-master branch of the repository.
-Commits may be merged directly into the master branch, or may be merged
-into multiple branches before finally reaching the master branch.
-To understand how a commit is integrated, it is necessary to know which
-merges a commit passes through to reach the master branch, and which
-commits are merged with it.
+For example, in the Linux repository, there is usually a merge
+into the master branch of the repository for the changes to
+the networking subsystem for a given release.
+Within this merge, there are merges for wireless networking, Bluetooth,
+and Ethernet, among other implementations of computer networking.
+In this form, the merges act in a similar manner to directories in a
+file system, where commits are the files containing the code, and merges
+are the directories containing related files.
+In this metaphor, the goal is to identify the file path to a given file,
+and the other files that are in the same directory.
+The root directory of the file path is the equivalent metaphorical
+equivalent of the master branch.
+To understand how a commit is integrated, it is necessary to understand
+the merges that the commit was propagated through, and which commits are
+integrated with it.
+In order for a commit to be integrated, it must be propagated to the
+master branch.
 Merging commits is the process of integrating them.
-
-Merges are a type of commit; it is possible to make additional
-changes while merging.
-
-When two commits from different branches make changes to the same file,
-a conflict occurs.
-Git is unable to determine which changes are correct, so it flags them
-as a merge conflict, which stops the merging process.
-The person making the merge decides which change should be kept,
-and which should be removed.
-The resolution of merge conflicts is stored as the patch of merge
-conflicts.
-The Linux repository has no merge conflicts.
-This is attained through a different workflow.
-When a developer wants to merge their changes, they must first rebase
-their branch onto the most up-to-date commit of the repository.
-When this happens, if there are conflicts, git will require
-the developer to make the fixes.
-The main difference being that the developer fixes conflicts,
-not the person performing the merge.
-The idea behind this is that the developer likely has a better
-understanding of which change is the correct, or how to integrate both
-changes.
+The other commits that are merged with the commit are also necessary for
+the given commit to be integrated in a meaningful way.
 
 \section{Directed Acyclic Graph}
 \label{sec:directed_acyclic_graph}
