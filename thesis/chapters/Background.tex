@@ -729,8 +729,8 @@ branch is the foxtrot merge.
     \textit{Origin}.}
     \\
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} \\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} \\
 
     \tiny{Alice makes some changes and commits them to her local repository.}
 
@@ -741,7 +741,7 @@ branch is the foxtrot merge.
     \\
 
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
     \tiny{Alice pushes her changes back into the master branch of the remote
@@ -751,8 +751,8 @@ branch is the foxtrot merge.
     \tiny{Bob is not made aware of these changes yet.} \\
 
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
     &
@@ -760,8 +760,8 @@ branch is the foxtrot merge.
     \tiny{Bob attempts to push, but this results in a merge conflict.}
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_3.png} \\
 
     &
@@ -770,8 +770,8 @@ branch is the foxtrot merge.
     branch into Bob's master branch.}
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
 
     &
@@ -779,17 +779,16 @@ branch is the foxtrot merge.
     &
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_3.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
 
   \end{tabulary}
-
   \caption{The sequence of steps that are part of the foxtrot, from the
   point of view of each repository. Alice's commit is pushed to the
-  master branch, but as a result of the foxtrot, ends up being merged
-  into the master branch.}
-\label{fig:FoxtrotSteps}
+  master branch, but as a result of the foxtrot, in the end appears to
+  be merged into the master branch.}
+  \label{fig:FoxtrotSteps}
 \end{figure}
 
 The effect of this can have different repercussions depending on the
