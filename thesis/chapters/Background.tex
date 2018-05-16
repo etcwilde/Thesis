@@ -103,31 +103,31 @@ If there is a merge conflict, or the user has specified that the merge
 should not fast-forward, a merge commit is created, as shown in
 Figure~\ref{fig:merge_node_merge}.
 
-\evantodo{Talk to Daniel about this example}
-
 \begin{figure}[htpb]
   \centering
+
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=0.85\textwidth]{Figures/background/repos/base_repo.png}
-    \caption{Example of a basic repository where the local master branch
-      is two commits ahead of the origin master branch.}
+    \includegraphics[width=0.85\textwidth]{Figures/background/fastforward/fastforward_2.png}
+    \caption{The repository contains two commits that are part of the
+      master branch, with one commit that is part of a separate branch
+      waiting to be merged.}
   \end{subfigure}
 
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{Figures/background/repos/fast_forward.png}
-    \caption{The fast-forward merge moves the origin branch pointer to
-      the current master}
+    \includegraphics[width=0.85\textwidth]{Figures/background/fastforward/fastforward_3.png}
+    \caption{A fast-forward merge does not create a merge commit,
+      and instead moves the branch pointer forward to the branch pointer.}
     \label{fig:fast_forwarded_merge}
   \end{subfigure}
 
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{Figures/background/repos/merge_commit.png}
-    \caption{A merge node is created when the merge cannot be made
+    \includegraphics[width=0.85\textwidth]{Figures/background/fastforward/fastforward_4.png}
+    \caption{A merge commit is created when the merge cannot be made
       cleanly, or \textit{--no-ff} is passed to the merge command.}
     \label{fig:merge_node_merge}
   \end{subfigure}
-  \caption{The distinction between fast forward and non fast forwarding
-  merges is shown}
+  \caption{A depiction of the distinction between fast-forward merges
+    and non fast-forward merges}
   \label{fig:merge_styles}
 \end{figure}
 
