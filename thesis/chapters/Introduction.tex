@@ -15,7 +15,7 @@ this information to help users understand the evolution of the software
 system, who is making changes, and which files are being changed the
 most.
 A version control system can be used in any context where file history
-is desires, it is usually used in the software development process.
+is needed, it is usually used in the software development process.
 
 Git is the \define{version control system}{VCS} designed for and used by
 the Linux kernel project.
@@ -58,35 +58,34 @@ software in order to apply the necessary fixes to older versions of the
 software to keep them secure and performing correctly. This requires
 understanding how a commit is integrated into the repository, and other
 commits that are merged with that commit. In large, active, software
-repositories this task is not trivial. The graph can be large and
+repositories this task is not trivial.
+The graph can be large and
 complicated, making these visualizations difficult to understand.
-
-This \paper{} makes four contributions. First, a new tree-based model,
-called the \mt{}, is constructed from the underlying graph of the
-repository.
-Compared to the graph, trees are relatively easy to
-visualize, and there are many visualization metaphors that take
-advantage of different properties of trees.
-The \mt{} abstracts the repository commit graph into a set of trees,
-each rooted at a merge into the master branch of the repository.
-The leaves of the tree are the commits, and the inner nodes of the tree
-represent the merges leading to the integration of the commits.
-Second, this \paper{} proposes several visualizations that take advantage
-of the \mt{} model.
-Third, an implementation of the visualizations in a tool called \tool{}.
-Finally, an evaluation of the tool to determine it's usability.
-This \paper{} specifically studies the Linux repository.
-The Linux repository is large and complex, with more than 1000
-active contributors.
-
-The central goal of this \paper{} is to improve visualizations of
-git repositories in a way that provides meaningful insight into how
-commits are integrated into a repository.
+The difficulties in understanding how commits are integrated into the
+Linux kernel repository drives the overarching question behind this
+\paper{}.
 
 \begin{textbox}
-  \textbf{Overarching Question:} How do we effectively visualize the
+  \textbf{Overarching Question:} How can we effectively visualize the
   graph of the Linux repository in a way that gives insight into how
   commits are integrated?
+\end{textbox}
+
+To answer the overarching question, this \paper{} makes four
+contributions.
+First, a new tree-based model, called the \mt{},
+is constructed from the underlying graph of the repository.
+Compared to the graph, trees are relatively easy to visualize, and there are many visualization metaphors that take advantage of different properties of trees.
+The \mt{} abstracts the repository commit graph into a set of trees, each rooted at a merge into the master branch of the repository.
+The leaves of the tree are the commits, and the inner nodes of the tree represent the merges leading to the integration of the commits.
+Second, this \paper{} proposes three visualizations that take advantage of the \mt{} model.
+Third, an implementation of the visualizations in a tool called \tool{}.
+Finally, an evaluation of the tool to determine its usability.
+
+\begin{textbox}
+  \textbf{Thesis:} Visualizations of the \mt{} are an effective means of
+  visualizing the graph of the Linux repository in a way that gives
+  insight into how commits are integrated.
 \end{textbox}
 
 \section{Thesis Organization}\label{sec:thesis_organization}
@@ -98,7 +97,7 @@ motivation for this work and the structure of git repositories.
 Chapter~\ref{chap:model} introduces the \mt{} model.
 This chapter includes a description of the model, an algorithm to
 convert from the DAG to a set of \mt{s}, and an evaluation of the
-resulting trees.
+resulting trees built from the Linux repository graph.
 At the end of the chapter is a summary of the information found in the
 Linux repository, including the number of authors contributing, the
 number of commits, and the average number of nodes per \mt{}.
@@ -106,7 +105,7 @@ number of commits, and the average number of nodes per \mt{}.
 Chapter~\ref{chap:design_and_implementation} introduces \tool{},
 providing the use-cases that were being targeted.
 This chapter also includes the features that were implemented into \tool{},
-including it's search engine, summarization tables, and tree visualizations.
+including its search engine, summarization tables, and tree visualizations.
 More details on how the tool was implemented are included in
 Chapter~\ref{chap:implementation_details}.
 
