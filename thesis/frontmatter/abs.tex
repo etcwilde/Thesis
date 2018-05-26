@@ -8,29 +8,60 @@
 \begin{flushleft}
   \textbf{ABSTRACT}
 
-  The visualization of the DAG is difficult to comprehend in large
-  software projects, specifically for the purpose of understanding how a
-  commit is integrated and what other commits are necessary for that
-  integration. Other research on repository visualization focuses on
-  other aspects of the repository, not the topology.
+  Version control systems are an asset to software development, enabling
+  developers to keep snapshots of the code as they work.
+  Stored in the version control system is the entire history of the
+  software project, rich in information about who is contributing to the
+  project, when contributions are made, and the what part of the project
+  they are being made.
+  Presented in the right way, this information can be made invaluable in
+  helping software developers further the development of the project,
+  and maintainers to understand how the changes to the current version
+  can be applied to older versions of projects.
 
-  This thesis focuses on improving the visualization of the DAG for the
-  Linux kernel repository, which is a large and highly collaborative
-  software project. The repository integrates more than 8000 commits per
-  release, contributed by more than 1000 active authors per release.
-  Using properties found in the Linux repository, a new tree-based model
-  is introduced to alleviate the issues in the DAG visualization.
+  This thesis focuses on improving visualizations of the Linux kernel
+  repository, developing new visualizations that help answer questions
+  about how commits are integrated into the project.
+  Older versions of the kernel are used in a variety of systems where it
+  is impractical to update to the current version of the kernel.
+  Some of these applications include the controllers for spacecrafts,
+  the
+  core of mobile phones, the operating system driving internet routers,
+  and as Internet-Of-Things (IOT) device firmware.
+  As vulnerabilities are discovered in the kernel, they are patched in
+  the current version.
+  To ensure that older versions are also protected against the
+  vulnerabilities, the patches applied to the current version of the
+  kernel must be applied back to the older version.
+  To do this, maintainers must be able to understand how the patch that
+  fixed the vulnerability was integrated into the kernel so that they
+  may apply it to the old version as well.
 
-  A tool is constructed using the \mt{} model as a proxy to testing the
-  capabilities of the new model. A 12-participant user study is
-  performed to evaluate how well the visualizations in the tool are able
-  to provide comprehension.
+  This thesis makes four contributions:
+  (1) a new tree-based model, the \mt{}, that abstracts the commits in the repository,
+  (2) three visualizations that use this model,
+  (3) a tool called \tool{} that uses these visualizations,
+  (4) a user study
+  that evaluates whether the tool is effective in helping users answer
+  questions related to how commits are integrated about the Linux
+  repository.
 
-  The findings indiacate the visualizations of the \mt{} are able to
-  help users comprehend how commits are integrated more quickly and more
-  accurately in the context of the Linux repository. The model should
-  generalize to repositorys with a similar topology, requring that th
-  repositoy must use a branch-and-merge structure, the repository must
-  not have foxtrots, and cannot apply fast-forward merges.
+  Included in the first contribution are the new model,
+  the algorithm that constructs the trees from the repository,
+  and an evaluation of the results of the algorithm.
+  The second contribution demonstrates
+  The third contribution appli
 
+  The second contribution demonstrates how the model can be used by
+  visualizations to extract different kinds of information about how
+  commits are integrated.
+
+  The tool was able to help the participants of the study with
+  understanding how commits were integrated into the Linux kernel
+  repository.
+  Additionally, the participants were able to summarize information
+  about merges,
+  including who made the most contributions,
+  which file were altered the most,
+  more quickly and accurately than with Gitk and the command line tools.
 \end{flushleft}

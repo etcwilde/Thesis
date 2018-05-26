@@ -1,93 +1,112 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Introduction}
 
-Version control records the changes being made to the files of a
-project, enabling users to view previous versions of the files, view the
-individual changes made, and restore the files back to a previous state
-if necessary. The version control system also maintains a log of who
-made changes and when those changes were made. By storing this
-information, the version control system stores the history of the
-project. Presented in the right way, there are many opportunities to use
-this information to help users understand the architecture of the
-software system, who is making changes, and which files are being
-changed the most. While version control can be used in any context where
-file history is desirable, version control is usually used in the
-software development process.
+A version control system records the changes being made to the files of
+a project,
+enabling users to view previous versions of the files,
+view the individual changes made,
+and restore the files back to a previous state if necessary.
+The version control system also maintains a log of who made changes and
+when those changes were made.
+By storing this information, the version control system stores the
+history of the project.
+Presented in the right way, there are many opportunities to use
+this information to help users understand the evolution of the software
+system, who is making changes, and which files are being changed the
+most.
+A version control system can be used in any context where file history
+is desires, it is usually used in the software development process.
 
 Git is the \define{version control system}{VCS} designed for and used by
-the Linux kernel project. In order to handle the number of people
-contributing to the kernel from different countries, git was designed to
-be distributed. Unlike in centralized repositories, where users must
+the Linux kernel project.
+In order to handle the number of people
+contributing to the kernel from different locations, git was designed to
+be distributed.
+Unlike in centralized version control systems, where users must
 re-synchronize with the server, a distributed version control system
 provides each user with a full first-class repository. This allows the
 user to have additional flexibility, and means that a user has to
-synchronize less often. Furthermore, each user has a copy of the entire
-repository, which means that they have access to all of the branches and
-commits in the repository. This gives users the ability to change the
-structure of the repository and make changes that would not work in a
-centralized repository. To make it more useful to the Linux project, git
-was designed to allow easy branching. Branches allow users to work on a
-logically separate part of the repository, then the changes into the
-repository once the feature is finished or the bug is fixed. This lets
-users work for longer without needing to synchronize with the rest of
-the project as often. To support these requirements, git uses a directed
-acyclic graph to represent the repository. The nodes of the graph
-represent the commits, containing the actual changes being made, along
-with metadata about who is making the changes, when the changes were
-made, and the parent nodes of the commit.
+synchronize less often.
+Furthermore, each user has a copy of the entire
+repository, which means that they have access to the history of the
+repository, including all branches and commits that were part of the
+original repository.
+Users are able to combine and re-order commits before making the changes
+publicly available, which alleviates issues with synchronization between
+developers.
+To make it more useful to the Linux project,
+git was designed to allow easy branching.
+Branches allow users to work on a logically separate part of the
+repository, then merge the changes into the repository once the feature
+is finished or the bug is fixed.
+This lets git users work independently on a feature, taking full
+advantage of version control, without needing to worry about
+synchronization until the feature is ready to be integrated.
+To support these features, git uses a directed acyclic graph to
+represent the structure of the commits in the repository.
+The nodes of the graph represent the commits, containing the changes
+being made and metadata about when and who made the changes.
+The edges of the graph represent the parent relationship between
+commits.
 
-Visualizations of the graph are used to answer questions about the
+Visualizations of this graph are used to answer questions about the
 development of the software including what changes are being made into
 various branches, how the changes to the code are grouped, and who is
-working with whom, among others. Maintainers use the visualizations to
+working with whom, among others. Maintainers use these visualizations to
 understand what changes are being made to the current version of the
 software in order to apply the necessary fixes to older versions of the
 software to keep them secure and performing correctly. This requires
 understanding how a commit is integrated into the repository, and other
 commits that are merged with that commit. In large, active, software
 repositories this task is not trivial. The graph can be large and
-complicated, making the visualizations difficult to understand.
+complicated, making these visualizations difficult to understand.
 
 This \paper{} makes four contributions. First, a new tree-based model,
-called the \mt{}, constructed from the underlying graph of the
-repository. Compared to the graph, trees are relatively easy to
+called the \mt{}, is constructed from the underlying graph of the
+repository.
+Compared to the graph, trees are relatively easy to
 visualize, and there are many visualization metaphors that take
-advantage of different properties of the trees. There are visualizations
-designed for both short wide trees, as in the case of file systems, and
-tall narrow trees. Furthermore, trees have fewer edges and relatively
-strict properties, meaning that the visualizations are simpler. Second,
-visualizations that take advantage of the \mt{} model. Third, an
-implementation of the visualizations in a tool, called \tool{}. Finally,
-an evaluation of the tool to determine whether visualizing the
-repository using the model is useful. This \paper{} specifically studies
-the Linux repository. The Linux repository is large and complex, with
-more than 1000 contributors making changes every release. Details about
-the repository are provides in Section~\ref{sec:linux}.
+advantage of different properties of trees.
+The \mt{} abstracts the repository commit graph into a set of trees,
+each rooted at a merge into the master branch of the repository.
+The leaves of the tree are the commits, and the inner nodes of the tree
+represent the merges leading to the integration of the commits.
+Second, this \paper{} proposes several visualizations that take advantage
+of the \mt{} model.
+Third, an implementation of the visualizations in a tool called \tool{}.
+Finally, an evaluation of the tool to determine it's usability.
+This \paper{} specifically studies the Linux repository.
+The Linux repository is large and complex, with more than 1000
+active contributors.
 
-The central thesis of the paper is finding a means of visualizing a
-repository that is as large and complex as the Linux repository in a
-meaningful way that gives insight into how commits are integrated.
+The central goal of this \paper{} is to improve visualizations of
+git repositories in a way that provides meaningful insight into how
+commits are integrated into a repository.
 
 \begin{textbox}
-  \textbf{Thesis:} How do we effectively visualize the graph of the
-  Linux repository in a way that gives insight into how commits are
-  integrated?
+  \textbf{Overarching Question:} How do we effectively visualize the
+  graph of the Linux repository in a way that gives insight into how
+  commits are integrated?
 \end{textbox}
 
 \section{Thesis Organization}\label{sec:thesis_organization}
 
-This \paper{} is organized as follows. Chapter~\ref{chap:background}
-contains background information about the motivation, the Linux
-repository, and the structure of git.
+This \paper{} is organized as follows.
+Chapter~\ref{chap:background} contains background information about the
+motivation for this work and the structure of git repositories.
 
-Chapter~\ref{chap:model} introduces the \mt{} model. This chapter
-includes a description of the model, an algorithm to convert from the
-DAG to the \mt{}, and an evaluation of the resulting trees.
+Chapter~\ref{chap:model} introduces the \mt{} model.
+This chapter includes a description of the model, an algorithm to
+convert from the DAG to a set of \mt{s}, and an evaluation of the
+resulting trees.
+At the end of the chapter is a summary of the information found in the
+Linux repository, including the number of authors contributing, the
+number of commits, and the average number of nodes per \mt{}.
 
 Chapter~\ref{chap:design_and_implementation} introduces \tool{},
-providing the use-cases that were being targeted. This chapter also
-includes the features that were implemented into \tool{}, including the
-search engine, the summarization tables, and the tree visualizations.
+providing the use-cases that were being targeted.
+This chapter also includes the features that were implemented into \tool{},
+including it's search engine, summarization tables, and tree visualizations.
 More details on how the tool was implemented are included in
 Chapter~\ref{chap:implementation_details}.
 
@@ -106,4 +125,4 @@ from the study. The chapter concludes with the limitations of the work
 and the future work.
 
 Chapter~\ref{chap:conclusion} concludes that paper, reiterating the
-problem and how it was solved.
+problem addressed by this \paper{} and how it was solved.

@@ -1,19 +1,20 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Background and Related Work}\label{chap:background}
 
-A version control system tracks files, and how that information changes over time.
+A version control system tracks files, and how they are changed over
+time.
 While it can be used for storing any digital information,
 version control is usually used in the context of software development;
-it is used for storing and managing the information about
-the project, the source code, and the binary assets.
-Version control has two primary purposes,
-first as a means of storing information,
-and second as a means of retrieving historical versions of that information.
-In addition to fulfilling the two primary purposes, modern version
-control maintains a log of who is making the changes and when the
+it is used for storing and managing the files of the project, including
+the project's source code and binary assets.
+Version control has two primary purposes: first as a means of storing
+files, and second as a means of retrieving historical versions of those
+files.
+In addition to fulfilling the two primary purposes, a version control
+system maintains a log of who is making the changes and when the
 changes were made.
 
-Early version control systems, such as revision control system (RCS),
+Early version control systems, such as Revision Control System (RCS),
 were designed for local development and provided no means of collaboration.
 As software projects grew, the model quickly became outdated,
 being replaced with a centralized server model.
@@ -30,14 +31,14 @@ re-synchronization with the central server.
 To work with the repository,
 the developer must always have access to the central server.
 To maintain the atomic properties of committing, the server will
-momentarily lock the repository to ensure that no changes happen while a
-commit is being processed or a conflict resolved.
+momentarily lock the repository to ensure that no other changes happen
+while a commit is being processed or a conflict resolved.
 
 Due to the limitations of a centralized architecture, the Linux kernel
 uses a distributed version control system. Until April of 2005, the
 kernel project used BitKeeper.
 In April 2005, the licensing became too restrictive and Linux was forced
-to change version control systems.
+to change version control systems. \evantodo{Find a reference}
 Git was written as the replacement for BitKeeper, and was designed to
 maintain a similar level of patch granularity as in BitKeeper\footnote{
   initial announcement of git on the mailing list
@@ -46,7 +47,7 @@ version of git was roughly 1300 lines of code and was written and
 self-hosting in less than two weeks\footnote{From the git mailing list
   \url{https://marc.info/?l=git&m=117254154130732}}.
 
-BitKeeper is a distributed version control system (DVCS).
+Both BitKeeper and git are distributed version control systems (DVCS).
 In distributed version control, the entire repository is mirrored on
 the developer's local computer instead of copying parts of the project.
 As a result, the local copy is much larger on disk than with a
@@ -56,8 +57,8 @@ structure of the repository without needing to re-synchronize with a
 central server.
 
 It is often desirable to have the features of version control available
-before a feature is ready to be made public, specifically in the case
-where many possible implementations may exist.
+before a feature is ready to be made available in a public-facing
+repository.
 It is also desirable that the commits into the master branch of the
 master repository leave the project in a state that will both compile
 and operate correctly.
@@ -65,11 +66,18 @@ Distributed version control makes this possible; developers can combine,
 split, and edit commits locally before pushing their changes into the
 central repository.
 
-When the developer makes a copy of a non-local repository, this is
-called cloning.
-The non-local repository is known as the origin repository.
-When changes are made to the origin repository, the local clone must
-resynchronize with origin in order to for those changes to be propagated.
+Cloning is when a developer copies a repository.
+The source repository is recorded as a remote repository.
+It is possible for repositories to have many remotes.
+The process of updating a remote repository with the changes made in the
+local repository is known as pushing.
+By default, the remote repository that was cloned will be given the
+label \textit{origin}, which is the repository where git will push to
+and pull from, unless another remote is specified.
+
+After changes are made to a remote, the local repository must
+resynchronize with the remote in order for those changes to be
+propagated.
 This resynchronization can be done in one of two ways.
 The normal way of resynchronizing is through the \textit{pull} command,
 which fetches the changes in the origin repository, then merges the
@@ -80,7 +88,8 @@ manually issuing the fetch command and then manually merging or rebasing
 branches.
 Rebasing is the process of moving one or more commits from one ancestor
 to another.
-The process of updating the origin repository with the changes made in
+
+The process of updating a remote repository with the changes made in
 the local repository is known as pushing.
 If there are no merge conflicts, the merge can perform a fast-forward
 merge, shown in Figure~\ref{fig:fast_forwarded_merge},
@@ -96,31 +105,32 @@ Figure~\ref{fig:merge_node_merge}.
 
 \begin{figure}[htpb]
   \centering
+
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=0.85\textwidth]{Figures/background/repos/base_repo.png}
-    \caption{Example of a basic repository where the local master branch
-      is two commits ahead of the origin master branch.}
+    \includegraphics[width=0.85\textwidth]{Figures/background/fastforward/fastforward_2.png}
+    \caption{The repository contains two commits that are part of the
+      master branch, with one commit that is part of a separate branch
+      waiting to be merged.}
   \end{subfigure}
 
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{Figures/background/repos/fast_forward.png}
-    \caption{The fast-forward merge moves the origin branch pointer to
-      the current master}
+    \includegraphics[width=0.85\textwidth]{Figures/background/fastforward/fastforward_3.png}
+    \caption{A fast-forward merge does not create a merge commit,
+      and instead moves the branch pointer forward to the branch pointer.}
     \label{fig:fast_forwarded_merge}
   \end{subfigure}
 
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{Figures/background/repos/merge_commit.png}
-    \caption{A merge node is created when the merge cannot be made
+    \includegraphics[width=0.85\textwidth]{Figures/background/fastforward/fastforward_4.png}
+    \caption{A merge commit is created when the merge cannot be made
       cleanly, or \textit{--no-ff} is passed to the merge command.}
     \label{fig:merge_node_merge}
   \end{subfigure}
-  \caption{The distinction between fast forward and non fast forwarding
-  merges is shown}
+  \caption{A depiction of the distinction between fast-forward merges
+    and non fast-forward merges}
   \label{fig:merge_styles}
 \end{figure}
 
-Git is an implementation of a distributed version control system.
 Distributed version control gives developers more flexibility with their
 local repository and requires the developer to synchronize their local
 copy of the repository with the public master repository less often
@@ -134,14 +144,44 @@ Unlike with the centralized version control though,
 there is no requirement for the developer to ever push their changes
 back to the public repository;
 the local repository is completely standalone.
-Because the local repository is separate, the developer has more
-flexibility to alter the structure of the repository before pushing
-the results back into the master repository.
+Developers can make changes that would otherwise break the workflow of
+other developers because they have a standalone repository.
+These changes include rebasing branches, re-ordering commits,
+splitting commits, and squashing commits into one.
+Once the developer is happy with their set of commits, they may push
+them to the remote repositories.
 
-With the additional flexibility, the structure of large and active
-repositories is more complex than the repositories that are in
-centralized version control. This poses a problem for a maintainer who
-must understand how a commit is integrated into the master branch of a
+Git needs to be designed to handle multiple repositories, with many
+developers working simultaneously.
+It also needs to be able to support the ability to move commits between
+branches, re-order commits, combine multiple commits into a single
+commit, and split a commit into multiple commits.
+
+To support these requirements, Linus chose to use a directed acyclic
+graph to represent the commits and the relationships between commits.
+The graph imposes relatively few constraints on what a developer can do.
+The only requirement is that there is not a cycle in the commits, that
+is, a change that at some point depends on itself.
+For example, SVN always has a well-defined trunk, the SVN equivalent of
+a master branch, whereas git does not require the existence of a master
+branch.
+The graph structure also supports relatively cheap braching compared to
+other version control systems, which makes it possible for developers to
+create more branches without having to worry about consuming excessive
+resources.
+With fewer constraints on the structure of the commit graph in git,
+tools are unable to make as many assumtions when abstracting the graph.
+Many tools avoid this by not abstracting the graph and visualizing other
+properties of the repository, such as the file structure.
+Tools that do visualize the graph do only minimal abstraction, creating
+a visualization of the graph itself.
+
+The graph of large and active repositories is very complicated.
+It is very difficult to understand the relationship between commits, and
+how the commits are integrated into the project from a visualization of
+the graph.
+This poses a problem for a maintainer who must understand how a
+commit is integrated into the master branch of a
 project and the other commits that are integrated with that commit.
 Maintainers must sift through thousands of commits to determine which
 changes being made to the current version of the software pertain to
@@ -163,25 +203,30 @@ about the Linux kernel repository.
 
 A Version Control System (VCS) tracks the development of a software project,
 recording each change as it happens. By tracking the changes, the VCS
-contains an entire story of the software, rich with information about
-who the authors are, what files are being modified, what where changes
-are being made. This makes the VCS vital in providing information about
+contains the entire history of the software, rich with information about
+who the authors are, what files are being modified, and the changes
+being made.
+This makes the VCS vital in providing information about
 how a software project is being developed and how the software is
 structured. In order to use the information stored in the VCS, users
 must be able to gain a clear understanding and summarization of the
 changes being made, and how they interact with the rest of the source
 code. While there has been extensive research on visualizing software
 repositories, previous work does not focus on how commits and merges are
-structures in the repository graph, and in extension, how commits are
-integrated into a repository. The literature on repository visualization
+structured in the repository graph, and in extension, how commits are
+integrated into a repository.
+
+The literature on repository visualization
 and summarization can be broken down into three academic subcategories:
 communication\cite{Cubranic2005,Begel2010}, aspect-oriented
 visualization\cite{Ambros2005,Burch2005,Ambros2009}, and organic
-visualizations\cite{ogawa09,Caudwell2010}. A fourth industrial category
-exists, including tools like GitKraken and SourceTree. The goal of the
-industrial tools is not to extract or synthesize new information from
-the repository, but to act as a user-friendly client on top of what git
-already provides.
+visualizations\cite{ogawa09,Caudwell2010}.\evan{I don't know what you
+  mean by "be consistent" here, I don't see the inconsistency.}
+A fourth industrial category exists, including tools like GitKraken and
+SourceTree.
+The goal of the industrial tools is not to extract or synthesize new
+information from the repository, but to act as a user-friendly client
+on top of what git already provides.
 
 Many tools focus on addressing the issue of communication between
 developers in inter-team collaborative work. Hipikat\cite{Cubranic2005}
@@ -190,14 +235,14 @@ with the integration of new developers into a project though
 communication, providing the new developer with searchable artifacts of
 the changes being made, and where to find them. The artifacts may
 include files or bug information, shown in Figure~\ref{fig:hipikat}.
-Codebook\cite{Begel2010} also focused on communication, but where
+Codebook\cite{Begel2010} also focused on communication, but while
 Hipikat focused on assisting new developers find artifacts, Codebook
 assists developers with finding who was responsible for creating the
 artifact. Codebook used a data-mining technique to determine the
 developer of a piece of code, the program manager who wrote the
 specification for the code, and the program managers and developers on
 the team who were working together. A screenshot of Hoozizat, an
-implementation of codebook, is shown in Figure~\ref{fig:codebook}.
+implementation of Codebook, is shown in Figure~\ref{fig:codebook}.
 Hoozizat and Hipikat use the version control as the archive of artifacts
 that are being queried. Neither tool is designed with the goal of
 providing information on the topological structure of a source code
@@ -223,7 +268,7 @@ system.
 \end{figure}
 
 Most visualization systems provide information about a certain aspect of
-the contents in the repository. The goal being Fractal
+the contents in the repository. The goal of Fractal
 Figures\cite{Ambros2005} is to show the division of work between
 contributors. The project is represented as a square. The square is then
 subdivided based on the proportion that a given contributor contributed
@@ -239,14 +284,17 @@ the projects where a single contributor is doing most of the work.
 \end{figure}
 
 EPOSee\cite{Burch2005} and Evolution Radar\cite{Ambros2009} use the
-information from the version control to determine which files are edited
-together. The tools from these papers are designed to help a user
-identify the degree to which two files are coupled. Two files are
-edited and committed together frequently are said to be more tightly
-coupled. This makes it possible to determine when two classes are
-semantically related. The evolution radar shown in
-Figure~\ref{fig:evolution_radar} places points on a circle based on the
-name and coupled they are. The files are arranged around the circle
+information from the version control system to determine which files
+are edited together.
+These tools  are designed to help a user identify the degree to which
+two files are coupled.
+Two files are edited and committed together frequently are said to be
+more tightly coupled.
+This makes it possible to determine when two classes are semantically
+related.
+The evolution radar shown in Figure~\ref{fig:evolution_radar} places
+points on a circle based on the name and coupled they are.
+The files are arranged around the circle
 based on the file name, including the full file path. This has the
 effect of grouping files that are from the same directory. The distance
 from the center of the circle is dependent on how tightly coupled the
@@ -263,37 +311,51 @@ positioned more closely to the center of the circle.
 Hoozizat, Hipikat, Fractal Figures, EPOSee, and Evolution Radar all
 extract data from CVS repositories. Our goal is to provide information
 about git repositories. Fewer tools are available for generating
-visualizations and summaries of git repositories, potentially due to the
-DAG model used as the internal structure of git repositories.
+visualizations and summaries of git repositories.
 
 Organic visualizations show patterns in cooperation and communication
-that arise within a software project organically. Heller et
-al.\cite{Heller2011} plots communication on a map. This visualization
-shows communication and cooperation patterns that arise, and how they
-cross country boundaries, within a software project. The visualizations
-proposed in Gource\cite{Caudwell2010}, shown in
+that arise within a software project organically\evan{One definition of
+  Organically: When something happens naturally without planing and is not forced.}.
+Heller et al.\cite{Heller2011} plots communication on a map.
+This visualization show patterns in communication as the arise, and how
+these communication channels operate internationally within a software
+project, depicted in Figure~\ref{fig:heller_map}.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/background/heller_map.png}
+  \caption{A screenshot of the communication mapping tool by Heller et
+    al.\cite{Heller2011}}
+  \label{fig:heller_map}
+\end{figure}
+
+The visualizations proposed in Gource\cite{Caudwell2010}, shown in
 Figure~\ref{fig:gource_view}, shows which files contributors are working
-on. Using this, it is possible to draw conclusion about which parts of a
+on.
+Using this, it is possible to draw conclusions about which parts of a
 project a given contributor is working on and the group of contributors
 working on a given area. Gource uses a graph metaphor structure to
 represent the file structure of a repository. Files in the same
 directory cluster together to form a node. Edges between the directory
 clusters represent which directory contains another, although there is
-no way to determine the direction of the relationship. User avatars move
-around the graph emitting different beams of colored light depending on
-the change being made to the file. Greed indicates the creation of a new
+no way to determine the direction of the relationship.
+User avatars move around the graph emitting different beams of colored
+light depending on the change being made to the file.
+Green indicates the creation of a new
 file, yellow indicates a modification, and red indicates the deletion of
 a file. The visualization is animated to show how a project grows over
 time. Codeswarm\cite{ogawa09}, shown in Figure~\ref{fig:codeswarm}, is
-similar to Gource, using an organic timelapse approach to visualizing
-the events in the repository. Unlike Gource, which constructs a graph
-from the directory structure of project, Codeswarm does not have a graph
-structure; developers are the center of the visualizations. When a
-developer makes a change to a file, the file lights up and flies toward
-the developer. As a developer makes more changes, the files that the
-developer is modifying will form a ring around the developer. If
-multiple developers are modifying a file, the developer nodes are drawn
-together.
+similar to Gource, using a timelapse approach to visualizing the events
+in the repository.
+Unlike Gource, which constructs a graph from the directory structure
+of project, Codeswarm does not have a graph structure;
+developers are the center of the visualizations.
+When a developer makes a change to a file, the file lights up and
+flies toward the developer.
+As a developer makes more changes, the files that the developer is
+modifying will form a ring around the developer.
+If multiple developers are modifying a file, the developer nodes
+are drawn together.
 
 \begin{figure}[htpb]
   \centering
@@ -311,22 +373,23 @@ together.
 \end{figure}
 
 There are many non-academic tools that are designed as an interface to
-git. While not all of these programs provide visualizations, those that
-do use a visual metaphor of the DAG to show topological information
-about the commits in the repository. While they ultimately show the same
-information, the topology of the repository, the organization of that
-information is different.
+git.
+While not all of these programs provide visualizations, those that
+do use a visual metaphor of the DAG to show topological relationship
+between commits.
+While they ultimately show the same information, the topology of the
+repository, the organization of that information is different.
 
 GitKraken, shown in Figure~\ref{fig:gitkraken_main},  is a popular
 commercially written git interface that aims to be efficient, elegant,
-and reliable, according to it's official website. On visual inspection,
-it appears to satisfy these goals. Overall, the interface is clean, most
-actions that are possible with the git command line are available in the
-graphical interface. Overall, the tool is effective and garners online
-approval from users. The graph itself, shown in the center of the main
-view provides users with the same information as the graph visualization
-in gitk and the git command line, though it may be visually more
-appealing.
+and reliable, according to it's official website.
+On visual inspection, it appears to satisfy these goals.
+Overall, the interface is clean and most actions that are possible with
+the git command line are available in the graphical interface.
+The tool is effective and garners online approval from users.
+The graph of the commits is shown in the center of the main view and
+provides users with the same information as the graph visualization in
+gitk and the git command line, though it may be visually more appealing.
 
 \begin{figure}[htpb]
   \centering
@@ -337,14 +400,15 @@ appealing.
 
 In January of 2018, the Gnome project released a replacement for Gitk.
 Gitg, shown in Figure~\ref{fig:gitg_screenshot}, is the git GUI client
-for the Gnome environment. The visualization is relatively clean, and it
-is able to produce a visualization of the Linux repository quickly.
-Unlike Gitk, there is no way to navigate to a commit directly using the
-commit hash, but the search feature is able to search the repository
-quickly without issue. A major drawback in Gitg is that, like in Gitk,
-long branches are cut with arrows, but unlike in Gitk, the arrows do not
-hyperlink to the other side of the branch. There is no apparent way to
-find the other side of the branch without manually looking for it.
+for the Gnome environment.
+The visualization is relatively clean, and it is able to produce a
+visualization of the Linux repository quickly.
+Like in Gitk, Gitg uses arrows to indicate that a branch has been cut.
+Unlike in Gitk, the arrows do not hyperlink which makes it difficult to
+find the parents of a commit.
+There is no apparent way to find the other side of the branch,
+as the interface does not provide information about the parents or
+children of the commit.
 
 \begin{figure}[htpb]
   \centering
@@ -353,7 +417,8 @@ find the other side of the branch without manually looking for it.
   \label{fig:gitg_screenshot}
 \end{figure}
 
-
+Giteye and most of the other visualizations are relatively
+conventional, simply cleaning up the interface of Gitk.
 GitLab and GitHub are both online repository hosts, with
 visualization and summarization provided as well. While the GitLab
 visualization does not appear to provide any additional information, the
@@ -361,9 +426,9 @@ visualization provided by GitHub takes advantage of additional internal
 knowledge to display information about forks. Through this
 visualization, GitHub displays the branch history of the repository
 network, including the branches of the main repository and forks from
-that. Giteye and most of the other visualizations are relatively
-conventional, simply cleaning up the interface of Gitk, the visualizer
-that is shipped with git. With the exception of Gitk, no GUI visualizers
+that.
+
+With the exception of Gitk and Gitg, no GUI visualizers
 are able to produce a visualization for the Linux repository, due to its
 size: the GitHub visualizer displays an error message, stating that
 there are too may forks to display; the GitKraken interface will freeze
@@ -398,33 +463,40 @@ repository.
 \label{sec:git}
 
 % Commits;
-Commits are the most basic unit of change in the git repository.
-Commits are how the changes and metadata are stored.
-Commits in git are immutable; a commit cannot be changed once created.
-Instead, modifying a commit will result
-in a new commit with a different commit hash.
-Because the commits that follow have references to the updated commit,
-those commits are copied and receive a new commit hash as well.
-Commits store the commit hash, commit date,
-committer, author, and authorship date, the patch, and an ordered list
-of parents. The metadata is shown in Figure~\ref{fig:commit_metadata}
-for a commit and merge within the repository for this \paper{}.
+Commits are the core of git repositories, storing the patch
+representing the changes being made to the files in the repository, and
+metadata about when the change was made, and who made the change.
+In the metadata, commits store an author, an authordate, a committer,
+and a commit date, and an ordered parent list of the commit hashes.
+The author is the person who first created the patch and issued the
+commit command.
+The author date is when the commit was first created.
+The committer and commit date contain the person who most recently
+updated the commit, and when that update was made.
+This metadata is exemplified in Figure~\ref{fig:commit_metadata} for a
+commit and merge.
 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\linewidth]{Figures/background/commit_metadata.png}
-  \caption{Screenshot of commit metadate for a commit and merge in the
-    repository for this \paper{}.}
+  \caption{Screenshot of commit metadata for a commit and merge in the
+    repository of this \paper{}.}
   \label{fig:commit_metadata}
 \end{figure}
 
-Git allows commits to be made on the behalf of another person, either
-via email, or simply because the author of the commit doesn't have the
-ability to write to the repository.
-When someone else makes the commit, the committer and author will not
-match. The patch contains the changes being made, including the
+Commits are immutable; a commit cannot be modified once created.
+When an update is made, new commit is created, the original metadata is
+copied to the new commit, the relevant changes are made, the comitter
+and commit date are updated, and the original commit is deleted.
+If other commits the modified commit as one of their parents, they
+are updated in the same manner to reflect the changes made .
+This happens recursively until all descendants of the original commit
+have been updated to reflect the new commit hash.
+
+The patch contains the changes being made, including the
 filenames, the line numbers, and the actual change, as shown in
-Figure~\ref{fig:commit_patch}.
+Figure~\ref{fig:commit_patch}
+
 Rebasing will also change the committer and commit date.
 
 \begin{figure}[htpb]
@@ -442,23 +514,18 @@ branches are being merged into.
 The remaining commits are the branches being merged, in the order that
 they are specified in the merge.
 A non-merging commit will only have one parent.
+
 To clarify the difference, non-merging commits are referred to as
-commits, merging commits as merges.
-In the scope of this thesis, repository event or event is used to refer
-to both commits and merges.
-The patch are set of changes being made to the files of the repository.
+commits and merging commits as merges.
+In the scope of this thesis the term, repository event or simply event
+is used to refer to either a commit or a merge.
 
 % Integration;
-Integration is the process by which the changes in a commit are added to
-the master repository.
-A small change with few dependencies are easier to integrate than
-changes.
-It is possible to merge these changes into the master repository
-without additional commits making changes.
-The changes are directly merged into the master repository.
-Many times, these changes are small, localized, bug fixes, or modifications to
-documentation, which can be integrated with the rest of the project
-without making changes beyond the scope of the bug or documentation.
+Integration is the process by which the changes in a commit are
+propagated to the master repository.
+A small change with few dependencies is easier to integrate than changes.
+Many times, Small changes that are localized contain bug fixes or small
+changes to documentation.
 An example of this from the Linux repository is shown in
 Figure~\ref{fig:single_commit_merge}.
 
@@ -469,67 +536,53 @@ Figure~\ref{fig:single_commit_merge}.
   \label{fig:single_commit_merge}
 \end{figure}
 
+Major changes may be broken down into smaller segments and committed
+seperately.
+The set of these commits combined represent the full implmenentation of
+the change,
+which represents a logical separatation from the rest of the code, and
+should be merged separately.
+A set of major changes may be needed to implement an entire feature.
+Each of these major changes may be merged into a feature branch before
+being integrated into the project.
 
-Adding additional functionality to a project may require additional
-support from other components of the project.
-Non-localized changes may be necessary to provide the additional
-information needed for the new function.
-Commits can be logically grouped based on the submodule that grouped
-based on what part of the project they are modifying.
-In the Linux kernel, it is customary to have commits related to
-networking in a single merge.
-This merge has sub-merges containing wireless networking, Bluetooth,
-and Ethernet, among the other implementations of networking.
-In this form, the merges act in a similar manner to subdirectories in a
-file system, where each directory contains files that work together.
+The Linux kernel repository has many examples of merge nesting like this.
+In the Linux kernel, it is customary to have commits related to a single
+subsystem in a single merge.
+The subsystem may then be broken into sub-subsystems, for which there
+are corresponding merges.
+These merges contain the changes that modify the specific sub-subsystem.
 
-Projects may also be shared between multiple organizations.
-The organizations will likely have their own internal master
-repositories that they work with before pushing the full set of
-changes upstream to the public master repository.
-In git, it is possible to merge repositories since they are treated in
-the same way as local branches.
-
-In order to integrate the changes, the commits must be merged into the
-master branch of the repository.
-Commits may be merged directly into the master branch, or may be merged
-into multiple branches before finally reaching the master branch.
-To understand how a commit is integrated, it is necessary to know which
-merges a commit passes through to reach the master branch, and which
-commits are merged with it.
+For example, in the Linux repository, there is usually a merge
+into the master branch of the repository for the changes to
+the networking subsystem for a given release.
+Within this merge, there are merges for wireless networking, Bluetooth,
+and Ethernet, among other implementations of computer networking.
+In this form, the merges act in a similar manner to directories in a
+file system, where commits are the files containing the code, and merges
+are the directories containing related files.
+In this metaphor, the goal is to identify the file path to a given file,
+and the other files that are in the same directory.
+The root directory of the file path is the equivalent metaphorical
+equivalent of the master branch.
+To understand how a commit is integrated, it is necessary to understand
+the merges that the commit was propagated through, and which commits are
+integrated with it.
+In order for a commit to be integrated, it must be propagated to the
+master branch.
 Merging commits is the process of integrating them.
-
-Merges are a type of commit; it is possible to make additional
-changes while merging.
-
-When two commits from different branches make changes to the same file,
-a conflict occurs.
-Git is unable to determine which changes are correct, so it flags them
-as a merge conflict, which stops the merging process.
-The person making the merge decides which change should be kept,
-and which should be removed.
-The resolution of merge conflicts is stored as the patch of merge
-conflicts.
-The Linux repository has no merge conflicts.
-This is attained through a different workflow.
-When a developer wants to merge their changes, they must first rebase
-their branch onto the most up-to-date commit of the repository.
-When this happens, if there are conflicts, git will require
-the developer to make the fixes.
-The main difference being that the developer fixes conflicts,
-not the person performing the merge.
-The idea behind this is that the developer likely has a better
-understanding of which change is the correct, or how to integrate both
-changes.
+The other commits that are merged with the commit are also necessary for
+the given commit to be integrated in a meaningful way.
 
 \section{Directed Acyclic Graph}
 \label{sec:directed_acyclic_graph}
 
 To allow for the flexibility needed for a distributed version control
-system, git uses a \define{directed acyclic graph}{DAG} as the central
-repository model.
+system, git uses a \define{directed acyclic graph}{DAG} to model the
+relationship between events.
 The repository events make up the nodes in the graph, and the
-child-parent relationship represents the edges.
+child-parent\evan{no, the child has a list of references to it's
+  parents, not the other way around.} relationship represents the edges.
 Commits will have a single parent, which is the repository event that
 is at the head of the current branch at the time that the commit
 is created.
@@ -544,12 +597,16 @@ Every repository will have at least one initial commit, which
 will have no parents, but it is possible for repositories to have
 multiple initial commits.
 Furthermore, it is possible for the graph of a repository to be
-disconnected; these branches are known as orphan branches.
+disconnected; disconnected branches are refered to as orphaned branches
+with respect to the rest of the graph \evan{They are with respect to
+  each other and all other branches in the repository. The documentation
+  doesn't say much on this topic}.
+
 
 The model is simple, but flexible.
 The flexibility of the model makes it more difficult to reason about,
 stricter models are easier to reason about since the model must follow
-the given rules.
+more rules.
 
 For example, many version control systems have a well-defined notion of
 the master branch.
@@ -559,8 +616,8 @@ confounded with another branch.
 The DAG model in git does not explicitly define a master branch, or even
 enforce the requirement that one exists.
 Instead, the idea of the master branch is a social construct used to
-identify which branch things should be merged into, and where the final
-product will be released from.
+identify where releasable code should be merged into, and where the
+final product will be released from.
 This relies on the discipline of the people committing code to the
 repository to maintain a well-defined master branch.
 
@@ -569,6 +626,9 @@ made to the same branch as the commit. Using this definition it is
 possible to define the set of commits in the branch as those that are
 long the first-parent path up to the first place where the first-child
 of the first-parent is not a commit of the branch.
+Using the example in Figure~\ref{fig:repoEvents2}, branch B consists of
+nodes 6, 4, and 2. Branch A consists of nodes 7, 5, 3, and 1.
+
 
 \begin{figure}[htbp]
   \centering
@@ -612,16 +672,10 @@ of the first-parent is not a commit of the branch.
 \end{figure}
 
 
-Commits that are made to a branch are on the first-parent path starting
-at the branch tag, and up to the point where the first-child of the
-first-parent is not the current node.
-Using the example in Figure~\ref{fig:repoEvents2}, branch B consists of
-nodes 6, 4, and 2. Branch A consists of nodes 7, 5, 3, and 1.
 Git has no internal safe-guards to protect branches from obfuscation.
-
 When certain conditions are met, it is possible to perform an action on
-the repository which results in commits that were in a branch being
-moved to a different branch.
+the repository which results in commits to appear as if they were
+performed as part of a different branch.
 The series of steps to swap branches is called a foxtrot\footnote{See
   \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html}
   for a full description of the issue}.
@@ -631,12 +685,13 @@ foxtrot to occur.
 The following is a short example of the series of steps in the foxtrot,
 also shown in Figure~\ref{fig:FoxtrotSteps}.
 Bob and Alice have both made local clones of a remote
+repository and are making changes to the master branch of their local
 repository.
 Bob and Alice both make local changes to the same file in the
 repository and commit those changes into the same branch.
 Alice pushes her changes to the repository first, which results in a
 fast-forward merge of the remote branch.
-Alice's commit is clearly in the set of commits in this branch.
+Alice's commit is clearly pushed to the master branch.
 Bob attempts to push, but the push fails as his repository is not in
 sync with the remote branch anymore, so Bob pulls.
 The pull merges the difference in the remote branch into the local
@@ -654,17 +709,17 @@ Prior to Bob pushing his changes to the remote repository, Alice's
 commit was at the head of the master branch.
 After Bob's push, this information is lost, and it appears that Alice's
 commit was merged into the master branch by Bob.
+This sequence of operations swaps the branches: the commits that were in
+remote's master now appear to be made to a separate branch and merged
+into the master branch, while Bob's commits appears as if they were made
+to the master branch.
 The merge commit that merges the remote master branch into Bob's master
-branch is the foxtrot merge, which is correct according to Bob's local
-repository, but is the incorrect action for the remote repository.
+branch is the foxtrot merge.
+
 
 \begin{figure}[htbp]
   \begin{tabulary}{\textwidth}{LLL}
-    Alice & Origin & Bob\\
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} \\
-
+    Alice's Repo. & Origin Repo. & Bob's Repo.\\
     \tiny{
     Alice has made a local clone of the remote repository
     \textit{Origin}.}
@@ -673,10 +728,9 @@ repository, but is the incorrect action for the remote repository.
     \tiny{Bob has made a local clone of the remote repository
     \textit{Origin}.}
     \\
-
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_1.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} \\
 
     \tiny{Alice makes some changes and commits them to her local repository.}
 
@@ -686,8 +740,8 @@ repository, but is the incorrect action for the remote repository.
     his local repository.}
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
     \tiny{Alice pushes her changes back into the master branch of the remote
@@ -696,18 +750,19 @@ repository, but is the incorrect action for the remote repository.
     Alice's master branch into the remote master branch.} &
     \tiny{Bob is not made aware of these changes yet.} \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_3.png} \\
+
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
     &
     &
     \tiny{Bob attempts to push, but this results in a merge conflict.}
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_3.png} \\
 
     &
     &
@@ -715,28 +770,33 @@ repository, but is the incorrect action for the remote repository.
     branch into Bob's master branch.}
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/remote_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
 
     &
     \tiny{Bob's changes are pushed to the remote.}
     &
     \\
-  \end{tabulary}
 
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_3.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
+
+  \end{tabulary}
   \caption{The sequence of steps that are part of the foxtrot, from the
   point of view of each repository. Alice's commit is pushed to the
-  master branch, but as a result of the foxtrot, ends up being merged
-  into the master branch.}
-\label{fig:FoxtrotSteps}
+  master branch but, as a result of the foxtrot, to
+  be merged into the master branch.}
+  \label{fig:FoxtrotSteps}
 \end{figure}
 
 The effect of this can have different repercussions depending on the
 project.
 In the best case, the repository visualizations will not give an
-accurate visualization of the repository, which may lead to confusion.
-In a more serious situation, the master branch is considered to be the
+accurate visualization of how commits were integrated into the project,
+which may lead to confusion.
+In a more serious situation, a specific branch is considered to be the
 stable branch, where only code that has been reviewed and tested is
 accepted.
 When a regression occurs, the project may need to revert back to a
@@ -745,27 +805,31 @@ This requires the ability to find and track the master branch, which may
 be confounded by a foxtrot.
 Picking the incorrect commit to revert to could lead to serious
 consequences.
-In the Linux project, the commits and merge to the master branch are the
-code that Linus has reviewed and decided to include in the kernel.
+In the Linux project, the merges to the master branch are
+the code that Linus has reviewed and accepted into the mainline kernel.
+\evan{I don't think he writes much code anymore, it looks like he mostly
+  merges things that have been reviewed.}
 
-The nodes in the DAG are immutable; once a commit or merge is created,
-it cannot be changed. Git allows operations to alter the events and
-re-order them, but this will create a new event with a new commit hash.
+As mentioned earlier, the nodes in the DAG are immutable;
+once a commit or merge is created, it cannot be changed.
+Git allows operations to alter the events and re-order them,
+but this will create a new event with a new commit hash.
 This property makes it impossible for nodes to store information about
-the children, and in extension, how the commit is being merged as this
-information is not available when the commit is created.
+their children, and in extension, how the commit is being merged, as
+this information is not available when the commit is created.
 Git provides the command \verb|git log --children|, which traverses the
 DAG and inverts the edges.
-The goal is to identify the series of merges that a commit takes to
-reach the master branch.
 The next child that is a merge is the first merge on the path to being
 integrated.
 
 The graph combined with the child information gives most of the
 information necessary for understanding how the commit is
-merged into the master branch; however, it is missing which merge is
-into the master branch, and the information is not always easy to
-understand, as shown in Figure~\ref{fig:git_graphs}.
+merged into the master branch; however, information about the specific
+merge into the master branch is still missing.
+Furthermore, the graph itself is not always easy to understand, as shown
+in Figure~\ref{fig:git_graphs}.
+This figure contrasts the levels of complexity that can be found in a
+given section of the Linux kernel repository.
 
 \begin{figure}[htpb]
   \centering
@@ -790,11 +854,13 @@ understand, as shown in Figure~\ref{fig:git_graphs}.
 
 Most repositories are simple enough that it is possible to identify how
 commits are integrated using the visualizations of the DAG that are
-available with the current tools. Difficulties arise in larger
-repositories. The master branch can be confounded with \foxtrot{}
-merges, making it difficult to identify. Sheer number of commits being
-added to various branches at a given time can make it difficult to
-understand which branch a commit is being added to.
+available with the current tools.
+Difficulties arise in larger repositories.
+The master branch can be confounded due to \foxtrot{}
+merges, making it difficult to identify merges to the master branch.
+Sheer number of commits being added to various branches at a given
+time can make it difficult to understand which branch a commit is
+being added to.
 
 \section{Linux}\label{sec:linux}
 
@@ -804,108 +870,29 @@ The repository itself is complex, contain tens of thousands of commits
 and thousands of merges per year.
 Older versions of the kernel are used in a wide
 variety of situations including various Linux desktop distributions,
-internet of things device firmware, web servers,
+IOT device firmware, web servers,
 spacecrafts\footnote{Linux is used heavily at SpaceX
   \url{https://lwn.net/Articles/540368/}}, and in mobile devices as the
-base of the Android platform. These kernels are sometimes modified forks
-of the official Linux kernel, made to be more suitable for the specific
-needs of the application. Due to these application-specific
-modifications, it is not feasible to update to the latest version of the
-kernel. While it may not be feasible to update, the changes being made
-to the official version are necessary as they fix bugs, patch security
-issues, and improve performance. Due to the sometimes critical nature of
+kernel of the Android platform.
+These kernels are sometimes modified forks of the official Linux kernel,
+made to be more suitable for the specific needs of the application.
+Due to these application-specific modifications,
+it is not feasible to update to the latest version of the
+kernel.
+While it may not be feasible to update, the changes being made to the
+official version are necessary as they fix bugs, patch security
+issues, and improve performance.
+Due to the sometimes critical nature of
 the patches being merged into the current version of the kernel, it is
 necessary for maintainers working on an application-specific fork of the
 kernel to sift through the commits coming into the official version,
 looking for changes that may impact the kernel that they are
 maintaining.
-This section presents statistics on the dataset collected from the Linux
-repository. Included is information about the number of authors,
-commits, and merges per release, as well as the range of dates from
-which the data was collected. This information is useful for
-characterizing the problem, and understanding how to best group the
-commits in a way that is useful and easy to understand.
 
-The data extracted from the repository involves all merges into the
-master branch between April 18, 2005 and August 14, 2014. This
-corresponds to the merges added to the kernel between versions 2.6.11
-and Linux 3.16.
-The commits collected from the repository include commits authored
-between September 17, 2001 and December 6, 2014.
-There are 4 commits in the dataset that are beyond this range due to
-the date being incorrectly set on that developer's machine.
-There is one incorrect date that is dated January 1, 1970, authored by
-Ursula Braun, and three commits dated after 2014.
-These commits are dated April 5, 2019, October 14 2030, and
-April 25 2037, authored by Len Brown, Yanmin Zhang, and Daniel Vetter,
-respectively.
-Commits are not necessarily merged immediately, all commits were added
-between April 15, 2005 and October 14, 2014.
-This breakdown of the kernel data focuses on the commits integrated
-into kernel versions Linux 3.1 to Linux 3.16, translating to the merges
-between July 21, 2011 and August 3, 2014.
 
-As expected, the Linux kernel is highly collaborative and is very
-active. Between 1000 and 1500 authors have contributions accepted into
-the official kernel per release (shown in
-Figure~\ref{fig:linux_authors_per_release}). These authors contribute
-between 8000 and 14000 commits per release
-(Figure~\ref{fig:linux_commits_per_release}). Between 275 and 400 merges
-integrate the commits into the master branch of the kernel per release
-(Figure~\ref{fig:linux_commits_per_release}). The Linux kernel
-repository is a prime example of a successful open source project,
-exemplifying the collaborative nature of modern software development.
-The sheer number of commits being contributed make the task of filtering
-the important or relevant commits impractical.
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=0.8\linewidth]{Figures/background/linux_authors_per_release.pdf}
-  \caption{Unique authors with contributions to each kernel version}
-  \label{fig:linux_authors_per_release}
-\end{figure}
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=0.8\linewidth, page=1]{Figures/background/linux_commits_per_release.pdf}
-  \caption{Commits per release from Linux 3.1 to Linux 3.16}
-  \label{fig:linux_commits_per_release}
-\end{figure}
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=0.8\linewidth, page=2]{Figures/background/linux_commits_per_release.pdf}
-  \caption{Merges per release from Linux 3.1 to Linux 3.16}
-  \label{fig:linux_merges_per_release}
-\end{figure}
-
-While the number of integrating merges into the master branch appears to
-be decreasing slightly per release, the number of commits per release is
-increasing.
-The average (mean) number of commits per merge per release has
-increased from slightly over 20 commits per merge into the master branch
-in Linux 3.1 up to 50 commits per merge in Linux 3.16
-(Figure~\ref{fig:linux_commits_per_merge_per_release}).
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=0.8\linewidth, page=3]{Figures/background/linux_commits_per_release.pdf}
-  \caption{Commits per merge into each release of Linux from 3.1 to 3.16}
-  \label{fig:linux_commits_per_merge_per_release}
-\end{figure}
-
-Grouping the commits by the merge that integrates int into the master
-branch and taking the median number of commits per merge shows a
-different view of the kernel repository.
-The individual merges contain
-relatively few commits, 25\% of the merges merge only a single commit,
-and 50\% of the merges merge at most 7 events
-(Figure~\ref{fig:linux_merge_distribution_per_release}).
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=0.8\linewidth]{Figures/background/linux_merge_distribution_per_release.pdf}
-  \caption{Distribution of Merge Sizes per Release Between Linux 3.1 and
-  3.16}
-  \label{fig:linux_merge_distribution_per_release}
-\end{figure}
+% This section presents statistics on the dataset collected from the Linux
+% repository. Included is information about the number of authors,
+% commits, and merges per release, as well as the range of dates from
+% which the data was collected. This information is useful for
+% characterizing the problem, and understanding how to best group the
+% commits in a way that is useful and easy to understand.
