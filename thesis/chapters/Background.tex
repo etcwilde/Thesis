@@ -151,17 +151,17 @@ splitting commits, and squashing commits into one.
 Once the developer is happy with their set of commits, they may push
 them to the remote repositories.
 
-Git needs to be designed to handle multiple repositories, with many
+Git is designed to handle multiple repositories, with many
 developers working simultaneously.
-It also needs to be able to support the ability to move commits between
+It is also be able to support the ability to move commits between
 branches, re-order commits, combine multiple commits into a single
 commit, and split a commit into multiple commits.
 
 To support these requirements, Linus chose to use a directed acyclic
 graph to represent the commits and the relationships between commits.
 The graph imposes relatively few constraints on what a developer can do.
-The only requirement is that there is not a cycle in the commits, that
-is, a change that at some point depends on itself.
+The only requirement is that there is not a cycle in the graph of the commits,
+that is, a change cannot depend on itself.
 For example, SVN always has a well-defined trunk, the SVN equivalent of
 a master branch, whereas git does not require the existence of a master
 branch.
@@ -485,11 +485,12 @@ commit and merge.
 \end{figure}
 
 Commits are immutable; a commit cannot be modified once created.
-When an update is made, new commit is created, the original metadata is
-copied to the new commit, the relevant changes are made, the comitter
+When a commit needs to be updated, a new commit is created,
+the original metadata is copied to the new commit,
+the relevant changes are made, the comitter
 and commit date are updated, and the original commit is deleted.
-If other commits the modified commit as one of their parents, they
-are updated in the same manner to reflect the changes made .
+If other commits have the original commit as one of their parents, they
+are updated in the same manner to reflect the new parent.
 This happens recursively until all descendants of the original commit
 have been updated to reflect the new commit hash.
 
@@ -523,8 +524,8 @@ is used to refer to either a commit or a merge.
 % Integration;
 Integration is the process by which the changes in a commit are
 propagated to the master repository.
-A small change with few dependencies is easier to integrate than changes.
-Many times, Small changes that are localized contain bug fixes or small
+A small change with few dependencies is easier to integrate than large changes.
+Many times, small changes that are localized contain bug fixes or small
 changes to documentation.
 An example of this from the Linux repository is shown in
 Figure~\ref{fig:single_commit_merge}.
@@ -536,14 +537,14 @@ Figure~\ref{fig:single_commit_merge}.
   \label{fig:single_commit_merge}
 \end{figure}
 
-Major changes may be broken down into smaller segments and committed
-seperately.
-The set of these commits combined represent the full implmenentation of
+Large changes may be broken down into smaller changes and committed
+separately.
+The set of these commits combined represent the full implementation of
 the change,
-which represents a logical separatation from the rest of the code, and
+which represents a logical separation from the rest of the code, and
 should be merged separately.
-A set of major changes may be needed to implement an entire feature.
-Each of these major changes may be merged into a feature branch before
+A large set of changes may be necessary to implement an entire feature.
+Each of these large changes may be merged into a feature branch before
 being integrated into the project.
 
 The Linux kernel repository has many examples of merge nesting like this.
@@ -720,6 +721,16 @@ branch is the foxtrot merge.
 \begin{figure}[htbp]
   \begin{tabulary}{\textwidth}{LLL}
     Alice's Repo. & Origin Repo. & Bob's Repo.\\
+
+    &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
+    \\
+    & \tiny{The original repository} & \\
+
+        \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} \\
+
     \tiny{
     Alice has made a local clone of the remote repository
     \textit{Origin}.}
@@ -728,20 +739,25 @@ branch is the foxtrot merge.
     \tiny{Bob has made a local clone of the remote repository
     \textit{Origin}.}
     \\
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} &
+
+
+
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_1.png} \\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
     \tiny{Alice makes some changes and commits them to her local repository.}
-
     &
     &
     \tiny{Bob makes some changes to the same file as Alice and commits them in
     his local repository.}
     \\
 
+
+
+
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
     \tiny{Alice pushes her changes back into the master branch of the remote
@@ -751,9 +767,10 @@ branch is the foxtrot merge.
     \tiny{Bob is not made aware of these changes yet.} \\
 
 
+
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_3.png} \\
 
     &
     &
@@ -762,7 +779,7 @@ branch is the foxtrot merge.
 
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_3.png} \\
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
 
     &
     &
@@ -771,7 +788,7 @@ branch is the foxtrot merge.
     \\
 
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_3.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
 
     &
@@ -779,15 +796,12 @@ branch is the foxtrot merge.
     &
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_3.png} &
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
-
   \end{tabulary}
   \caption{The sequence of steps that are part of the foxtrot, from the
-  point of view of each repository. Alice's commit is pushed to the
-  master branch but, as a result of the foxtrot, to
-  be merged into the master branch.}
+  point of view of each repository. Alice's commit (2) is pushed to the
+  master branch but, as a result of the push by Bob, the master branch
+  has been swapped with Bob's branch. This type of merge (4) is called a
+  foxtrot.}
   \label{fig:FoxtrotSteps}
 \end{figure}
 
