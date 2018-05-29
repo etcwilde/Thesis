@@ -38,7 +38,8 @@ Due to the limitations of a centralized architecture, the Linux kernel
 uses a distributed version control system. Until April of 2005, the
 kernel project used BitKeeper.
 In April 2005, the licensing became too restrictive and Linux was forced
-to change version control systems. \evantodo{Find a reference}
+to change version control
+systems\footnote{\url{https://git-scm.com/book/en/v2/Getting-Started-A-Short-History-of-Git}}.
 Git was written as the replacement for BitKeeper, and was designed to
 maintain a similar level of patch granularity as in BitKeeper\footnote{
   initial announcement of git on the mailing list
@@ -219,9 +220,7 @@ integrated into a repository.
 The literature on repository visualization
 and summarization can be broken down into three academic subcategories:
 communication\cite{Cubranic2005,Begel2010}, aspect-oriented
-visualization\cite{Ambros2005,Burch2005,Ambros2009}, and organic
-visualizations\cite{ogawa09,Caudwell2010}.\evan{I don't know what you
-  mean by "be consistent" here, I don't see the inconsistency.}
+visualization\cite{Ambros2005,Burch2005,Ambros2009}, and visualizations of naturally occurring phenomena\cite{ogawa09,Caudwell2010}.
 A fourth industrial category exists, including tools like GitKraken and
 SourceTree.
 The goal of the industrial tools is not to extract or synthesize new
@@ -313,9 +312,8 @@ extract data from CVS repositories. Our goal is to provide information
 about git repositories. Fewer tools are available for generating
 visualizations and summaries of git repositories.
 
-Organic visualizations show patterns in cooperation and communication
-that arise within a software project organically\evan{One definition of
-  Organically: When something happens naturally without planing and is not forced.}.
+The visualizations of naturally occurring phenomena show patterns
+in cooperation and communication arise within a software project.
 Heller et al.\cite{Heller2011} plots communication on a map.
 This visualization show patterns in communication as the arise, and how
 these communication channels operate internationally within a software
@@ -582,8 +580,7 @@ To allow for the flexibility needed for a distributed version control
 system, git uses a \define{directed acyclic graph}{DAG} to model the
 relationship between events.
 The repository events make up the nodes in the graph, and the
-child-parent\evan{no, the child has a list of references to it's
-  parents, not the other way around.} relationship represents the edges.
+child-parent relationship represents the edges.
 Commits will have a single parent, which is the repository event that
 is at the head of the current branch at the time that the commit
 is created.
@@ -598,11 +595,8 @@ Every repository will have at least one initial commit, which
 will have no parents, but it is possible for repositories to have
 multiple initial commits.
 Furthermore, it is possible for the graph of a repository to be
-disconnected; disconnected branches are refered to as orphaned branches
-with respect to the rest of the graph \evan{They are with respect to
-  each other and all other branches in the repository. The documentation
-  doesn't say much on this topic}.
-
+disconnected; branches that do not interact with the master branch are
+referred to as orphaned branches.
 
 The model is simple, but flexible.
 The flexibility of the model makes it more difficult to reason about,
@@ -821,8 +815,6 @@ Picking the incorrect commit to revert to could lead to serious
 consequences.
 In the Linux project, the merges to the master branch are
 the code that Linus has reviewed and accepted into the mainline kernel.
-\evan{I don't think he writes much code anymore, it looks like he mostly
-  merges things that have been reviewed.}
 
 As mentioned earlier, the nodes in the DAG are immutable;
 once a commit or merge is created, it cannot be changed.
