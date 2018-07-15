@@ -45,7 +45,7 @@ maintain a similar level of patch granularity as in BitKeeper\footnote{
   initial announcement of git on the mailing list
   \url{https://marc.info/?l=linux-kernel&m=111280216717070}}. The first
 version of git was roughly 1300 lines of code and was written and
-self-hosting in less than two weeks\footnote{From the git mailing list
+self-hosted in less than two weeks\footnote{From the git mailing list
   \url{https://marc.info/?l=git&m=117254154130732}}.
 
 Both BitKeeper and git are distributed version control systems (DVCS).
@@ -67,9 +67,10 @@ Distributed version control makes this possible; developers can combine,
 split, and edit commits locally before pushing their changes into the
 central repository.
 
-Cloning is when a developer copies a repository.
+A clone refers to a copy of a repository, cloning occurs when the
+developer makes a copy of a target repository.
 The source repository is recorded as a remote repository.
-It is possible for repositories to have many remotes.
+It is possible for repositories to have many remotes, or have none.
 The process of updating a remote repository with the changes made in the
 local repository is known as pushing.
 By default, the remote repository that was cloned will be given the
@@ -117,7 +118,8 @@ Figure~\ref{fig:merge_node_merge}.
   \begin{subfigure}[b]{0.5\textwidth}
     \includegraphics[width=0.85\textwidth]{Figures/background/fastforward/fastforward_3.png}
     \caption{A fast-forward merge does not create a merge commit,
-      and instead moves the branch pointer forward to the branch pointer.}
+      and instead moves the branch pointer forward to the commit that is
+      being merged into the branch.}
     \label{fig:fast_forwarded_merge}
   \end{subfigure}
 
@@ -166,12 +168,12 @@ that is, a change cannot depend on itself.
 For example, SVN always has a well-defined trunk, the SVN equivalent of
 a master branch, whereas git does not require the existence of a master
 branch.
-The graph structure also supports relatively cheap braching compared to
+The graph structure also supports relatively cheap branching compared to
 other version control systems, which makes it possible for developers to
 create more branches without having to worry about consuming excessive
 resources.
 With fewer constraints on the structure of the commit graph in git,
-tools are unable to make as many assumtions when abstracting the graph.
+tools are unable to make as many assumptions when abstracting the graph.
 Many tools avoid this by not abstracting the graph and visualizing other
 properties of the repository, such as the file structure.
 Tools that do visualize the graph do only minimal abstraction, creating
@@ -262,7 +264,7 @@ system.
   \centering
   \includegraphics[width=0.8\linewidth]{Figures/introduction/codebook.png}
   \caption{A screenshot of the search results on Hoozizat, an
-    implementation of codebook.}
+    implementation of codebook.\cite{Begel2010}}
   \label{fig:codebook}
 \end{figure}
 
@@ -280,7 +282,7 @@ the projects where a single contributor is doing most of the work.
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\linewidth]{Figures/introduction/fractal_figures.png}
-  \caption{Construction of Fractal Figures}
+  \caption{Construction of Fractal Figures\cite{Ambros2005}}
   \label{fig:fractal_figures}
 \end{figure}
 
@@ -305,7 +307,7 @@ positioned more closely to the center of the circle.
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\linewidth]{Figures/introduction/evo_radar.png}
-  \caption{Evolution Radar visualization}
+  \caption{Evolution Radar visualization\cite{Ambros2009}}
   \label{fig:evolution_radar}
 \end{figure}
 
@@ -317,7 +319,7 @@ visualizations and summaries of git repositories.
 The visualizations of naturally occurring phenomena show patterns
 in cooperation and communication arise within a software project.
 Heller et al.\cite{Heller2011} plots communication on a map.
-This visualization show patterns in communication as the arise, and how
+This visualization show patterns in communication as they arise, and how
 these communication channels operate internationally within a software
 project, depicted in Figure~\ref{fig:heller_map}.
 
@@ -361,14 +363,14 @@ are drawn together.
   \centering
   \includegraphics[width=0.8\linewidth]{./Figures/introduction/gource-linux.jpg}
   \caption{View of Gource file graph with users operating on a
-    repository}
+    repository\cite{Caudwell2010}}
   \label{fig:gource_view}
 \end{figure}
 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.8\linewidth]{Figures/introduction/codeswarm.png}
-  \caption{View of the Postgresql repository in Codeswarm}
+  \caption{View of the Postgresql repository in Codeswarm\cite{ogawa09}}
   \label{fig:codeswarm}
 \end{figure}
 
@@ -380,7 +382,8 @@ between commits.
 While they ultimately show the same information, the topology of the
 repository, the organization of that information is different.
 
-GitKraken, shown in Figure~\ref{fig:gitkraken_main},  is a popular
+GitKraken\footnote{\url{gitkraken.com}},
+shown in Figure~\ref{fig:gitkraken_main}, is a popular
 commercially written git interface that aims to be efficient, elegant,
 and reliable, according to it's official website.
 On visual inspection, it appears to satisfy these goals.
@@ -399,8 +402,9 @@ gitk and the git command line, though it may be visually more appealing.
 \end{figure}
 
 In January of 2018, the Gnome project released a replacement for Gitk.
-Gitg, shown in Figure~\ref{fig:gitg_screenshot}, is the git GUI client
-for the Gnome environment.
+Gitg\footnote{\url{https://wiki.gnome.org/Apps/Gitg/}},
+shown in Figure~\ref{fig:gitg_screenshot},
+is the git GUI client for the Gnome environment.
 The visualization is relatively clean, and it is able to produce a
 visualization of the Linux repository quickly.
 Like in Gitk, Gitg uses arrows to indicate that a branch has been cut.
@@ -417,9 +421,10 @@ children of the commit.
   \label{fig:gitg_screenshot}
 \end{figure}
 
-Giteye and most of the other visualizations are relatively
+Giteye\footnote{url{https://www.collab.net/products/giteye}} and most of the other visualizations are relatively
 conventional, simply cleaning up the interface of Gitk.
-GitLab and GitHub are both online repository hosts, with
+GitLab\footnote{\url{https://www.gitlab.com}} and
+GitHub\footnote{\url{https://www.github.com}} are both online repository hosts, with
 visualization and summarization provided as well. While the GitLab
 visualization does not appear to provide any additional information, the
 visualization provided by GitHub takes advantage of additional internal
@@ -502,7 +507,34 @@ Rebasing will also change the committer and commit date.
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=0.8\linewidth]{Figures/background/commit_patch.png}
+  \scriptsize{
+  \begin{verbatim}
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index eca8ad75e28b..043b60de041e 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -517,7 +517,8 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
+ # define __compiletime_error_fallback(condition) do { } while (0)
+ #endif
+
+-#define __compiletime_assert(condition, msg, prefix, suffix)		\
++#ifdef __OPTIMIZE__
++# define __compiletime_assert(condition, msg, prefix, suffix)		\
+ 	do {								\
+ 		bool __cond = !(condition);				\
+ 		extern void prefix ## suffix(void) __compiletime_error(msg); \
+@@ -525,6 +526,9 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
+ 			prefix ## suffix();				\
+ 		__compiletime_error_fallback(__cond);			\
+ 	} while (0)
++#else
++# define __compiletime_assert(condition, msg, prefix, suffix) do { } while (0)
++#endif
+
+ #define _compiletime_assert(condition, msg, prefix, suffix) \
+ 	__compiletime_assert(condition, msg, prefix, suffix)
+  \end{verbatim}
+}
   \caption{Example of a commit patch from the Linux kernel repository
     from commit \textit{c03567a8e8d5}.}
   \label{fig:commit_patch}
@@ -661,7 +693,7 @@ nodes 6, 4, and 2. Branch A consists of nodes 7, 5, 3, and 1.
   \end{tikzpicture}
 }
   \caption{A small example of a sequence of commits and merges.
-    The branch pointer A reference commit 7, which merges the head of
+    The branch pointer A references commit 7, which merges the head of
     branch B, commit 6, into the original head of branch A, which was
     commit 5. Merge 7 is the most recent change to the repository.}
   \label{fig:repoEvents2}
@@ -874,7 +906,7 @@ being added to.
 
 This \paper{} studies and proposes a visualization for the Linux kernel
 repository.
-The repository itself is complex, contain tens of thousands of commits
+The repository itself is complex, containing tens of thousands of commits
 and thousands of merges per year.
 Older versions of the kernel are used in a wide
 variety of situations including various Linux desktop distributions,
