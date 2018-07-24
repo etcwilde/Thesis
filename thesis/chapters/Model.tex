@@ -1,26 +1,31 @@
 % vim:set et sw=2 ts=4 tw=72:
-\chapter{Model}\label{chap:model}
+\chapter{\mt{} Model}\label{chap:model}
 
-This chapter introduces the \mt{} model and the algorithm used to
-convert the DAG into the \mt{s}. Starting with an introduction of the
-\mt{} model, the chapter includes the algorithm to convert the DAG into
-\mt{s}, and an evaluation of that algorithm.
+This chapter introduces the \mt{} model, the algorithm used to
+convert the DAG into a set of \mt{s}, and an evaluation of the results
+produced by the algorithm.
+The model and algorithm take advantage of properties of Linux kernel
+repository that likely won't generalize beyond this repository.
+The algorithm will still run and produce results, but the results will
+likely not be meaningful.
 
-Thousands of commits are merged into the Linux kernel repository per
+The Linux repository is large;
+thousands of commits are merged into the Linux kernel repository per
 year.
 Directly visualizing all of the information in a meaningful way is
 difficult, or potentially impossible.
-As shown in Figure~\ref{fig:linux_merge_distribution_per_release},
-dividing the commits based on the merge into the master branch results
+Dividing the commits based on the merge into the master branch results
 in groups that are relatively small,
-the median size of the group being seven repository events.
+the median group size contains seven items.
+This is visualized in
+Figure~\ref{fig:linux_merge_distribution_per_release}.
 The merge into the master branch is atomic, all of the context necessary
 for integrating a commit is available at the merge into the master
 branch.
-Showing only the repository events that are are merged into the master
+Showing only the commits that are merged into the master
 branch together filters the number of events down to a manageable size,
 while still containing all of the information necessary to determine how
-a commit is integrated, and the other commits integrated with it.
+a commit is integrated, and what other commits are integrated with it.
 
 The \mt{} model is a tree structure,
 rooted at the merge into the master branch.
@@ -28,14 +33,15 @@ The leaves of this tree are the commits and the merges are the inner
 nodes.
 The parent of a node is the next merge on the path to the root.
 Merge trees are constructed recursively.
-Starting at a commit, then walking up the children of the DAG until the
+Starting at a commit, we walk up the children of the DAG until the
 first merge is found.
 All of the nodes that were traversed on the path to that merge are
 children of the merge in the \mt{}.
 Commits can be merged in multiple places.
-The true parent of a commit in the tree is defined by shortest path.
+The true parent of a commit in the tree is defined by the shortest path.
 In the case that there are the same number of intermediate nodes
-between the commit and the root, time is used as a tie-breaker.
+between the commit and the root, shortest distance in time is used as a
+tie-breaker.
 The structure recursively groups commits that are merged together,
 making it easy to identify the commits that are integrated together.
 Commits have a single path to reach the master branch, which makes
@@ -62,8 +68,8 @@ in a repository. The sequence starts with the initial commit in the
 master branch of the master repository at time $t_0$. Repository event 1
 is a commit, which gets forked into a separate repository, \textit{Repo
   A}, where another commit is made, event 2. Event 5 is a merge event,
-merging event 2, 3, and 4 into \textit{Repo A}. Event 5 is branched
-from, commit 6 happens in the new branch, while commit 7 is added
+merging events 2, 3, and 4 into \textit{Repo A}. A branch created from
+event 5 and commit 6 happens in the new branch, while commit 7 is added
 simultaneously to the original branch in \textit{Repo A}. Events 11 and
 12 are both merge events, merging changes made in \textit{Repo A} into
 the master branch of the master repository. As every repository is a
@@ -128,13 +134,13 @@ representation of these events is shown in Figure~\ref{fig:repoDAG}.
 The commit nodes do not preserve branch information, which allows users
 to rename branches and repositories without having to update the
 preceding commits.
-This is at the expense of maintain a consistent history.
+This is at the expense of maintaining a consistent history.
 It is desirable to reconstruct all of the branch and repository
 information, shown in Figure~\ref{fig:repoEvents}, from the information
 in the DAG, shown in Figure~\ref{fig:repoDAG}, but this may not be
 possible.
-Instead, I focus on determining the next merge that leads
-toward the integration of a commit.
+Instead, the focus is placed on finding the next merge that leads toward
+the integration of a commit.
 Depicted in Figure~\ref{fig:repoTree}, is the first version of the \mt{}.
 It does not completely rebuild the lost information, but is able to
 show the sequence of merges that a commit follows to be integrated,
@@ -142,9 +148,9 @@ and the commits that were involved with the integration.
 This is the version of the \mt{} that is used in the visualizations, in
 the construction of \tool{}, and in the user study.
 This tree does not preserve the ordering of the commits within the
-merge; however, the algorithm presented in Section~\ref{sec:algorithm}
-preserves this information, but the visualizations in \tool{} do not
-make use of it.
+merge, and while the algorithm presented in Section~\ref{sec:algorithm}
+preserves this information, the visualization in \tool{} does not make
+use of it.
 
 \begin{figure}[htbp]
   \centering
@@ -300,19 +306,21 @@ commit to the master branch using the inverted DAG\@.
         \end{algorithmic}
 \end{algorithm}
 
-The algorithm is broken into two phases.
-The first is determining which repository events happened on the master
+The algorithm has two phases.
+The first phase determines which repository events happened on the mater
 branch.
 This is done by traversing the first parent from the master branch
 reference to the commit that has no parents.
 The second phase is encompassed by the function
 $MergeAtMaster$ which determines, for each commit, which merge the
 commit is merged at, the depth (as variable $d$ in the algorithm), and
-the next merge on the path to the master branch. The function
-$MergeAtMaster$ has two parts, the first for determining the depth, from
-the master branch, that the repository event is at. The second phase
-determines the merge into the master branch, and the next merge on the
-way to the master branch.
+the next merge on the path to the master branch.
+The function $MergeAtMaster$ has two parts,
+the first for determining the depth,
+from the master branch,
+that the repository event is at.
+The second phase determines the merge into the master branch,
+and the next merge on the way to the master branch.
 The distance is computed by shortest path close to the master branch as
 possible.
 If there is a tie between two paths, the path that merges into the
@@ -505,9 +513,10 @@ The results of the evaluation are summarized as follows:
 
   \item
 
-    There is 1 merge after September 4, 2007 that does not have recorded
-    commit logs. This is due to incorrect formatting. If it were
-    correctly formatted, it would report having 15 commits integrated,
+    There is one merge after September 4, 2007
+    that does not have recorded commit logs.
+    This is due to incorrect formatting.
+    If it were correctly formatted, it would report having 15 commits integrated,
     which is consistent with the results in the database.
 
   \item
