@@ -941,7 +941,7 @@ while David Miller handles the changes for networking subsystem, as well
 as the changes to the SPARC implementation.
 The primary maintainers collect patches that are related to the part of
 the kernel that they are maintaining, verify that the patches meet the
-quality requirements of the kernel, and passes them to Linus, who
+quality requirements of the kernel, and pass them to Linus, who
 merges them into the master branch.
 
 This structure is reflected in the repository graph.
@@ -949,7 +949,8 @@ Linus merges commits based on the subsystem that the commits are changing.
 Within the merge that groups changes to the networking subsystem are
 commits related to networking and a merge for wireless networking.
 In the merge for wireless networking are additional merges that group
-commits that make changes to bluetooth and mac80211.
+commits that make changes to wireless networking technologies like
+bluetooth and mac80211.
 Merges are used in the repository in the same way that directories are
 used in a file system, grouping related information.
 
@@ -958,8 +959,7 @@ advantage of the consistency of the repository, as well as the
 structure.
 While the work presented herein is designed for the Linux repository,
 other repositories with nested merging and highly-consistent merging
-practices, such as the git repository for git, can take advantage of
-this work.
+practices can take advantage of this work.
 
 The remainder of this section provides a summary of the Linux kernel
 repository.

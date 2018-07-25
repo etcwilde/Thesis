@@ -16,7 +16,7 @@ Directly visualizing all of the information in a meaningful way is
 difficult, or potentially impossible.
 Dividing the commits based on the merge into the master branch results
 in groups that are relatively small,
-the median group size contains seven items.
+the median size of the merges is seven items.
 This is visualized in
 Figure~\ref{fig:linux_merge_distribution_per_release}.
 The merge into the master branch is atomic, all of the context necessary
@@ -25,7 +25,7 @@ branch.
 Showing only the commits that are merged into the master
 branch together filters the number of events down to a manageable size,
 while still containing all of the information necessary to determine how
-a commit is integrated, and what other commits are integrated with it.
+a commit is integrated, and other commits that are integrated with it.
 
 The \mt{} model is a tree structure,
 rooted at the merge into the master branch.
@@ -307,7 +307,7 @@ commit to the master branch using the inverted DAG\@.
 \end{algorithm}
 
 The algorithm has two phases.
-The first phase determines which repository events happened on the mater
+The first phase determines which repository events happened on the master
 branch.
 This is done by traversing the first parent from the master branch
 reference to the commit that has no parents.
