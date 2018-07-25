@@ -22,7 +22,7 @@ each other. Only the commits that are merged together are related to
 each other are relevant, while commits that are not included in that
 merge are unrelated. The Linux repository adds thousands of commits per
 release, but only a few of these are related to each other. 50\% of the
-merges contain fewer than 7 repository events being merged.
+merges are merging at most seven commits.
 
 The \mt{} model takes advantage of this structure, breaking the commits
 into groups based on the merge into the master branch. The commits are
@@ -63,9 +63,15 @@ is retained in the DAG visualizations.
 \mt{s} are a novel means of processing git repositories to be visualized
 and summarized in a more effective way. Participants in our study found
 visualizations of the \mt{} to be more enjoyable for summarization tasks
-than the visualizations of the DAG. The visualizations of the \mt{}
+than the visualizations of the DAG\@.
+The visualizations of the \mt{}
 model help users to more accurately summarize information about merges
-more quickly. While there are still issues with the visualizations in
-\tool{}, \mt{} visualizations are an effective means of providing a
-clear conceptual understanding and simple summarization of the events
-being merged into the master branch of a repository.
+more quickly.
+We cannot definitely defend the claim that visualizations of the \mt{}
+are an effective means of providing a clear conceptual understanding of
+how commits are integrated as there are no other tools that attempt to
+do this.
+The claim which this \paper{} defends is that visualizations of the
+\mt{} are more effective
+than the tools that are currently available for deriving a conceptual
+understanding of how commits are integrated.
