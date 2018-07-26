@@ -19,7 +19,7 @@ in groups that are relatively small,
 the median size of the merges is seven items.
 This is visualized in
 Figure~\ref{fig:linux_merge_distribution_per_release}.
-The merge into the master branch is atomic, all of the context necessary
+A merge into the master branch is atomic, all of the context necessary
 for integrating a commit is available at the merge into the master
 branch.
 Showing only the commits that are merged into the master
@@ -40,14 +40,14 @@ children of the merge in the \mt{}.
 Commits can be merged in multiple places.
 The true parent of a commit in the tree is defined by the shortest path.
 In the case that there are the same number of intermediate nodes
-between the commit and the root, shortest distance in time is used as a
-tie-breaker.
+between the commit and the root, shortest distance in time between when
+the commit was created and merges is used as a tie-breaker.
 The structure recursively groups commits that are merged together,
 making it easy to identify the commits that are integrated together.
 Commits have a single path to reach the master branch, which makes
 identifying the series of merges to the master branch and, in extension,
 how the commit is integrated into the master branch of the master
-repository.
+repository, much easier.
 
 The structure makes it easier to understand how commits are grouped and
 integrated. This model simplifies and prunes the information from the

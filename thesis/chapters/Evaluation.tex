@@ -10,13 +10,12 @@ controlled environment running Ubuntu 14.04. Participants were allowed
 to use Gitk and the git command-line tools for these tasks, I will refer
 to both tools as Gitk, when working with DAG-based visualizations and
 summarizations.
-
 I considered allowing participants to use any of the
-free tools for Linux suggested on the git website\footnote{}, but
+free tools for Linux suggested on the git
+website\footnote{\url{https://git-scm.com/downloads/guis}}, but
 after attempting to use them, found that none of the tools listed at
 the time were able to operate on repositories that were as large as
 the Linux repository.
-
 \tool{} was used for evaluating the \mt{-based} visualizations.
 
 The study has two primary goals: first determining if the DAG-based
@@ -261,16 +260,11 @@ at least one internal merge node.
 Commits were selected randomly from the trees.
 The small tree was trivial as it contained only a single node.
 A node was chosen randomly from the medium-sized tree.
-
-
-Once the trees were selected, I had to select a commit from the tree.
-Selecting a commit from the small tree was trivial, there was only a
-single node to choose.
 The commits selected from the small tree and medium tree were
 \emph{a3c1239eb59c} and \emph{cdbdd1676a53} respectively.
 Commit 1, the commit from the small tree is visualized in
 Figure~\ref{fig:commit_1_visualization}, showing the DAG visualization
-by Gitk and \rt{} tree visualization in Linvis.
+by Gitk and \rt{} tree visualization in \tool{}.
 The same is shown for commit 2 in
 Figure~\ref{fig:commit_2_visualization}.
 
@@ -280,7 +274,7 @@ Figure~\ref{fig:commit_2_visualization}.
     \includegraphics[height=4.5cm]{Figures/evaluation/commit1_gitk.png} &
     \includegraphics[height=4.5cm]{Figures/evaluation/commit1_linvis.pdf}
   \end{tabular}
-  \caption{The visualizations of commit 1 by Gitk and Linvis
+  \caption{The visualizations of commit 1 by Gitk and \tool{}
     respectively.}
   \label{fig:commit_1_visualization}
 \end{figure}
@@ -291,7 +285,7 @@ Figure~\ref{fig:commit_2_visualization}.
     \includegraphics[height=4.5cm]{Figures/evaluation/commit2_gitk.png} &
     \includegraphics[height=4.5cm]{Figures/evaluation/commit2_linvis.pdf}
   \end{tabular}
-  \caption{The visualizations of commit 2 by Gitk and Linvis
+  \caption{The visualizations of commit 2 by Gitk and \tool{}
     respectively.}
   \label{fig:commit_2_visualization}
 \end{figure}

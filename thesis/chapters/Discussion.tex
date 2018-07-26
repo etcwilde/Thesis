@@ -3,9 +3,9 @@
 
 This chapter provides further discussion on the results and observations
 from the study evaluating \tool{}. Included are observations that could
-lead to improvements in the current DAG visualizations, the comments
-from a release manager, and work toward applying the \mt{} model and
-visualizations to other repositories.
+lead to improvements in the current DAG visualizations, and the comments
+from a release manager.
+
 
 \section{Interpreting the Results}\label{sec:interpreting_the_results}
 
@@ -81,17 +81,18 @@ restarting Gitk.
 Had the participants been able to easily identify the master branch, the
 results from the study would likely be very different. This would be
 most prominent in the summarization portion of the small merge, since
-summarizing a single item is trivial, but the issue was identifying that
-there was only a single item, which is currently not trivial. With more
-than 25\% of the merges into Linux being single-commit merges, it is
-important that users are able to identify them and understand the
+summarizing a single item is trivial.
+The issue was identifying that there was only a single item.
+With more than 25\% of the merges into Linux being single-commit merges,
+it is important that users are able to identify them and understand the
 changes being made within them. The structure of a single-commit tree is
 identical to the structure of a flat tree, all commits are merged
 directly into the master branch, passing through no other merges on the
 way. Flat trees are the most common form of tree in the kernel
 repository. To improve the visualization of the DAG for providing an
 effective visualization for summarization and comprehension of flat
-trees, it would likely be sufficient to indicate the master branch.
+trees, it would likely be sufficient to indicate which line represents
+the master branch.
 For the non-flat trees, a more powerful structure would likely be
 necessary, such as the \mt{}.
 
@@ -126,11 +127,10 @@ to improve the \mt{} model.
 
 \section{Threats to Validity}\label{sec:threats_to_validity}
 
-While precautions were taken to mitigate threats to the validity, for
-pragmatic reasons and other errors, some threats must be taken into
-account when considering the results. These threats, the mitigation
-techniques, and the steps to minimize other threats are provided in this
-section.
+While precautions were taken to mitigate threats to the validity of this
+research, these threats must be taken into account when considering the results.
+The threats, the mitigation techniques, and the steps to minimize
+other threats are provided in this section.
 
 \subsection{Internal Validity}\label{sub:internal_validity}
 
@@ -138,9 +138,8 @@ This section provides a summary of areas where bias may have influenced
 the results of the study and the steps taken to mitigate these issues.
 The biases may impact the design of the study, how the questions are
 presented, and how the results are interpreted.
-To ensure that this research was conducted in a way that is reasonable
-and prudent, ethics was requested and approved by the university ethics
-board.
+To ensure that this research was conducted in a way that was ethical,
+the study was approved by the university ethics board.
 
 The design of the study has an impact on the results.
 I needed to make considerations about the merges that would be used
@@ -155,14 +154,12 @@ limit the bias toward either tool while attempting to determine if
 The tasks themselves are biased in favour of \tool{}, as the tool is
 specifically designed for answering questions surrounding conceptual
 understanding of how commits are merged.
-Ideally, we could compare our \tool{} with another tool designed for the
+Ideally, we could compare \tool{} with another tool designed for the
 tasks specified, but such a tool does not exist.
 Instead, we compare against the tool that is currently in use for
 performing these tasks.
 The original thesis statement must be softened to accommodate this
 change though.
-The visualizations of the \mt{} are more effective than the tools that
-are currently employed for these types of tasks.
 
 How the study is conducted can impact the results.
 The study has two manipulated variables, the tool being used and the
@@ -202,8 +199,8 @@ participants of the study.
 This biases the results in favour of the tool that is better-able to
 visualize small merges.
 Due to this bias, I had hypothesized that Gitk and \tool{} would have
-nearly identical results for the first commit, while the results would
-be in favour of \tool{} for the second commits.
+nearly identical results for the merge containing only a single commit,
+while the results would be in favour of \tool{} for the second commits.
 This was not the case, participants had a difficult time discerning
 which commits were being merged in both cases.
 Based on the comments and behaviours exhibited while performing the
@@ -224,21 +221,24 @@ summarization task sets to limit the propagation of errors.
 
 \subsection{External validity}\label{sub:external_validity}
 
-While many online git resources, Gitk, and the git command line provide
-visualizations of the DAG, many participants were unfamiliar with the
-DAG visualizations. Other tools than Gitk and the command line may
+While many online git resources, git graphical clients, and the git
+command line provide visualizations of the DAG,
+many participants were unfamiliar with the DAG.
+While other tools than Gitk and the command line may
 provide better summarizations and different visualizations, I am not
 aware of any. I investigated the use of other GUI tools on the git
 website, but none were able to produce visualizations for repositories
 that are at the size of the Linux kernel repository, except for Gitk and
-the git command line. While this may have had an effect on the results,
+the git command line at the time of the study.
+While this may have had an effect on the results,
 the tools listed on the website provide a very similar visual DAG
 metaphor to the visualization in Gitk.
 
 The participants in the study were students, some with industrial
 experience. Most participants had worked with relatively few
 collaborators on academic projects. Many of the participants had worked
-with larger repositories while performing a research study. Even though
+with relatively large repositories while performing a research study.
+Even though
 the participants have worked with large repositories during the course
 of their research, professional developers are the target audience of
 this tool, so working with professional developers would provide more
@@ -294,7 +294,7 @@ they are merged together, which contributes to the short and wide
 structure.
 In the updated structure, the commits won't be on the same level, the
 parent of the commit will be the next commit in the chain.
-This structure leads to tall and skinny trees.
+This structure leads to tall and narrow trees.
 The list-tree and \rt{} tree would likely visualize these effectively.
 The list-tree would only need to order the elements according to the
 order of the commits, but would otherwise be left unchanged.
@@ -309,7 +309,8 @@ as there are generally multiple commits being merged by a given merge.
 If the model is adjusted so that the parent of a commit is the next
 commit on the path toward the master branch, this property changes.
 A commit may have one or zero children, so only the first commit of a
-branch will be rendered by the pack tree.
+branch will be rendered by the pack tree, omitting most of the
+information.
 
 Changing the model to include information about how commits are ordered
 will have an impact on how it is rendered.

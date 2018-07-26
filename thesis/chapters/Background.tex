@@ -15,7 +15,8 @@ system maintains a log of who is making the changes and when the
 changes were made.
 
 Early version control systems, such as Revision Control System (RCS),
-were designed for local development and provided no means of collaboration.
+were designed for local development and provided very little support for
+collaboration.
 As software projects grew, the model quickly became outdated,
 being replaced with a centralized server model.
 Concurrent Version System (CVS) and Apache Subversion (SVN) are two
@@ -23,7 +24,7 @@ examples of centralized version control systems. The centralized version
 control system provides means of collaboration through a client-server
 interface. The repository is stored in a central server. Developers use
 a client to check out parts of the repository, choosing parts that
-pertain to the part they are editing.
+pertain to the part of the codebase that they are editing.
 
 In large open source projects, the centralized architecture becomes a
 burden. Common tasks such as committing and changing branches requires
@@ -57,7 +58,7 @@ changes to the code and to the
 structure of the repository without needing to re-synchronize with a
 central server.
 
-It is often desirable to have the features of version control available
+It is often desirable to have the features of version control
 before a feature is ready to be made available in a public-facing
 repository.
 It is also desirable that the commits into the master branch of the
@@ -68,11 +69,13 @@ split, and edit commits locally before pushing their changes into the
 central repository.
 
 A clone refers to a copy of a repository, cloning occurs when the
-developer makes a copy of a target repository.
-The source repository is recorded as a remote repository.
+developer makes a copy of a target repository, the target is recorded as
+a remote repository.
 It is possible for repositories to have many remotes, or have none.
 The process of updating a remote repository with the changes made in the
 local repository is known as pushing.
+Conversely, updating the local repository with the changes made to a
+remote are referred to as pulling.
 By default, the remote repository that was cloned will be given the
 label \textit{origin}, which is the repository where git will push to
 and pull from, unless another remote is specified.
@@ -86,7 +89,7 @@ which fetches the changes in the origin repository, then merges the
 branches of the origin repository into the corresponding branches in the
 local repository.
 The second way of resynchronization breaks the process into two steps,
-manually issuing the fetch command and then manually merging or rebasing
+manually issuing the \textit{fetch} command and then manually merging or rebasing
 branches.
 Rebasing is the process of moving one or more commits from one ancestor
 to another.
@@ -160,13 +163,13 @@ It is also be able to support the ability to move commits between
 branches, re-order commits, combine multiple commits into a single
 commit, and split a commit into multiple commits.
 
-To support these requirements, Linus chose to use a directed acyclic
-graph to represent the commits and the relationships between commits.
+To support these feature, Linus chose to use a directed acyclic
+graph to represent the commits and the relationships between them.
 The graph imposes relatively few constraints on what a developer can do.
 The only requirement is that there is not a cycle in the graph of the commits,
 that is, a change cannot depend on itself.
-For example, SVN always has a well-defined trunk, the SVN equivalent of
-a master branch, whereas git does not require the existence of a master
+Git does not impose the requirement of a master branch.
+SVN always has a well-defined trunk, the SVN equivalent of a master
 branch.
 The graph structure also supports relatively cheap branching compared to
 other version control systems, which makes it possible for developers to
@@ -183,7 +186,7 @@ The graph of large and active repositories is very complicated.
 It is very difficult to understand the relationship between commits, and
 how the commits are integrated into the project from a visualization of
 the graph.
-This poses a problem for a maintainer who must understand how a
+This poses a problem for maintainers who must understand how a
 commit is integrated into the master branch of a
 project and the other commits that are integrated with that commit.
 Maintainers must sift through thousands of commits to determine which
@@ -318,7 +321,7 @@ about git repositories. Fewer tools are available for generating
 visualizations and summaries of git repositories.
 
 The visualizations of naturally occurring phenomena show patterns
-in cooperation and communication arise within a software project.
+in cooperation and communication that arise within a software project.
 Heller et al.\cite{Heller2011} plots communication on a map.
 This visualization show patterns in communication as they arise, and how
 these communication channels operate internationally within a software
@@ -356,7 +359,7 @@ developers are the center of the visualizations.
 When a developer makes a change to a file, the file lights up and
 flies toward the developer.
 As a developer makes more changes, the files that the developer is
-modifying will form a ring around the developer.
+modifying will form a ring around their avatar.
 If multiple developers are modifying a file, the developer nodes
 are drawn together.
 
@@ -383,9 +386,24 @@ between commits.
 While they ultimately show the same information, the topology of the
 repository, the organization of that information is different.
 
+Gitk is the graphical interface that is shipped with Git, shown in
+Figure~\ref{fig:gitk_all_view}.
+The interface is fairly complex, and looks a little dated.
+The program displays all of the information that is stored in a commit,
+giving what is likely the most complete view of the information stored.
+Unfortunately, the presentation makes the interface appear somewhat
+overwhelming.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/introduction/gitk_full.png}
+  \caption{Gitk interface, the graphical interface shipped with Git.}
+  \label{fig:gitk_all_view}
+\end{figure}
+
 GitKraken~\cite{gitkraken},
 shown in Figure~\ref{fig:gitkraken_main}, is a popular
-commercially written git interface that aims to be efficient, elegant,
+commercially-written git interface that aims to be efficient, elegant,
 and reliable, according to it's official website.
 On visual inspection, it appears to satisfy these goals.
 Overall, the interface is clean and most actions that are possible with
@@ -423,7 +441,7 @@ children of the commit.
 \end{figure}
 
 Giteye\cite{giteye} and most of the other visualizations are relatively
-conventional, simply cleaning up the interface of Gitk.
+conventional, simply acting as a cleaner version of Gitk.
 GitLab\cite{gitlab} and
 GitHub\cite{github} are both online repository hosts, with
 visualization and summarization provided as well. While the GitLab
@@ -580,25 +598,6 @@ A large set of changes may be necessary to implement an entire feature.
 Each of these large changes may be merged into a feature branch before
 being integrated into the project.
 
-The Linux kernel repository has many examples of merge nesting like this.
-In the Linux kernel, it is customary to have commits related to a single
-subsystem in a single merge.
-The subsystem may then be broken into sub-subsystems, for which there
-are corresponding merges.
-These merges contain the changes that modify the specific sub-subsystem.
-
-For example, in the Linux repository, there is usually a merge
-into the master branch of the repository for the changes to
-the networking subsystem for a given release.
-Within this merge, there are merges for wireless networking, Bluetooth,
-and Ethernet, among other implementations of computer networking.
-In this form, the merges act in a similar manner to directories in a
-file system, where commits are the files containing the code, and merges
-are the directories containing related files.
-In this metaphor, the goal is to identify the file path to a given file,
-and the other files that are in the same directory.
-The root directory of the file path is the equivalent metaphorical
-equivalent of the master branch.
 To understand how a commit is integrated, it is necessary to understand
 the merges that the commit was propagated through, and which commits are
 integrated with it.
@@ -860,8 +859,8 @@ their children, and in extension, how the commit is being merged, as
 this information is not available when the commit is created.
 Git provides the command \verb|git log --children|, which traverses the
 DAG and inverts the edges.
-The next child that is a merge is the first merge on the path to being
-integrated.
+The next child on the path of children that is a merge is the first
+merge on the path to the commit being integrated.
 
 The graph combined with the child information gives most of the
 information necessary for understanding how the commit is
