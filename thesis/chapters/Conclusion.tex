@@ -5,7 +5,7 @@ The visualization of the DAG of a git repository is difficult to
 comprehend in large projects.
 This \paper{} investigates user comprehension of the DAG
 visualization in the Linux repository, and presents the design of a new
-model, and a tool built from the model, with the goal of assisting users
+model and a tool built from the model, with the goal of assisting users
 with comprehending how a commit is integrated into the master branch.
 Very few tools have the explicit goal of showing the topology of the
 repository. No academic tools that I am aware of attempt to do this.
@@ -22,7 +22,7 @@ each other. Only the commits that are merged together are related to
 each other are relevant, while commits that are not included in that
 merge are unrelated. The Linux repository adds thousands of commits per
 release, but only a few of these are related to each other. 50\% of the
-merges contain fewer than 7 repository events being merged.
+merges are merging at most seven commits.
 
 The \mt{} model takes advantage of this structure, breaking the commits
 into groups based on the merge into the master branch. The commits are
@@ -63,9 +63,14 @@ is retained in the DAG visualizations.
 \mt{s} are a novel means of processing git repositories to be visualized
 and summarized in a more effective way. Participants in our study found
 visualizations of the \mt{} to be more enjoyable for summarization tasks
-than the visualizations of the DAG. The visualizations of the \mt{}
+than the visualizations of the DAG\@.
+The visualizations of the \mt{}
 model help users to more accurately summarize information about merges
-more quickly. While there are still issues with the visualizations in
-\tool{}, \mt{} visualizations are an effective means of providing a
-clear conceptual understanding and simple summarization of the events
-being merged into the master branch of a repository.
+more quickly.
+We cannot definitively defend the original thesis statement as there
+are no other tools that attempt to provide information about how
+commits are integrated.
+Instead, we defend the revised thesis statement.
+The findings of the study show that the visualizations of the \mt{} are more effective at providing a
+conceptual understanding of how a commit is integrated and what other
+commits are integrated with it than tools that are currently available.

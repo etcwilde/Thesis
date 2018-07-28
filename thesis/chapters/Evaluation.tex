@@ -10,13 +10,12 @@ controlled environment running Ubuntu 14.04. Participants were allowed
 to use Gitk and the git command-line tools for these tasks, I will refer
 to both tools as Gitk, when working with DAG-based visualizations and
 summarizations.
-
 I considered allowing participants to use any of the
-free tools for Linux suggested on the git website\footnote{}, but
+free tools for Linux suggested on the git
+website\footnote{\url{https://git-scm.com/downloads/guis}}, but
 after attempting to use them, found that none of the tools listed at
 the time were able to operate on repositories that were as large as
 the Linux repository.
-
 \tool{} was used for evaluating the \mt{-based} visualizations.
 
 The study has two primary goals: first determining if the DAG-based
@@ -261,16 +260,11 @@ at least one internal merge node.
 Commits were selected randomly from the trees.
 The small tree was trivial as it contained only a single node.
 A node was chosen randomly from the medium-sized tree.
-
-
-Once the trees were selected, I had to select a commit from the tree.
-Selecting a commit from the small tree was trivial, there was only a
-single node to choose.
 The commits selected from the small tree and medium tree were
 \emph{a3c1239eb59c} and \emph{cdbdd1676a53} respectively.
 Commit 1, the commit from the small tree is visualized in
 Figure~\ref{fig:commit_1_visualization}, showing the DAG visualization
-by Gitk and \rt{} tree visualization in Linvis.
+by Gitk and \rt{} tree visualization in \tool{}.
 The same is shown for commit 2 in
 Figure~\ref{fig:commit_2_visualization}.
 
@@ -280,7 +274,7 @@ Figure~\ref{fig:commit_2_visualization}.
     \includegraphics[height=4.5cm]{Figures/evaluation/commit1_gitk.png} &
     \includegraphics[height=4.5cm]{Figures/evaluation/commit1_linvis.pdf}
   \end{tabular}
-  \caption{The visualizations of commit 1 by Gitk and Linvis
+  \caption{The visualizations of commit 1 by Gitk and \tool{}
     respectively.}
   \label{fig:commit_1_visualization}
 \end{figure}
@@ -291,7 +285,7 @@ Figure~\ref{fig:commit_2_visualization}.
     \includegraphics[height=4.5cm]{Figures/evaluation/commit2_gitk.png} &
     \includegraphics[height=4.5cm]{Figures/evaluation/commit2_linvis.pdf}
   \end{tabular}
-  \caption{The visualizations of commit 2 by Gitk and Linvis
+  \caption{The visualizations of commit 2 by Gitk and \tool{}
     respectively.}
   \label{fig:commit_2_visualization}
 \end{figure}
@@ -299,7 +293,7 @@ Figure~\ref{fig:commit_2_visualization}.
 \subsection{Part 1: Conceptual Study}\label{sub:conceptual_study}
 
 The conceptual portion of the study seeks to answer the first research
-question, ``Are people able to draw a conceptual understanding from the
+question, ``Are people able to derive a conceptual understanding from the
 visualization of the DAG in Gitk''.
 This part tests our initial assumption that the visualization of the DAG
 is unable to provide people with a conceptual understanding of the
@@ -328,8 +322,8 @@ Task 1 asks participants to draw a diagram showing the shortest path for
 a commit to be merged, including any commits that are related to it, or
 are necessary for the integration. Participants were given 10 minutes to
 draw the diagram. The correct answer should look something like the
-\mt{} for that commit. The drawing from Task 1 is then referred to
-in Task 2 and 3. Building on the conceptual understanding built in task
+\mt{} for that commit. The drawing from task 1 is then referred to
+in task 2 and 3. Building on the conceptual understanding built in task
 1, task 2 and 3 ask the participant to determine how many commits are
 related, and how many merges. The order that task 2 and 3 are presented
 to participants is randomized between participants, to remove order
@@ -404,7 +398,7 @@ The null hypotheses for each are as follows:
   \item \tool{} does not have an impact on the correctness of the
     response
   \item \tool{} does not have an impact on the accuracy of the response
-  \item \tool{} doe snot have an impact on the time taken to respond
+  \item \tool{} does not have an impact on the time taken to respond
 \end{itemize}
 
 The tasks are split into four task sets, based on the type of
@@ -530,15 +524,20 @@ variation between participants in experience with repositories.
 \section{Results}
 \label{sec:results}
 
-This section presents the results from the user study. The results for
-the conceptual tasks are presented in
-Section~\ref{sub:conceptual_results}, for the summarization tasks in
-Section~\ref{sub:summarization_results}, and the user opinions in
+This section presents the results from the user study.
+Section~\ref{sub:conceptual_results} presents the results for the
+conceptual tasks.
+The results for the summarization tasks, performed on both \tool{} and
+Gitk, are presented in Section~\ref{sub:summarization_results}.
+Lastly, the user opinions are presented in
 Section~\ref{sub:user_opinions_results}.
 
 \subsection{Conceptual Study Results}
 \label{sub:conceptual_results}
 
+The conceptual study is performed with Gitk to determine if the
+participants are able to derive a conceptual understanding
+of how commits are integrated into the master branch from the graph.
 Investigating the drawings made in response to task T1, none of the
 results from this task are correct. The diagrams for commit 1 tend to
 resemble a linked list, showing all of the merges along the master
@@ -677,7 +676,7 @@ structure as what would be constructed from using shortest paths.
 The participants were better able to determine the number of merges a
 commit passed through, and the number of commits being merged in the
 larger merge tree, as seen in Table~\ref{tab:conceptual_results}. The
-results reported in this table are in number of commits for Task T2, and
+results reported in this table are in number of commits for task T2, and
 the number of merges for task T3. Commit 1, which was merged directly
 without any other related commits, was said to have a median of 6
 related commits. The median number of merges was said to be between 6
@@ -737,7 +736,8 @@ estimate of number of commits.
 \subsection{Summarization Study Results}
 \label{sub:summarization_results}
 
-Merge size does not affect \textbf{correctness}; however, task T5,
+Merge size does not affect \textbf{correctness} for merges in the first
+and second quartile of merge sizes; however, task T5,
 finding the other commits being integrated, and task T9, determining
 which file had the most changes, are very close to the $p$-value
 threshold. The results of the Wilcoxon test on correctness are shown
@@ -1025,3 +1025,4 @@ conceptual understanding from the DAG visualization and perform the
 summarization tasks. One of these three participants said that they
 would prefer to have both tools available, as they are able to
 complement each other.
+This is discussed further in Section~\ref{sec:comments_from_a_release_manager}.

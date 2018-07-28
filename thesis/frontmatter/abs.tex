@@ -12,13 +12,17 @@
   developers to keep snapshots of the code as they work.
   Stored in the version control system is the entire history of the
   software project, rich in information about who is contributing to the
-  project, when contributions are made, and the what part of the project
+  project, when contributions are made, and to what part of the project
   they are being made.
   Presented in the right way, this information can be made invaluable in
-  helping software developers further the development of the project,
+  helping software developers continue the development of the project,
   and maintainers to understand how the changes to the current version
   can be applied to older versions of projects.
 
+  Maintainers are unable to effectively use the information stored
+  within a software repository to assist with the maintanance older
+  versions of that software in highly-collaborative projects.
+  The Linux kernel repository is an example of such a project.
   This thesis focuses on improving visualizations of the Linux kernel
   repository, developing new visualizations that help answer questions
   about how commits are integrated into the project.
@@ -46,15 +50,16 @@
   questions related to how commits are integrated about the Linux
   repository.
 
-  Included in the first contribution are the new model,
-  the algorithm that constructs the trees from the repository,
-  and an evaluation of the results of the algorithm.
-  The second contribution demonstrates
-  The third contribution appli
 
-  The second contribution demonstrates how the model can be used by
-  visualizations to extract different kinds of information about how
-  commits are integrated.
+  The first contribution includes the new tree-based model, the
+  algorithm that constructs the trees from the repository,
+  and the evaluation of the results of the algorithm.
+  the second contribution demonstrates some of the potential
+  visualizations of the repository that are made possible by the model,
+  and how these visualizations can be used depending on the structure of
+  the tree.
+  The third contribution is an application that applies the
+  visualizations to the Linux kernel repository.
 
   The tool was able to help the participants of the study with
   understanding how commits were integrated into the Linux kernel
