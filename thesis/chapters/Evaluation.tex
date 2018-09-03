@@ -53,6 +53,8 @@ Since the time measures until the final modification to the answer,
 it is possible for times to overlap between tasks if the participant
 were to change their response after answering another question.
 
+% TODO 22: How often did this happen? - not sure
+
 Order bias was mitigated throughout the study through the use of
 randomization between participants. In both parts, the order that the
 participants worked with the commits, tasks, and tools was randomized.
@@ -257,6 +259,8 @@ from trees in the second quartile. These trees contain seven nodes, and
 to increase the complexity of the tree, I required that the tree contain
 at least one internal merge node.
 
+% TODO 23: Why not more complex trees? - People had to be able to work with them in Gitk
+
 Commits were selected randomly from the trees.
 The small tree was trivial as it contained only a single node.
 A node was chosen randomly from the medium-sized tree.
@@ -317,6 +321,8 @@ Table~\ref{tab:conceptual_tasks}.
     \bottomrule
   \end{tabulary}
 \end{table*}
+
+% TODO 24: What tools were available to participants with the conceptual tasks
 
 Task 1 asks participants to draw a diagram showing the shortest path for
 a commit to be merged, including any commits that are related to it, or
@@ -619,6 +625,8 @@ toward the node of interest. In this case, the parents point toward the
 branch point, which is in the opposite direction of the merge, so the
 participant would actually need to follow the child to get to the merge
 point.
+
+% TODO 25: Provide an illustration of the direction of the edges
 
 One participant was able to identify the path to the master branch, but
 no participants were able to identify the commits that were necessary
@@ -967,9 +975,10 @@ integrated with this commit, and the other number of authored involved.
 The direction of the effect is visible in Figure~\ref{fig:agg_time}.
 Inspecting the results from task T7 in Figure~\ref{fig:task_7_time},
 \tool{} appears to have an effect, and Cliff's delta indicates that in
-the case of the medium-sized merge, that there is a medium effect. So
-why does the Wilcoxon test indicate that the null hypothesis should not
-be rejected? This is likely due to the sample size; the Wilcoxon test is
+the case of the medium-sized merge, that there is a medium effect.
+So why does the Wilcoxon test indicate that the null hypothesis should
+not be rejected?  % TODO 26: Does Effect size make sense if not statistically significant
+This is likely due to the sample size; the Wilcoxon test is
 related to the sample size, while the delta effect size is not. Since
 the results in task T7 are not aggregated, the number of samples is
 effectively cut in half, from 22 down to 11, which is not enough to have

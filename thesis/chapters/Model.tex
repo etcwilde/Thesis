@@ -9,6 +9,8 @@ repository that likely won't generalize beyond this repository.
 The algorithm will still run and produce results, but the results will
 likely not be meaningful.
 
+% TODO: What are the properties and how likely?
+
 The Linux repository is large;
 thousands of commits are merged into the Linux kernel repository per
 year.
@@ -44,7 +46,7 @@ between the commit and the root, shortest distance in time between when
 the commit was created and merges is used as a tie-breaker.
 The structure recursively groups commits that are merged together,
 making it easy to identify the commits that are integrated together.
-Commits have a single path to reach the master branch, which makes
+Commits have a single path to reach the master branch, which makes % TODO: What about foxtrots?
 identifying the series of merges to the master branch and, in extension,
 how the commit is integrated into the master branch of the master
 repository, much easier.
@@ -55,7 +57,7 @@ DAG, it also inverts the parent-child relationship. The parent of a node
 in the DAG is the child of that node in the \mt{}.
 
 In addition to identifying the path that a commit took to being merged,
-the model enables easy aggregation of commit metadata at merges,
+the model enables easy aggregation of commit metadata at merges, % TODO: Comment 10 in what sense?
 since the parent-child and child-parent relationship for each event
 is known;
 commits are aware of which merge is the next merge toward integration
@@ -135,7 +137,7 @@ The commit nodes do not preserve branch information, which allows users
 to rename branches and repositories without having to update the
 preceding commits.
 This is at the expense of maintaining a consistent history.
-It is desirable to reconstruct all of the branch and repository
+It is desirable to reconstruct all of the branch and repository % TODO: 11: provide example of when (foxtrots) - git loses information about which branch a commit is coming from and relies entirely on the commit parents
 information, shown in Figure~\ref{fig:repoEvents}, from the information
 in the DAG, shown in Figure~\ref{fig:repoDAG}, but this may not be
 possible.
@@ -232,7 +234,7 @@ information is reconstructed. In our events, nodes 2, 5, 7, and 9, are
 all on the same branch, and are merged into node 11. Nodes 5 and 9 are
 merge nodes, 5 merges a single commit into the branch, and 9 merges two
 nodes into the branch. In some cases, it is possible that a commit was
-merged twice. In the case of node 9, it is merged into 11, though it
+merged twice. In the case of node 9, it is merged into 11, though it % TODO 12: Why a second time?
 could also be merged into 12 through 10. The \mt{} is designed to use
 the shortest distance in merges, and if two paths have the same distance
 from the master branch, use the shortest distance through time.
@@ -246,7 +248,8 @@ feasible to compute the \mt for the Linux repository. First, the master
 branch of Linux is maintained by Linus Torvalds, and only Linus has
 write access to it. This assertion is verified by
 German~\cite{German2015}. The heuristic developed from this information
-is presented in Algorithm~\ref{fig:alg}. In short, the algorithm first
+is presented in Algorithm~\ref{fig:alg}. % TODO 13: Does this heuristic apply to other repos?
+In short, the algorithm first
 identifies the commits made directly to the master branch, whereafter it
 recursively determines the shortest path, using the DAG, from each
 commit to the master branch using the inverted DAG\@.
@@ -310,7 +313,7 @@ The algorithm has two phases.
 The first phase determines which repository events happened on the master
 branch.
 This is done by traversing the first parent from the master branch
-reference to the commit that has no parents.
+reference to the commit that has no parents. % TODO 14: More than one root?
 The second phase is encompassed by the function
 $MergeAtMaster$ which determines, for each commit, which merge the
 commit is merged at, the depth (as variable $d$ in the algorithm), and
@@ -442,7 +445,7 @@ merges by Linus Torvalds, and
 merges that are along the master branch, assuming that the master branch
 is not confounded.
 The inner product of the results of the two commands leaves the set of
-merges made by Linus Torvalds into the master branch.
+merges made by Linus Torvalds into the master branch. % TODO 15: Inner product or intersection?
 The results of the algorithm were collected up to version 3.16, which is
 why the set of merges must be limited to that version.
 For each merge in the set of merges above, the program extracts the
@@ -483,6 +486,7 @@ not found in the logs were due to the fast-forward merges. The commits
 were detected as being part of the master branch when inserting the
 commits into the database, but were not collected by our git log query
 since they were not authored by Linus Torvalds.
+% TODO 16: difference between this case and the earlier commits?
 
 Beyond investigating why merges show up in either the database or logs,
 further analysis requires that the merges are present in both the
@@ -524,6 +528,8 @@ The results of the evaluation are summarized as follows:
     The algorithm breaks on merges prior to December 12, 2006 due to a
     foxtrot. There were 1537 merges made by Linus prior to this date.
 
+    % TODO 17: How do we know?
+
   \item
 
     77 Merges were made by Linus into non-master branches after
@@ -539,6 +545,7 @@ The results of the evaluation are summarized as follows:
   \includegraphics[width=0.8\linewidth]{Figures/model/big_tree.pdf}
   \caption{The largest \mt{}, made by Linus Torvalds into Linux 3.16.}
   \label{fig:big_tree}
+  % TODO 18: How to interpret this visualization when the packtree is introduced later
 \end{figure}
 
 There were 12837 merges after September 4, 2007. With the exception of

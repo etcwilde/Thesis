@@ -175,6 +175,7 @@ The graph structure also supports relatively cheap branching compared to
 other version control systems, which makes it possible for developers to
 create more branches without having to worry about consuming excessive
 resources.
+% TODO: Comment 3: Clarify this
 With fewer constraints on the structure of the commit graph in git,
 tools are unable to make as many assumptions when abstracting the graph.
 Many tools avoid this by not abstracting the graph and visualizing other
@@ -708,6 +709,7 @@ performed as part of a different branch.
 The series of steps to swap branches is called a foxtrot\footnote{See
   \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html}
   for a full description of the issue}.
+% TODO: Try to figure out how many foxtrots there are? -- maybe
 
 It is necessary for multiple repositories to be interacting for a
 foxtrot to occur.
@@ -768,7 +770,7 @@ branch is the foxtrot merge.
     \textit{Origin}.}
     \\
 
-
+    % TODO: Fix alice_2 - should have origin/master on commit 1 until she pushes
 
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
@@ -1018,6 +1020,8 @@ of filtering the important or relevant commits difficult.
   \caption{Merges per release from Linux 3.1 to Linux 3.16}
   \label{fig:linux_merges_per_release}
 \end{figure}
+
+% TODO: comment on the dip in 3.16 - probably linked to the fact that 79 merges were integrated in one merge that would otherwise have been separate
 
 While the number of integrating merges into the master branch appears to
 be decreasing slightly per release, the number of commits per release is

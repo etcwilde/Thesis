@@ -140,7 +140,8 @@ The database is made of seven tables:
 The search engine uses the full text search built into PostgreSQL to
 enable easy searching for commits in the database. While it is possible
 to compute the text search vectors for every query, it is faster to
-pre-compute the vectors for each commit. The search vectors are
+pre-compute the vectors for each commit. % TODO 19: example, or why?
+The search vectors are
 pre-computed and stored in the search table, creating a map between
 search terms and commit hash. The search vectors include terms from the
 commit hash, log subject, full log message, commit author name, commit
@@ -205,6 +206,7 @@ When a user clicks on a page, it takes nearly no time to get most of
 the page showing, since it should be cached at all hops on the way back
 to the server.
 The only waiting period is for the commit-specific information to load.
+% TODO 20: Do this asynchronously - it is, but the results are not cached, so it must still be gathered from the database
 The issue is that many requests must be passed between the client and
 the server.
 When the client requests the page, instead of getting a single
@@ -212,6 +214,8 @@ response, the client will wait for the response, then send a request
 for the commit-specific information.
 There are different requests involved for collecting the tree, files,
 authorship, modules, and message information.
+
+% TODO 21: provide a link to Linvis
 
 The backend itself is written in Python 3.5, and uses the Flask
 framework to handle routing requests and manage cookies. While flask
