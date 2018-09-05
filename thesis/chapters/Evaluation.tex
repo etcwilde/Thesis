@@ -38,7 +38,7 @@ studied each commit was randomized for each participant, but was kept
 consistent through each part of the study. Participants would complete
 part one of the study on both commits, the continue with part two, before
 answering a few questions about their opinions and experience in an exit
-interview. A screencapture with audio was taken for the duration of the
+interview. A screen-capture with audio was taken for the duration of the
 study with each participant.
 
 Three metrics are recorded from each task:
@@ -52,8 +52,8 @@ final response.
 Since the time measures until the final modification to the answer,
 it is possible for times to overlap between tasks if the participant
 were to change their response after answering another question.
-
-% TODO 22: How often did this happen? - not sure
+Overlapping times occurred infrequently through the study, but more
+frequently with Gitk than with \tool{}.
 
 Order bias was mitigated throughout the study through the use of
 randomization between participants. In both parts, the order that the
@@ -258,8 +258,14 @@ appear frequently in the repository. The second tree was chosen randomly
 from trees in the second quartile. These trees contain seven nodes, and
 to increase the complexity of the tree, I required that the tree contain
 at least one internal merge node.
-
-% TODO 23: Why not more complex trees? - People had to be able to work with them in Gitk
+We limited the selected trees to the first two quartiles to ensure that
+the tasks would take a reasonable amount of time.
+The third quartile included trees with up to 51 nodes,
+and the fourth quartile included trees with more than 7000 nodes.
+Given that Gitk cannot provide aggregated summarizations due to the
+limitations of the graph, it is infeasible, in a reasonable time, to
+aggregate information about the larger trees, even with a conceptual
+understanding of which commits are involved.
 
 Commits were selected randomly from the trees.
 The small tree was trivial as it contained only a single node.
@@ -322,13 +328,12 @@ Table~\ref{tab:conceptual_tasks}.
   \end{tabulary}
 \end{table*}
 
-% TODO 24: What tools were available to participants with the conceptual tasks
-
 Task 1 asks participants to draw a diagram showing the shortest path for
 a commit to be merged, including any commits that are related to it, or
 are necessary for the integration. Participants were given 10 minutes to
-draw the diagram. The correct answer should look something like the
-\mt{} for that commit. The drawing from task 1 is then referred to
+draw the diagram, working with GitK and the git command line interface.
+The correct answer should look something like the \mt{} for that commit.
+The drawing from task 1 is then referred to
 in task 2 and 3. Building on the conceptual understanding built in task
 1, task 2 and 3 ask the participant to determine how many commits are
 related, and how many merges. The order that task 2 and 3 are presented
@@ -624,9 +629,12 @@ parent-child relationship. In most diagrams, the parents point
 toward the node of interest. In this case, the parents point toward the
 branch point, which is in the opposite direction of the merge, so the
 participant would actually need to follow the child to get to the merge
-point.
-
-% TODO 25: Provide an illustration of the direction of the edges
+point. The difference is alluded in Figure~\ref{fig:repoDAG} and
+Figure~\ref{fig:repoTree}.
+Notice that in Figure~\ref{fig:repoDAG} that the edges point from
+the merge toward the commits, and eventually toward the branch point.
+Conversely, the edges in Figure~\ref{fig:repoTree} point from the commit
+toward the integrating merge.
 
 One participant was able to identify the path to the master branch, but
 no participants were able to identify the commits that were necessary
@@ -681,11 +689,15 @@ structure as what would be constructed from using shortest paths.
 
 \end{figure}
 
-The participants were better able to determine the number of merges a
-commit passed through, and the number of commits being merged in the
-larger merge tree, as seen in Table~\ref{tab:conceptual_results}. The
-results reported in this table are in number of commits for task T2, and
-the number of merges for task T3. Commit 1, which was merged directly
+The results show that participants were closer to the correct number of
+merges to integrate commit 2 into the master branch.
+This is counter-intuitive as commit 2 is from the larger, more complex
+\mt{}.
+Furthermore, the results show that they were also closer to determining
+how many other commits were integrated with it than with commit 1, shown
+in as seen in Table~\ref{tab:conceptual_results}.
+The results reported in this table are in number of commits for task T2, and the number of merges for task T3.
+Commit 1, which was merged directly
 without any other related commits, was said to have a median of 6
 related commits. The median number of merges was said to be between 6
 and 7 merges. The correct answer should have been 1, the integrating
@@ -709,6 +721,16 @@ determining the number of merges was consistent between both trees.
     \bottomrule
   \end{tabular}
 \end{table}
+
+While the results were closer with the larger \mt{}, the merges that were
+indicated as being the integrating merges and commits identified as
+being those integrated with it were incorrect in both cases.
+For commit 1, many participants indicated that the entire master branch
+up to the branch pointer was in the integrating merge.
+This dramatically increases the average and variance for commit 1.
+In the case of commit 2, participants selected merges and commits a
+more conservatively, though many of the selected merges and commits were
+incorrect, and in some cases appeared to be randomly selected.
 
 Participants generally took longer to respond to questions about the
 larger merge tree, and the time taken was far more variable. The timing
@@ -933,7 +955,7 @@ in Table~\ref{tab:cross_commit_timing}.
   \end{tabular}
 \end{table}
 
-Inspecting the results from commit 7, depicted in
+Inspecting the results from task 7, depicted in
 Figure~\ref{fig:task_7_time}, the primary difference stems from the time
 used to respond when using \tool{}. Participants much longer to produce
 a response for the larger merge while using \tool{} than they did for
@@ -973,11 +995,14 @@ changes, and the modules involved. \tool{} had a medium effect on the
 time taken to respond to tasks T5 and T6, what other commits are
 integrated with this commit, and the other number of authored involved.
 The direction of the effect is visible in Figure~\ref{fig:agg_time}.
-Inspecting the results from task T7 in Figure~\ref{fig:task_7_time},
-\tool{} appears to have an effect, and Cliff's delta indicates that in
-the case of the medium-sized merge, that there is a medium effect.
-So why does the Wilcoxon test indicate that the null hypothesis should
-not be rejected?  % TODO 26: Does Effect size make sense if not statistically significant
+
+The results of task T7 in Figure~\ref{fig:task_7_time} show that
+\tool{} appears to have an effect.
+The Cliff's delta effect size indicates that, in the case of the
+medium-sized merge, there is a medium effect.
+The Wilcoxon test, however, indicates that the null hypothesis should not
+be rejected, or at least that there is inconclusive evidence to show
+that there is a difference.
 This is likely due to the sample size; the Wilcoxon test is
 related to the sample size, while the delta effect size is not. Since
 the results in task T7 are not aggregated, the number of samples is

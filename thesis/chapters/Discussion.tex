@@ -56,15 +56,6 @@ specifically designed for the same tasks; however, one does not
 currently exist.
 Instead, we compare the results between \tool{}, and the tool that is
 currently in use for these tasks, Gitk.
-As we don't have a baseline that is designed for performing the task,
-the thesis statement should be weakened to reflect the new position.
-
-\begin{textbox}
-  \textbf{Revised Thesis:} Visualizations of the \mt{} are more
-  effective for visualizing the graph of the Linux repository in a way
-  that gives insight into how commits are integrated than the tools and
-  visualizations that are currently available.
-\end{textbox}
 
 \section{Study Observations}\label{sec:study_observations}
 
@@ -115,14 +106,21 @@ developer was thinking as they were writing the changes.
 The visualization of the \mt{} in \tool{} does not order the commits,
 randomly ordering them in each level as atomic units.
 
-% TODO 27: Any idea on ordering the commits / branches
-
 This is the primary reason behind why this participant would ask to use
 both tools simultaneously. \tool{} is able to help with the aggregation
 of the information, and provide a better understanding of the next merge
 involved in integrating this commit, but the DAG visualization in Gitk
 provides the full story of the commit instead of hiding it behind a
 layer of abstraction.
+
+The algorithm is capable of retaining information about which commit
+comes next on the path to the master branch.
+The adjustment simply requires that the returning commit be passed
+with the depth, next merge, and integrating merge.
+The update rules are the same for the next merge and integrating merge,
+so no other changes are required.
+Then instead of using the next merge toward integration, the next commit
+should be used in the visualization.
 
 The comments from this participant were very insightful, and will help
 to improve the \mt{} model.
@@ -290,6 +288,35 @@ extending the model to preserve the order of the commits in the graph.
 This extension would involve deciding on new visualizations, and
 performing a new study.
 
+\begin{figure}[htpb]
+  \centering
+  \resizebox{0.4\textwidth}{!}{
+    \begin{tikzpicture}[auto, on grid, semithick, node distance=1cm, state/.style={circle, text=black, minimum size=7mm}]
+
+      \node[state, draw=chartblue] (11) {11};
+
+      \node[state, draw=chartyellow, above right= 1cm of 11] (9) {9};
+      \node[state, draw=chartyellow, above = of 9] (7) {7};
+      \node[state, draw=chartyellow, above = of 7] (5) {5};
+      \node[state, draw=chartyellow, above = of 5] (2) {2};
+
+      \node[state, draw=chartmagenta, right = of 7] (6) {6};
+      \node[state, draw=chartmagenta, right = of 6] (8) {8};
+      \node[state, draw=chartmagenta, right = of 2] (3) {3};
+
+      \draw (11) edge[chartyellow, stealth-] (9)
+            (9) edge[chartyellow, stealth-] (7) edge[chartmagenta, stealth-] (6) edge[chartmagenta, stealth-] (8)
+            (7) edge[chartyellow, stealth-] (5)
+            (5) edge[chartyellow, stealth-] (2) edge[chartmagenta, stealth-] (3);
+    \end{tikzpicture}
+  }
+  \caption{
+    Updating the \mt{} shows the order that commits are created,
+    while retaining the merges that the commits pass through.}
+  \label{fig:updated_mt}
+\end{figure}
+
+
 In our model, the trees are short, but very wide, as there are usually
 very few merges that a commit will pass through, but there may be many
 commits that build on it before finally having the changes merged.
@@ -315,8 +342,8 @@ commit on the path toward the master branch, this property changes.
 A commit may have one or zero children, so only the first commit of a
 branch will be rendered by the pack tree, omitting most of the
 information.
-
-% TODO 29: Add illustration
+An example of what the model may look like is shown in
+Figure~\ref{fig:updated_mt}.
 
 Changing the model to include information about how commits are ordered
 will have an impact on how it is rendered.
