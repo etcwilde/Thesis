@@ -175,7 +175,11 @@ The graph structure also supports relatively cheap branching compared to
 other version control systems, which makes it possible for developers to
 create more branches without having to worry about consuming excessive
 resources.
-With fewer constraints on the structure of the commit graph in git,
+Git places fewer constraints on the structure of the commit graph than
+many other version control systems.
+For example, most version control systems need a branch to take the role
+of a main, or master, branch, whereas git has no such requirement.
+With fewer constraints on the structure of the commit graph,
 tools are unable to make as many assumptions when abstracting the graph.
 Many tools avoid this by not abstracting the graph and visualizing other
 properties of the repository, such as the file structure.
@@ -708,6 +712,7 @@ performed as part of a different branch.
 The series of steps to swap branches is called a foxtrot\footnote{See
   \url{http://bit-booster.blogspot.ca/2016/02/no-foxtrots-allowed.html}
   for a full description of the issue}.
+% TODO: Try to figure out how many foxtrots there are? -- maybe
 
 It is necessary for multiple repositories to be interacting for a
 foxtrot to occur.
@@ -768,9 +773,7 @@ branch is the foxtrot merge.
     \textit{Origin}.}
     \\
 
-
-
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.22\textwidth]{Figures/background/foxtrot/alice_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_1.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
@@ -782,9 +785,7 @@ branch is the foxtrot merge.
     \\
 
 
-
-
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_2.png} \\
 
@@ -794,9 +795,7 @@ branch is the foxtrot merge.
     Alice's master branch into the remote master branch.} &
     \tiny{Bob is not made aware of these changes yet.} \\
 
-
-
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_3.png} \\
 
@@ -805,7 +804,7 @@ branch is the foxtrot merge.
     \tiny{Bob attempts to push, but this results in a merge conflict.}
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_2.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
 
@@ -815,7 +814,7 @@ branch is the foxtrot merge.
     branch into Bob's master branch.}
     \\
 
-    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_2.png} &
+    \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/alice_3.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/origin_3.png} &
     \includegraphics[width=0.27\textwidth]{Figures/background/foxtrot/bob_4.png} \\
 
@@ -850,27 +849,6 @@ consequences.
 In the Linux project, the merges to the master branch are
 the code that Linus has reviewed and accepted into the mainline kernel.
 
-As mentioned earlier, the nodes in the DAG are immutable;
-once a commit or merge is created, it cannot be changed.
-Git allows operations to alter the events and re-order them,
-but this will create a new event with a new commit hash.
-This property makes it impossible for nodes to store information about
-their children, and in extension, how the commit is being merged, as
-this information is not available when the commit is created.
-Git provides the command \verb|git log --children|, which traverses the
-DAG and inverts the edges.
-The next child on the path of children that is a merge is the first
-merge on the path to the commit being integrated.
-
-The graph combined with the child information gives most of the
-information necessary for understanding how the commit is
-merged into the master branch; however, information about the specific
-merge into the master branch is still missing.
-Furthermore, the graph itself is not always easy to understand, as shown
-in Figure~\ref{fig:git_graphs}.
-This figure contrasts the levels of complexity that can be found in a
-given section of the Linux kernel repository.
-
 \begin{figure}[htpb]
   \centering
   \begin{subfigure}[b]{0.8\textwidth}
@@ -891,6 +869,27 @@ given section of the Linux kernel repository.
     repository.}
   \label{fig:git_graphs}
 \end{figure}
+
+As mentioned earlier, the nodes in the DAG are immutable;
+once a commit or merge is created, it cannot be changed.
+Git allows operations to alter the events and re-order them,
+but this will create a new event with a new commit hash.
+This property makes it impossible for nodes to store information about
+their children, and in extension, how the commit is being merged, as
+this information is not available when the commit is created.
+Git provides the command \verb|git log --children|, which traverses the
+DAG and inverts the edges.
+The next child on the path of children that is a merge is the first
+merge on the path to the commit being integrated.
+
+The graph combined with the child information gives most of the
+information necessary for understanding how the commit is
+merged into the master branch; however, information about the specific
+merge into the master branch is still missing.
+Furthermore, the graph itself is not always easy to understand, as shown
+in Figure~\ref{fig:git_graphs}.
+This figure contrasts the levels of complexity that can be found in a
+given section of the Linux kernel repository.
 
 Most repositories are simple enough that it is possible to identify how
 commits are integrated using the visualizations of the DAG that are

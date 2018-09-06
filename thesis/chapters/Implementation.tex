@@ -1,8 +1,8 @@
 % vim:set et sw=2 ts=4 tw=72:
 \chapter{Implementation Details}\label{chap:implementation_details}
 
-The implementation is broken into two parts, the \tool{} and the
-database.
+The implementation is broken into two parts, the
+\tool{}\footnote{\tool{} is available at \url{http://li.turingmachine.org}} and the database.
 The database uses PostgreSQL, an advanced opensource database management
 system. The tool backend uses Python and the Flask framework.
 Both the database and the \tool{} backend are containerized using
@@ -138,13 +138,19 @@ The database is made of seven tables:
 \subsection{Full Text Search}\label{sub:full_text_search}
 
 The search engine uses the full text search built into PostgreSQL to
-enable easy searching for commits in the database. While it is possible
-to compute the text search vectors for every query, it is faster to
-pre-compute the vectors for each commit. The search vectors are
+enable easy searching for commits in the database.
+
+The engine uses pre-computed text vectors instead of re-computing them
+for each query.
+The search vectors are
 pre-computed and stored in the search table, creating a map between
-search terms and commit hash. The search vectors include terms from the
-commit hash, log subject, full log message, commit author name, commit
-and authorship date, and list of files that were modified in the commit.
+search terms and commit hash.
+The vectors include terms from the commit hash,
+log subject,
+full log message,
+commit author name,
+commit and authorship date,
+and list of files that were modified in the commit.
 
 The search attributes are given different weight when calculating the
 search rank. The attribute weights are listed in
@@ -201,10 +207,13 @@ information with Javascript.
 Using the asynchronous architecture has advantages and disadvantages.
 Since the main part of the page is the same for every commit,
 it can be cached.
+The requests are processed asynchronously.
 When a user clicks on a page, it takes nearly no time to get most of
 the page showing, since it should be cached at all hops on the way back
 to the server.
-The only waiting period is for the commit-specific information to load.
+The primary delay comes from the delay caused by the round-trip to the
+server to gather the commit-specific data.
+
 The issue is that many requests must be passed between the client and
 the server.
 When the client requests the page, instead of getting a single
@@ -220,4 +229,3 @@ which is more secure and runs faster, supporting multiple worker
 threads. The frontend is written in Javascript, HTML, and CSS. Bootstrap
 is used to produce the clean interface, and D3 generates the tree
 visualizations.
-

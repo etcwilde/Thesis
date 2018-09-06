@@ -27,7 +27,7 @@ Unlike in centralized version control systems, where users must
 re-synchronize with the server, a distributed version control system
 provides each user with a full first-class repository. This allows the
 user to have additional flexibility, and means that a user has to
-synchronize less often.
+synchronize their local repository with the remote repository less often.
 Furthermore, each user has access to the entire history of the
 repository, including all branches and commits that were part of the
 original repository.
@@ -74,7 +74,8 @@ Linux kernel repository drives the overarching question behind this
 To answer the overarching question, this \paper{} makes four
 contributions.
 First, a new tree-based model, called the \mt{},
-is constructed from the underlying graph of the repository.
+% TODO: Comment 2: It is basically a projection of the initial graph?
+is abstracted from the underlying graph of the repository.
 Compared to the graph, trees are relatively easy to visualize, and there are many visualization metaphors that take advantage of different properties of trees.
 The \mt{} abstracts the repository commit graph into a set of trees, each rooted at a merge into the master branch of the repository.
 The leaves of the tree are the commits, and the inner nodes of the tree represent the merges leading to the integration of the commits.
@@ -84,9 +85,9 @@ Fourth, the last contribution of this \paper{} is an evaluation of the
 tool.
 
 \begin{textbox}
-  \textbf{Thesis:} Visualizations of the \mt{} are an effective means of
-  visualizing the graph of the Linux repository in a way that gives
-  insight into how commits are integrated.
+  \textbf{Thesis:} Trees are more effective for visualizing and
+  summarizing the integration of commits into the Linux kernel
+  repository than the DAG.
 \end{textbox}
 
 \section{Thesis Organization}\label{sec:thesis_organization}

@@ -83,7 +83,7 @@ the patch, but given a commit hash, the patch can be found directly from
 the repository with the \verb|git show| command, or using other tools.
 
 The files tab shows the list of files that were modified in a merge or
-merge.
+commit.
 The table includes the number of lines added, lines removed, total lines
 modified, and the difference between the number of lines added and
 removed.
@@ -163,6 +163,10 @@ If the node is a commit, only the node will be shown.
 
 This visualization is text-based, making
 searching simple through the browser text search functionality.
+This visualization works well with large and small trees, though it does
+not give an immediate impression of the structure of the entire merge.
+The visualization is designed to show the path that a specific commit
+takes to reach the master branch.
 
 \tool{} also provides breadcrumbs showing the path that the current
 repository event took to being merged into the root of the \mt{} to
@@ -219,6 +223,9 @@ aesthetic requirement; subtrees should be drawn identically regardless
 of position in the tree, and that the reflection of the tree should
 produce a mirror-image of the original tree. The entire goal is to
 produce trees that are aesthetically pleasing and easily understandable.
+This visualization works well with trees that are not exceptionally
+wide and can give a good impression of how commits are integrated in
+smaller trees.
 
 In our visual metaphor, the white nodes indicate a commit, while the
 colored nodes indicate merges. The merges are colored in shades of blue
