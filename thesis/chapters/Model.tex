@@ -51,6 +51,11 @@ Figure~\ref{fig:linux_merge_distribution_per_release}.
 A merge into the master branch is atomic, all of the context necessary
 for integrating a commit is available at the merge into the master
 branch.
+If a previous commit needs to be fixed after being integrated, the fix
+will be integrated in a future merge.
+If the issue is caught before the initial commit reaches the master
+branch, the fixing commit may be one of the commits that was integrated
+with the original commit.
 Showing only the commits that are merged into the master
 branch together filters the number of events down to a manageable size,
 while still containing all of the information necessary to determine how
